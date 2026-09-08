@@ -4,295 +4,295 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Marketing</title>
 	<meta name="descrption" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="CareerExploreStyleSheets.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-	<div class="top-nav">
-  <div class="logo-area" onclick="window.location.reload()">
-    <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-    <div class="logo-text">Find<span class="green">Your</span>Path</div>
-  </div>
+<div class="top-nav">
+	<div class="logo-area" onclick="window.location.reload()">
+		<img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+		<div class="logo-text">Find<span class="green">Your</span>Path</div>
+	</div>
 
-  <div class="nav-middle">
-    <a href="Dashboard.html" data-page="home">Home</a>
-    <a href="Mentors.html" data-page="mentor">Find Mentor</a>
-    <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-    <a href="#" data-page="resources">Resources</a>
-  </div>
+	<div class="nav-middle">
+		<a href="Dashboard.html" data-page="home">Home</a>
+		<a href="Mentors.html" data-page="mentor">Find Mentor</a>
+		<a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
+		<a href="#" data-page="resources">Resources</a>
+	</div>
 
-  <div style="display: flex; gap: 16px; align-items: center;">
-    <input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
-    <div class="right-actions">
-      <div class="icon-group">
-        <div class="icon-btn" id="notificationBtn">
-          <i class="far fa-bell"></i>
-          <span class="badge" id="notificationBadge">3</span>
-        </div>
-        <div class="icon-btn" id="messageBtn">
-          <i class="far fa-comment-dots"></i>
-        </div>
-      </div>
-      <div class="divider-vertical"></div>
-      <div class="profile-preview" id="profileBtn">
-        <a href="Settings.html" class="profile-pic-link">
-        <img src="../../../../Polygon%201.png" alt="profile">
-		</a>
-        <div class="info">
-          <div class="name">Angle M.</div>
-          <div class="role">Youth</div>
-        </div>
-        <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-      </div>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="#"><i class="fas fa-user"></i> My Profile</a>
-        <a href="#"><i class="fas fa-cog"></i> Settings</a>
-        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-      </div>
-    </div>
-  </div>
-</div>
-	<div class="main-layout">
-			<div class="sidebar">
-				<ul>
-				  <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-				  <li data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
-				  <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
-				  <li class="active" data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
-				  <li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-				  <li data-nav="resources"><i class="fas fa-folder-open"></i> Resources</li>
-				  <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
-				  <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
-				  <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
-				</ul>
-				
-				
-				<div class="sidebar-footer" id="aboutFooter">
-				  <div class="promo-card">
-                    <div><img src="../../../../PROJECT%203%20LOGO.png" alt="Profile" class="promo-img"></div>
-                    <div class="promo-text">
-                        Real guidance.<br>Local mentors.<br>Brighter futures.
-                    </div>
-                </div>
+	<div style="display: flex; gap: 16px; align-items: center;">
+		<input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
+		<div class="right-actions">
+			<div class="icon-group">
+				<div class="icon-btn" id="notificationBtn">
+					<i class="far fa-bell"></i>
+					<span class="badge" id="notificationBadge">3</span>
 				</div>
+				<div class="icon-btn" id="messageBtn">
+					<i class="far fa-comment-dots"></i>
+				</div>
+			</div>
+			<div class="divider-vertical"></div>
+			<div class="profile-preview" id="profileBtn">
+				<a href="Settings.html" class="profile-pic-link">
+					<img src="Polygon 1.png" alt="profile">
+				</a>
+				<div class="info">
+					<div class="name">Angle M.</div>
+					<div class="role">Youth</div>
+				</div>
+				<span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
+			</div>
+			<div class="dropdown-menu" id="dropdownMenu">
+				<a href="#"><i class="fas fa-user"></i> My Profile</a>
+				<a href="#"><i class="fas fa-cog"></i> Settings</a>
+				<a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+			</div>
 		</div>
-			<div class="content-column">
-				 <div class="heading">
-					<div class="heading-text">
-						<h1>Career Explore</h1>
-						<h2>Explore different career paths and explore your future.</h2>
-					</div>
-					<div class="searchCareer">
-					<form>
-						<input type="text" id="search-input" placeholder="Search...">
-					</form>
-					</div>
-					<a href="explore.html" class="explore-btn">
-						Explore industries
-					</a>
-				 </div>
-				 <div class="cards-row">
-						 <div class="card2">
-						
-							<ul class="menu2">
-								<li class="menu-item2">
-									<span>Top Career Paths</span>
-								</li>
-								<li class="menu-item2">
-									<span>Information Technology</span>
-								</li>
-								<li class="menu-item2">
-									<span>Business & Finance </span>
-								</li>
-								<li class="menu-item2">
-									<span>Healthcare</span>
-								</li>
-								<li class="menu-item2">
-									<span>Education</span>
-								</li>
-								<li class="menu-item2">
-									<span>Engineering</span>
-								</li>
-								<li class="menu-item2 active2">
-									<span>Marketing</span>
-								</li>
-								<li class="menu-item2">
-									<span>Law</span>
-								</li>
-								<li class="menu-item2">
-									<span>Creative Arts</span>
-								</li>
-							</ul>
+	</div>
+</div>
+<div class="main-layout">
+	<div class="sidebar">
+		<ul>
+			<li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+			<li data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
+			<li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
+			<li class="active" data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
+			<li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
+			<li data-nav="resources"><i class="fas fa-folder-open"></i> Resources</li>
+			<li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
+			<li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
+			<li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
+		</ul>
+
+
+		<div class="sidebar-footer" id="aboutFooter">
+			<div class="promo-card">
+				<div><img src="PROJECT 3 LOGO.png" alt="Profile" class="promo-img"></div>
+				<div class="promo-text">
+					Real guidance.<br>Local mentors.<br>Brighter futures.
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="content-column">
+		<div class="heading">
+			<div class="heading-text">
+				<h1>Career Explore</h1>
+				<h2>Explore different career paths and explore your future.</h2>
+			</div>
+			<div class="searchCareer">
+				<form>
+					<input type="text" id="search-input" placeholder="Search...">
+				</form>
+			</div>
+			<a href="explore.html" class="explore-btn">
+				Explore industries
+			</a>
+		</div>
+		<div class="cards-row">
+			<div class="card2">
+
+				<ul class="menu2">
+					<li class="menu-item2">
+						<span>Top Career Paths</span>
+					</li>
+					<li class="menu-item2">
+						<span>Information Technology</span>
+					</li>
+					<li class="menu-item2">
+						<span>Business & Finance </span>
+					</li>
+					<li class="menu-item2">
+						<span>Healthcare</span>
+					</li>
+					<li class="menu-item2">
+						<span>Education</span>
+					</li>
+					<li class="menu-item2">
+						<span>Engineering</span>
+					</li>
+					<li class="menu-item2 active2">
+						<span>Marketing</span>
+					</li>
+					<li class="menu-item2">
+						<span>Law</span>
+					</li>
+					<li class="menu-item2">
+						<span>Creative Arts</span>
+					</li>
+				</ul>
+			</div>
+			<div class="card3">
+				<img src="Marketing.png" alt="Marketing" class="card3-banner">
+				<div class="card3-content">
+					<div class="stats-row">
+						<div class="stat-item">
+							<img class="logo" src="Salary.png" alt="logo">
+							<div class="stat-text">
+								<span class="stat-label">Average Salary</span>
+								<span class="stat-value">R445,100 /year</span>
+							</div>
 						</div>
-						<div class="card3">
-							<img src="Marketing.png" alt="Marketing" class="card3-banner">
-							<div class="card3-content">
-								<div class="stats-row">
-									<div class="stat-item">
-										<img class="logo" src="Salary.png" alt="logo">
-										<div class="stat-text">
-											<span class="stat-label">Average Salary</span>
-											<span class="stat-value">R445,100 /year</span>
-										</div>
-									</div>
-									<div class="stat-item">
-										<img class="logo" src="../../../../Trending%20up%20(1).png" alt="logo">
-										<div class="stat-text">
-											<span class="stat-label">Job Growth</span>
-											<span class="stat-value">High</span>
-										</div>
-									</div>
-									<div class="stat-item">
-										<img class="logo" src="../../../../Plus%20circle.png" alt="logo">
-										<div class="stat-text">
-											<span class="stat-label">Education Level</span>
-											<span class="stat-value">Diploma/Degree</span>
-										</div>
-									</div>
-								</div>
-
-								<hr>
-
-								<div class="skills-section">
-									<h3>Skills You Need</h3>
-									<div class="skills-tags">
-										<span class="skill-tag">Communication</span>
-										<span class="skill-tag">Creativity</span>
-										<span class="skill-tag">Social Media Management</span>
-										<span class="skill-tag">Analytical Thinking</span>
-									</div>
-								</div>
-
-								<div class="steps-section">
-									<h3>Steps to Get Started</h3>
-									<ol class="steps-list">
-										<li>Study Marketing or Digital Marketing</li>
-										<li>Learn social media and branding skills</li>
-										<li>Build a portfolio or online presence</li>
-										<li>Gain experience through internships or freelance work</li>
-									</ol>
-								</div>
+						<div class="stat-item">
+							<img class="logo" src="Trending up (1).png" alt="logo">
+							<div class="stat-text">
+								<span class="stat-label">Job Growth</span>
+								<span class="stat-value">High</span>
+							</div>
+						</div>
+						<div class="stat-item">
+							<img class="logo" src="Plus circle.png" alt="logo">
+							<div class="stat-text">
+								<span class="stat-label">Education Level</span>
+								<span class="stat-value">Diploma/Degree</span>
 							</div>
 						</div>
 					</div>
+
+					<hr>
+
+					<div class="skills-section">
+						<h3>Skills You Need</h3>
+						<div class="skills-tags">
+							<span class="skill-tag">Communication</span>
+							<span class="skill-tag">Creativity</span>
+							<span class="skill-tag">Social Media Management</span>
+							<span class="skill-tag">Analytical Thinking</span>
+						</div>
+					</div>
+
+					<div class="steps-section">
+						<h3>Steps to Get Started</h3>
+						<ol class="steps-list">
+							<li>Study Marketing or Digital Marketing</li>
+							<li>Learn social media and branding skills</li>
+							<li>Build a portfolio or online presence</li>
+							<li>Gain experience through internships or freelance work</li>
+						</ol>
+					</div>
+				</div>
 			</div>
-		<script>
-			document.querySelectorAll('.menu-item[data-nav]').forEach(function(item) {
-				item.addEventListener('click', function() {
-					const destination = item.dataset.nav;
+		</div>
+	</div>
+	<script>
+		document.querySelectorAll('.menu-item[data-nav]').forEach(function(item) {
+			item.addEventListener('click', function() {
+				const destination = item.dataset.nav;
 
-					if (destination === 'Home.html') {
-						const confirmed = confirm('Are you sure you want to log out?');
-						if (!confirmed) {
-							return; 
-						}
+				if (destination === 'Home.html') {
+					const confirmed = confirm('Are you sure you want to log out?');
+					if (!confirmed) {
+						return;
 					}
+				}
 
-					window.location.href = destination;
+				window.location.href = destination;
+			});
+		});
+		// Sidebar navigation
+		document.querySelectorAll('.sidebar li').forEach(item => {
+			item.addEventListener('click', () => {
+				const navItem = item.dataset.nav;
+				document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+				item.classList.add('active');
+
+				if (navItem === 'dashboard') {
+					window.location.href = 'Dashboard.html';
+					return;
+				} else if (navItem === 'logout') {
+					const confirmed = confirm('Are you sure you want to log out?');
+					if (confirmed) {
+						window.location.href = 'Home.html';
+					}
+				} else if (navItem === 'mentors') {
+					window.location.href = 'CareerExplorerBusinessAndFinance.html';
+					return;
+				} else if (navItem === 'messages') {
+					window.location.href = 'Messages.html';
+					return;
+				} else if (navItem === 'booking') {
+					window.location.href = 'Booking.html';
+					return;
+				} else if (navItem === 'encouragement') {
+					window.location.href = 'EncouragementWall.html';
+					return;
+				} else if (navItem === 'resources') {
+					showToast('📚 Resources page coming soon!');
+				} else if (navItem === 'settings') {
+					window.location.href = 'Settings.html';
+					return;
+				} else if (navItem === 'help') {
+					window.location.href = 'HelpAndSupport.html';
+				}
+			});
+		});
+		document.addEventListener('DOMContentLoaded', () => {
+			// Selectors
+			const careerListItems = document.querySelectorAll('.menu-item2');
+			const careerSearchInput = document.getElementById('search-input'); // matches your HTML
+
+			/**
+			 * Mapping of career names → HTML pages
+			 * Adjust the file names to match your actual pages
+			 */
+			const careerPages = {
+				'Top Career Paths': 'InformationTechnology.html',
+				'Information Technology': 'InformationTechnology.html',
+				'Business & Finance': 'CareerExplorerBusinessAndFinance.html',
+				'Healthcare': 'Healthcare.html',
+				'Education': 'Education.html',
+				'Engineering': 'Engineer.html',
+				'Marketing': 'Marketing.html',
+				'Law': 'Law.html',
+				'Creative Arts': 'CreativeArts.html'
+			};
+
+			/**
+			 * 1. CAREER PATH SWITCHER (navigates to page)
+			 */
+			careerListItems.forEach(item => {
+				item.addEventListener('click', () => {
+					// Skip the header item if you want
+					const selectedCareer = item.innerText.trim();
+
+					// Remove active class from all
+					careerListItems.forEach(li => li.classList.remove('active2'));
+
+					// Add active class to clicked item
+					item.classList.add('active2');
+
+					// Navigate to the corresponding page
+					const targetPage = careerPages[selectedCareer];
+					if (targetPage) {
+						window.location.href = targetPage;
+					} else {
+						console.warn(`No page mapped for: ${selectedCareer}`);
+					}
 				});
 			});
-			// Sidebar navigation
-  document.querySelectorAll('.sidebar li').forEach(item => {
-    item.addEventListener('click', () => {
-      const navItem = item.dataset.nav;
-      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-      item.classList.add('active');
-      
-      if (navItem === 'dashboard') {
-        window.location.href = 'Dashboard.html';
-        return;
-      } else if (navItem === 'logout') {
-		const confirmed = confirm('Are you sure you want to log out?');
-		if (confirmed) {
-			window.location.href = 'Home.html';
-		}
-      } else if (navItem === 'mentors') {
-        window.location.href = 'CareerExplorerBusinessAndFinance.html';
-        return;
-      } else if (navItem === 'messages') {
-        window.location.href = 'Messages.html';
-        return;
-      } else if (navItem === 'booking') {
-        window.location.href = 'Booking.html';
-        return;
-      } else if (navItem === 'encouragement') {
-        window.location.href = 'EncouragementWall.html';
-        return;
-      } else if (navItem === 'resources') {
-        showToast('📚 Resources page coming soon!');
-      } else if (navItem === 'settings') {
-        window.location.href = 'Settings.html';
-        return;
-      } else if (navItem === 'help') {
-        window.location.href = 'HelpAndSupport.html';
-      }
-    });
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-    // Selectors
-    const careerListItems = document.querySelectorAll('.menu-item2');
-    const careerSearchInput = document.getElementById('search-input'); // matches your HTML
 
-    /**
-     * Mapping of career names → HTML pages
-     * Adjust the file names to match your actual pages
-     */
-    const careerPages = {
-        'Top Career Paths': 'InformationTechnology.html',
-        'Information Technology': 'InformationTechnology.html',
-        'Business & Finance': 'CareerExplorerBusinessAndFinance.html',
-        'Healthcare': 'Healthcare.html',
-        'Education': 'Education.html',
-        'Engineering': 'Engineer.html',
-        'Marketing': 'Marketing.html',
-        'Law': 'Law.html',
-        'Creative Arts': 'CreativeArts.html'
-    };
-
-    /**
-     * 1. CAREER PATH SWITCHER (navigates to page)
-     */
-    careerListItems.forEach(item => {
-        item.addEventListener('click', () => {
-            // Skip the header item if you want
-            const selectedCareer = item.innerText.trim();
-
-            // Remove active class from all
-            careerListItems.forEach(li => li.classList.remove('active2'));
-
-            // Add active class to clicked item
-            item.classList.add('active2');
-
-            // Navigate to the corresponding page
-            const targetPage = careerPages[selectedCareer];
-            if (targetPage) {
-                window.location.href = targetPage;
-            } else {
-                console.warn(`No page mapped for: ${selectedCareer}`);
-            }
-        });
-    });
-
-    /**
-     * 2. SEARCH FILTER
-     * Filters the career list in real-time
-     */
-    if (careerSearchInput) {
-        careerSearchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            careerListItems.forEach(item => {
-                const text = item.innerText.toLowerCase();
-                // Keep the first item ("Top Career Paths") always visible if you want
-                if (item === careerListItems[0] || text.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    }
-});
-		</script>
+			/**
+			 * 2. SEARCH FILTER
+			 * Filters the career list in real-time
+			 */
+			if (careerSearchInput) {
+				careerSearchInput.addEventListener('input', (e) => {
+					const searchTerm = e.target.value.toLowerCase();
+					careerListItems.forEach(item => {
+						const text = item.innerText.toLowerCase();
+						// Keep the first item ("Top Career Paths") always visible if you want
+						if (item === careerListItems[0] || text.includes(searchTerm)) {
+							item.style.display = 'flex';
+						} else {
+							item.style.display = 'none';
+						}
+					});
+				});
+			}
+		});
+	</script>
 </body>
 </html>

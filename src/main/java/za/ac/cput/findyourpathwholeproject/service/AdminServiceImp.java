@@ -44,7 +44,7 @@ public class AdminServiceImp implements AdminService {
     }
 
     @Override
-    public List<Admin> findAdminById(String admin) {
-        return adminService.findAdminById(admin);
+    public List<Admin> findByAdminId(String admin) {
+        return adminService.findByAdminId(admin);
     }
 }

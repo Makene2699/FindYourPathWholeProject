@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IndustryService extends IService<Industry,String>{
     List<Industry> findAll();
-    List<Industry> findIndustryById(String industry);
+    List<Industry> findByIndustryID(String industry);
 }

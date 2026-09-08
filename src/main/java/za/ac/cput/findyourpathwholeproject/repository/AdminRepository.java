@@ -12,5 +12,5 @@ public interface AdminRepository extends JpaRepository<Admin,String> {
     @Override
     List<Admin> findAll();
 
-    List<Admin> findAdminById(String adminId);
+    List<Admin> findByAdminId(String adminId);
 }

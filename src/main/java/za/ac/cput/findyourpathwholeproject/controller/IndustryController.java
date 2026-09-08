@@ -38,6 +38,6 @@ public class IndustryController {
     }
     @GetMapping("/findIndustryById{industryID}")
     public List<Industry> findIndustries(@PathVariable String industryID){
-        return industryController.findIndustryById(industryID);
+        return industryController.findByIndustryID(industryID);
     }
 }

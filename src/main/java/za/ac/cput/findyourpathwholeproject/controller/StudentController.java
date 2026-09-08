@@ -38,6 +38,6 @@ public class StudentController {
     }
     @GetMapping("findAllStudentsById{studentId}")
     public List<Student> getAllStudentsById(@PathVariable String studentId){
-        return studentController.findStudentById(studentId);
+        return studentController.findByStudentId(studentId);
     }
 }

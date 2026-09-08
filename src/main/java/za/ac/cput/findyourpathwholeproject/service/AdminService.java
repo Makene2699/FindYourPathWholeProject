@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface AdminService extends IService<Admin,String> {
     List<Admin>findAll();
-    List<Admin>findAdminById(String admin);
+    List<Admin>findByAdminId(String admin);
 }

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface StudentService extends IService<Student,String>{
     List<Student>findAll();
-    List<Student>findStudentById(String student);
+    List<Student>findByStudentId(String student);
 }

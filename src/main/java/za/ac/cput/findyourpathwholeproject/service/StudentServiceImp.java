@@ -44,7 +44,7 @@ public class StudentServiceImp implements StudentService{
     }
 
     @Override
-    public List<Student> findStudentById(String student) {
-        return studentService.findStudentsById(student);
+    public List<Student> findByStudentId(String student) {
+        return studentService.findByStudentId(student);
     }
 }

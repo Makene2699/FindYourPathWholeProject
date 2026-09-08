@@ -9,5 +9,5 @@ public interface IndustryRepository extends JpaRepository<Industry,String> {
     @Override
     List<Industry> findAll();
 
-    List<Industry> findIndustriesById(String industry);
+    List<Industry> findByIndustryID(String industry);
 }

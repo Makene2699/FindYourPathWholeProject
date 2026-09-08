@@ -44,8 +44,8 @@ public class IndustryServiceImp implements IndustryService{
     }
 
     @Override
-    public List<Industry> findIndustryById(String industry) {
-        return industryService.findIndustriesById(industry);
+    public List<Industry> findByIndustryID(String industry) {
+        return industryService.findByIndustryID(industry);
     }
 
 }

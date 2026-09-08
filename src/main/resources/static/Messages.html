@@ -17,345 +17,350 @@
 
 <body>
 <div class="top-nav">
-  <div class="logo-area" onclick="window.location.reload()">
-    <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-    <div class="logo-text">Find<span class="green">Your</span>Path</div>
-  </div>
-
-  <div class="nav-middle">
-    <a href="Dashboard.html" data-page="home">Home</a>
-    <a href="Mentors.html" data-page="mentor">Find Mentor</a>
-    <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-    <a href="#" data-page="resources">Resources</a>
-  </div>
-
-  <div style="display: flex; gap: 16px; align-items: center;">
-    <input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
-    <div class="right-actions">
-      <div class="icon-group">
-        <div class="icon-btn" id="notificationBtn">
-          <i class="far fa-bell"></i>
-          <span class="badge" id="notificationBadge">3</span>
-        </div>
-        <div class="icon-btn" id="messageBtn">
-          <i class="far fa-comment-dots"></i>
-        </div>
-      </div>
-      <div class="divider-vertical"></div>
-      <div class="profile-preview" id="profileBtn">
-        <a href="Settings.html" class="profile-pic-link">
-        <img src="../../../../Polygon%201.png" alt="profile">
-		</a>
-        <div class="info">
-          <div class="name">Angle M.</div>
-          <div class="role">Youth</div>
-        </div>
-        <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-      </div>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="#"><i class="fas fa-user"></i> My Profile</a>
-        <a href="#"><i class="fas fa-cog"></i> Settings</a>
-        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-      </div>
+    <div class="logo-area" onclick="window.location.reload()">
+        <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+        <div class="logo-text">Find<span class="green">Your</span>Path</div>
     </div>
-  </div>
+
+    <div class="nav-middle">
+        <a href="Dashboard.html"  data-page="home">Home</a>
+        <a href="Mentors.html" data-page="mentor">Find Mentor</a>
+        <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
+        <a href="#" data-page="resources">Resources</a>
+    </div>
+
+    <div style="display: flex; gap: 16px; align-items: center;">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
+        <div class="right-actions">
+            <div class="icon-group">
+                <div class="icon-btn" id="notificationBtn">
+                    <i class="far fa-bell"></i>
+                    <span class="badge" id="notificationBadge">3</span>
+                </div>
+                <div class="icon-btn" id="messageBtn">
+                    <i class="far fa-comment-dots"></i>
+                </div>
+            </div>
+            <div class="divider-vertical"></div>
+            <div class="profile-preview" id="profileBtn">
+                <img src="Polygon 1.png" alt="profile">
+                <div class="info">
+                    <div class="name">Angle M.</div>
+                    <div class="role">Youth</div>
+                </div>
+                <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+            </div>
+        </div>
+    </div>
 </div>
-	<div class="main-layout">
-			<div class="sidebar">
-				<ul>
-				  <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-				  <li class="active" data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
-				  <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
-				  <li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
-				  <li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-				  <li data-nav="experiances"><i class="fas fa-folder-open"></i> Experiances</li>
-				  <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
-				  <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
-				  <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
-				</ul>
-				
-				
-				<div class="sidebar-footer" id="aboutFooter">
-				  <div class="promo-card">
-                    <div><img src="../../../../PROJECT%203%20LOGO.png" alt="Profile" class="promo-img"></div>
-                    <div class="promo-text">
-                        Real guidance.<br>Local mentors.<br>Brighter futures.
-                    </div>
-                </div>
-				</div>
-		</div>
+<div class="main-layout">
+    <div class="sidebar">
+        <ul>
+            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li class="active" data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
+            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
+            <li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
+            <li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
+            <li data-nav="experiances"><i class="fas fa-folder-open"></i> Experiances</li>
+            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
+            <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
+            <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
+        </ul>
 
-        <!-- Middle Chat List -->
-        <section class="chat-list-panel">
-            <div class="chat-header">Chat</div>
 
-            <div class="chat-search">
-                <i class="fas fa-search"></i>
-                <input type="text" id="chatSearchInput" placeholder="Search...">
-            </div>
-
-            <div class="chat-filters" id="filterContainer">
-                <button class="filter-btn active" onclick="filterChats('all')">All</button>
-                <button class="filter-btn" onclick="filterChats('unread')">Unread</button>
-                <button class="filter-btn" onclick="filterChats('read')">Read</button>
-            </div>
-
-            <div class="chat-users" id="chatListContainer">
-                <!-- Added 'data-unread="true"' to those with green dots for JS filtering -->
-                <div class="chat-user-item active" data-unread="false" onclick="selectChat(this, 'Asiphe Dosi')">
-                    <img src="Ellipse%207.png" alt="Asiphe" class="user-avatar-md">
-                    <div class="user-info">
-                        <div class="user-name">Asiphe Dosi</div>
-                        <div class="user-msg">Everything is temporary</div>
-                    </div>
-                </div>
-
-                <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Klyan Shane')">
-                    <img src="Ellipse%205.png" alt="Klyan" class="user-avatar-md">
-                    <div class="user-info">
-                        <div class="user-name">Klyan Shane</div>
-                        <div class="user-msg">Sun sets, sun rises</div>
-                    </div>
-                    <div class="status-dot"></div>
-                </div>
-
-                <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Aron Smith')">
-                    <img src="Ellipse%209.png" alt="Aron" class="user-avatar-md">
-                    <div class="user-info">
-                        <div class="user-name">Aron Smith</div>
-                        <div class="user-msg">I know that birds fly in different directions</div>
-                    </div>
-                </div>
-
-                <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Mduduzi Zwane')">
-                    <img src="Ellipse%206.png" alt="Mduduzi" class="user-avatar-md">
-                    <div class="user-info">
-                        <div class="user-name">Mduduzi Zwane</div>
-                        <div class="user-msg">When the moon is looking down</div>
-                    </div>
-                    <div class="status-dot"></div>
-                </div>
-
-                <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Jessica Motaung')">
-                    <img src="Ellipse%208.png" alt="Jessica" class="user-avatar-md">
-                    <div class="user-info">
-                        <div class="user-name">Jessica Motaung</div>
-                        <div class="user-msg">I find hard to let you see the shadow...</div>
-                    </div>
-                    <div class="status-dot"></div>
-                </div>
-
-                <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Angelo Author')">
-                    <img src="Ellipse%2010.png" alt="Angelo" class="user-avatar-md">
-                    <div class="user-info">
-                        <div class="user-name">Angelo Author</div>
-                        <div class="user-msg">Sorry I could be so blind</div>
-                    </div>
-                </div>
-
-                <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Indiphile Mbali')">
-                    <img src="Ellipse%2018.png" alt="Indiphile" class="user-avatar-md">
-                    <div class="user-info">
-                        <div class="user-name">Indiphile Mbali</div>
-                        <div class="user-msg">So fly high!</div>
-                    </div>
+        <div class="sidebar-footer" id="aboutFooter">
+            <div class="promo-card">
+                <div><img src="PROJECT 3 LOGO.png" alt="Profile" class="promo-img"></div>
+                <div class="promo-text">
+                    Real guidance.<br>Local mentors.<br>Brighter futures.
                 </div>
             </div>
-        </section>
-
-        <!-- Right Chat Window -->
-        <section class="chat-main-panel">
-            <div class="chat-main-header">
-                <img id="activeChatAvatar" src="Ellipse%205.png" alt="Avatar">
-                <div class="chat-main-name" id="activeChatName">Asiphe Dosi</div>
-            </div>
-
-            <div class="chat-messages" id="messageContainer">
-                <div class="message msg-sent">
-                    Hi Asiphe, how are you doing today?
-                </div>
-                <div class="message msg-received">
-                    I'm doing great! Thanks for asking.
-                </div>
-                <div class="message msg-sent">
-                    That's wonderful to hear. I was wondering if you had time to look at the project brief I sent?
-                </div>
-                <div class="message msg-received">
-                    Yes, I just finished reviewing it. It looks promising! I have a few ideas I'd like to share.
-                </div>
-            </div>
-
-            <div class="chat-input-area">
-                <i class="far fa-smile"></i>
-                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleEnter(event)">
-                <i class="fas fa-paperclip"></i>
-                <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </section>
-		</div>
-
+        </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // --- 1. SENDING MESSAGES LOGIC ---
-        function sendMessage() {
-            const inputField = document.getElementById('chatInput');
-            const messageText = inputField.value.trim();
-            const messageContainer = document.getElementById('messageContainer');
+    <!-- Middle Chat List -->
+    <section class="chat-list-panel">
+        <div class="chat-header">Chat</div>
 
-            if (messageText !== "") {
-                // Create new message bubble
-                const newMessage = document.createElement('div');
-                newMessage.classList.add('message', 'msg-sent');
-                newMessage.textContent = messageText;
+        <div class="chat-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="chatSearchInput" placeholder="Search...">
+        </div>
 
-                // Add to chat
-                messageContainer.appendChild(newMessage);
+        <div class="chat-filters" id="filterContainer">
+            <button class="filter-btn active" onclick="filterChats('all')">All</button>
+            <button class="filter-btn" onclick="filterChats('unread')">Unread</button>
+            <button class="filter-btn" onclick="filterChats('read')">Read</button>
+        </div>
 
-                // Clear input
-                inputField.value = '';
+        <div class="chat-users" id="chatListContainer">
+            <!-- Added 'data-unread="true"' to those with green dots for JS filtering -->
+            <div class="chat-user-item active" data-unread="false" onclick="selectChat(this, 'Asiphe Dosi')">
+                <img src="Ellipse 7.png" alt="Asiphe" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">Asiphe Dosi</div>
+                    <div class="user-msg">Everything is temporary</div>
+                </div>
+            </div>
 
-                // Auto-scroll to bottom
-                messageContainer.scrollTop = messageContainer.scrollHeight;
-            }
-        }
+            <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Klyan Shane')">
+                <img src="Ellipse 5.png" alt="Klyan" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">Klyan Shane</div>
+                    <div class="user-msg">Sun sets, sun rises</div>
+                </div>
+                <div class="status-dot"></div>
+            </div>
 
-        // Allow pressing "Enter" key to send
-        function handleEnter(event) {
-            if (event.key === "Enter") {
-                sendMessage();
-            }
-        }
+            <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Aron Smith')">
+                <img src="Ellipse 9.png" alt="Aron" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">Aron Smith</div>
+                    <div class="user-msg">I know that birds fly in different directions</div>
+                </div>
+            </div>
 
-        // --- 2. CHAT FILTER LOGIC (All, Unread, Read) ---
-function filterChats(filterType) {
-    const users = document.querySelectorAll('.chat-user-item');
-    const buttons = document.querySelectorAll('.filter-btn');
-    const searchInput = document.getElementById('chatSearchInput');
-    const currentSearch = searchInput.value.toLowerCase().trim();
+            <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Mduduzi Zwane')">
+                <img src="Ellipse 6.png" alt="Mduduzi" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">Mduduzi Zwane</div>
+                    <div class="user-msg">When the moon is looking down</div>
+                </div>
+                <div class="status-dot"></div>
+            </div>
 
-    // Update active button styling
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+            <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Jessica Motaung')">
+                <img src="Ellipse 8.png" alt="Jessica" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">Jessica Motaung</div>
+                    <div class="user-msg">I find hard to let you see the shadow...</div>
+                </div>
+                <div class="status-dot"></div>
+            </div>
 
-    users.forEach(user => {
-        const isUnread = user.getAttribute('data-unread') === 'true';
-        
-        // 1. Check if the user matches the ACTIVE SEARCH TEXT
-        const userName = user.querySelector('.user-name').textContent.toLowerCase();
-        const matchesSearch = userName.includes(currentSearch);
+            <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Angelo Author')">
+                <img src="Ellipse 10.png" alt="Angelo" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">Angelo Author</div>
+                    <div class="user-msg">Sorry I could be so blind</div>
+                </div>
+            </div>
 
-        // 2. Logic to hide users based on Filter + Search
-        let hideByFilter = false;
-        if (filterType === 'unread' && !isUnread) hideByFilter = true;
-        if (filterType === 'read' && isUnread) hideByFilter = true;
+            <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Indiphile Mbali')">
+                <img src="Ellipse 18.png" alt="Indiphile" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">Indiphile Mbali</div>
+                    <div class="user-msg">So fly high!</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // 3. Apply visibility
-        if (hideByFilter || !matchesSearch) {
-            user.classList.add('hidden-user'); // Use CSS class for filter
-            user.style.display = 'none';       // Force hide for search
-        } else {
-            user.classList.remove('hidden-user');
-            user.style.display = 'flex';       // Force show
-        }
+    <!-- Right Chat Window -->
+    <section class="chat-main-panel">
+        <div class="chat-main-header">
+            <img id="activeChatAvatar" src="Ellipse 5.png" alt="Avatar">
+            <div class="chat-main-name" id="activeChatName">Asiphe Dosi</div>
+        </div>
+
+        <div class="chat-messages" id="messageContainer">
+            <div class="message msg-sent">
+                Hi Asiphe, how are you doing today?
+            </div>
+            <div class="message msg-received">
+                I'm doing great! Thanks for asking.
+            </div>
+            <div class="message msg-sent">
+                That's wonderful to hear. I was wondering if you had time to look at the project brief I sent?
+            </div>
+            <div class="message msg-received">
+                Yes, I just finished reviewing it. It looks promising! I have a few ideas I'd like to share.
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <i class="far fa-smile"></i>
+            <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleEnter(event)">
+            <i class="fas fa-paperclip"></i>
+            <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </section>
+</div>
+
+</div>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('dropdownMenu');
+
+    profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
     });
-}
+    // --- 1. SENDING MESSAGES LOGIC ---
+    function sendMessage() {
+        const inputField = document.getElementById('chatInput');
+        const messageText = inputField.value.trim();
+        const messageContainer = document.getElementById('messageContainer');
 
-        // --- 3. CHAT SELECTION LOGIC (Simulate switching users) ---
-        // --- 3. CHAT SELECTION LOGIC (Update Profile Picture too) ---
-        function selectChat(element, userName) {
-            // 1. Remove active class from all list items
-            document.querySelectorAll('.chat-user-item').forEach(item => item.classList.remove('active'));
+        if (messageText !== "") {
+            // Create new message bubble
+            const newMessage = document.createElement('div');
+            newMessage.classList.add('message', 'msg-sent');
+            newMessage.textContent = messageText;
 
-            // 2. Add active class to clicked item
-            element.classList.add('active');
+            // Add to chat
+            messageContainer.appendChild(newMessage);
 
-            // 3. Update the header name
-            document.getElementById('activeChatName').textContent = userName;
+            // Clear input
+            inputField.value = '';
 
-            // --- NEW: UPDATE THE PROFILE PICTURE ---
-            // Find the <img> tag inside the clicked element
-            const clickedAvatar = element.querySelector('img');
-            if (clickedAvatar) {
-                // Get the src attribute (the image URL)
-                const newImgSrc = clickedAvatar.src;
-                // Apply it to the top header avatar
-                document.getElementById('activeChatAvatar').src = newImgSrc;
+            // Auto-scroll to bottom
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+    }
+
+    // Allow pressing "Enter" key to send
+    function handleEnter(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    }
+
+    // --- 2. CHAT FILTER LOGIC (All, Unread, Read) ---
+    function filterChats(filterType) {
+        const users = document.querySelectorAll('.chat-user-item');
+        const buttons = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('chatSearchInput');
+        const currentSearch = searchInput.value.toLowerCase().trim();
+
+        // Update active button styling
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        users.forEach(user => {
+            const isUnread = user.getAttribute('data-unread') === 'true';
+
+            // 1. Check if the user matches the ACTIVE SEARCH TEXT
+            const userName = user.querySelector('.user-name').textContent.toLowerCase();
+            const matchesSearch = userName.includes(currentSearch);
+
+            // 2. Logic to hide users based on Filter + Search
+            let hideByFilter = false;
+            if (filterType === 'unread' && !isUnread) hideByFilter = true;
+            if (filterType === 'read' && isUnread) hideByFilter = true;
+
+            // 3. Apply visibility
+            if (hideByFilter || !matchesSearch) {
+                user.classList.add('hidden-user'); // Use CSS class for filter
+                user.style.display = 'none';       // Force hide for search
+            } else {
+                user.classList.remove('hidden-user');
+                user.style.display = 'flex';       // Force show
             }
-            // ----------------------------------------
+        });
+    }
 
-            // 4. Clear chat history and set a welcome message for demo
-            const msgContainer = document.getElementById('messageContainer');
-            msgContainer.innerHTML = `
+    // --- 3. CHAT SELECTION LOGIC (Simulate switching users) ---
+    // --- 3. CHAT SELECTION LOGIC (Update Profile Picture too) ---
+    function selectChat(element, userName) {
+        // 1. Remove active class from all list items
+        document.querySelectorAll('.chat-user-item').forEach(item => item.classList.remove('active'));
+
+        // 2. Add active class to clicked item
+        element.classList.add('active');
+
+        // 3. Update the header name
+        document.getElementById('activeChatName').textContent = userName;
+
+        // --- NEW: UPDATE THE PROFILE PICTURE ---
+        // Find the <img> tag inside the clicked element
+        const clickedAvatar = element.querySelector('img');
+        if (clickedAvatar) {
+            // Get the src attribute (the image URL)
+            const newImgSrc = clickedAvatar.src;
+            // Apply it to the top header avatar
+            document.getElementById('activeChatAvatar').src = newImgSrc;
+        }
+        // ----------------------------------------
+
+        // 4. Clear chat history and set a welcome message for demo
+        const msgContainer = document.getElementById('messageContainer');
+        msgContainer.innerHTML = `
         <div class="message msg-received">
             Hello! I'm ${userName}. How can I help you today?
         </div>
     `;
-        }
+    }
 
 
-        //============================search=================================
-        // --- 4. SEARCH FUNCTIONALITY ---
-document.getElementById('chatSearchInput').addEventListener('input', function() {
-    const searchValue = this.value.toLowerCase().trim(); // Get typed text, make lowercase
-    const chatItems = document.querySelectorAll('.chat-user-item'); // Get all user rows
+    //============================search=================================
+    // --- 4. SEARCH FUNCTIONALITY ---
+    document.getElementById('chatSearchInput').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase().trim(); // Get typed text, make lowercase
+        const chatItems = document.querySelectorAll('.chat-user-item'); // Get all user rows
 
-    chatItems.forEach(item => {
-        // Find the user's name inside the item
-        const userNameElement = item.querySelector('.user-name');
-        if (userNameElement) {
-            const userName = userNameElement.textContent.toLowerCase();
+        chatItems.forEach(item => {
+            // Find the user's name inside the item
+            const userNameElement = item.querySelector('.user-name');
+            if (userNameElement) {
+                const userName = userNameElement.textContent.toLowerCase();
 
-            // If the typed text matches the name, show it. Otherwise, hide it.
-            if (userName.includes(searchValue)) {
-                // IMPORTANT: Remove the hidden class IF it was hidden by filter or search
-                item.classList.remove('hidden-user'); 
-                item.style.display = 'flex'; // Force it to show
-            } else {
-                item.style.display = 'none'; // Explicitly hide non-matching users
+                // If the typed text matches the name, show it. Otherwise, hide it.
+                if (userName.includes(searchValue)) {
+                    // IMPORTANT: Remove the hidden class IF it was hidden by filter or search
+                    item.classList.remove('hidden-user');
+                    item.style.display = 'flex'; // Force it to show
+                } else {
+                    item.style.display = 'none'; // Explicitly hide non-matching users
+                }
             }
-        }
+        });
     });
-});
-// Sidebar navigation
-  document.querySelectorAll('.sidebar li').forEach(item => {
-    item.addEventListener('click', () => {
-      const navItem = item.dataset.nav;
-      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-      item.classList.add('active');
-      
-      if (navItem === 'dashboard') {
-        window.location.href = 'Dashboard.html';
-        return;
-      } else if (navItem === 'logout') {
-		const confirmed = confirm('Are you sure you want to log out?');
-		if (confirmed) {
-			window.location.href = 'Home.html';
-		}
-      } else if (navItem === 'mentors') {
-        window.location.href = 'InformationTechnology.html';
-        return;
-      } else if (navItem === 'messages') {
-        window.location.href = 'Messages.html';
-        return;
-      } else if (navItem === 'booking') {
-        window.location.href = 'Booking.html';
-        return;
-      } else if (navItem === 'encouragement') {
-        window.location.href = 'EncouragementWall.html';
-        return;
-      } else if (navItem === 'experiances') {
-        window.location.href = 'ExperianceWall.html';
-      } else if (navItem === 'settings') {
-        window.location.href = 'Settings.html';
-        return;
-      } else if (navItem === 'help') {
-        window.location.href = 'HelpAndSupport.html';
-      }
+    // Sidebar navigation
+    document.querySelectorAll('.sidebar li').forEach(item => {
+        item.addEventListener('click', () => {
+            const navItem = item.dataset.nav;
+            document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+            item.classList.add('active');
+
+            if (navItem === 'dashboard') {
+                window.location.href = 'Dashboard.html';
+                return;
+            } else if (navItem === 'logout') {
+                const confirmed = confirm('Are you sure you want to log out?');
+                if (confirmed) {
+                    window.location.href = 'Home.html';
+                }
+            } else if (navItem === 'mentors') {
+                window.location.href = 'InformationTechnology.html';
+                return;
+            } else if (navItem === 'messages') {
+                window.location.href = 'Messages.html';
+                return;
+            } else if (navItem === 'booking') {
+                window.location.href = 'Booking.html';
+                return;
+            } else if (navItem === 'encouragement') {
+                window.location.href = 'EncouragementWall.html';
+                return;
+            } else if (navItem === 'experiances') {
+                window.location.href = 'ExperianceWall.html';
+            } else if (navItem === 'settings') {
+                window.location.href = 'Settings.html';
+                return;
+            } else if (navItem === 'help') {
+                window.location.href = 'HelpAndSupport.html';
+            }
+        });
     });
-  });
-    </script>
+</script>
 </body>
 
 </html>

@@ -39,7 +39,7 @@ public class AdminController {
     }
     @GetMapping("findAdminById{adminId}")
     public List<Admin> getAdminById(@PathVariable String adminId){
-        return adminController.findAdminById(adminId);
+        return adminController.findByAdminId(adminId);
     }
 
 }

@@ -53,7 +53,7 @@
       letter-spacing: -0.3px;
       color: #1e3a5f;
     }
-    
+
     .logo-text .green {
       color: #2e7d32;
     }
@@ -551,7 +551,7 @@
       <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
       <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
     </ul>
-    
+
     <!-- Sidebar footer with BIGGER logo (80px) above the text -->
     <div class="sidebar-footer" id="aboutFooter">
       <img src="PROJECT.png" alt="logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
@@ -608,20 +608,20 @@
   // Render mentors
   function renderMentors() {
     let filtered = [...mentors];
-    
+
     if (currentFilter === 'following') {
       filtered = filtered.filter(m => m.followed);
     }
-    
+
     if (currentSearch) {
-      filtered = filtered.filter(m => 
-        m.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
-        m.role.toLowerCase().includes(currentSearch.toLowerCase())
+      filtered = filtered.filter(m =>
+              m.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+              m.role.toLowerCase().includes(currentSearch.toLowerCase())
       );
     }
-    
+
     const grid = document.getElementById('mentorsGrid');
-    
+
     if (filtered.length === 0) {
       grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #5b6e8c;">
         <i class="fas fa-user-friends" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
@@ -630,7 +630,7 @@
       </div>`;
       return;
     }
-    
+
     grid.innerHTML = filtered.map(mentor => `
       <div class="card" data-mentor-id="${mentor.id}">
         <div class="card-cover" style="background-image: url('${mentor.cover}'); background-size: cover;"></div>
@@ -646,14 +646,14 @@
         </div>
       </div>
     `).join('');
-    
+
     // Attach follow button events
     document.querySelectorAll('.follow-button').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const id = parseInt(btn.dataset.id);
         const mentor = mentors.find(m => m.id === id);
-        
+
         if (mentor.followed) {
           mentor.followed = false;
           followingList = followingList.filter(fid => fid !== id);
@@ -663,7 +663,7 @@
           followingList.push(id);
           showToast(`Following ${mentor.name} ✅`);
         }
-        
+
         localStorage.setItem('following', JSON.stringify(followingList));
         renderMentors();
         updateFollowingCount();
@@ -710,12 +710,12 @@
   // Profile dropdown
   const profileBtn = document.getElementById('profileBtn');
   const dropdown = document.getElementById('dropdownMenu');
-  
+
   profileBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     dropdown.classList.toggle('show');
   });
-  
+
   document.addEventListener('click', () => {
     dropdown.classList.remove('show');
   });
@@ -747,15 +747,15 @@
       const navItem = item.dataset.nav;
       document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
       item.classList.add('active');
-      
+
       if (navItem === 'dashboard') {
         window.location.href = 'Dashboard.html';
         return;
       } else if (navItem === 'logout') {
-		const confirmed = confirm('Are you sure you want to log out?');
-		if (confirmed) {
-			window.location.href = 'Home.html';
-		}
+        const confirmed = confirm('Are you sure you want to log out?');
+        if (confirmed) {
+          window.location.href = 'Home.html';
+        }
       } else if (navItem === 'mentors') {
         window.location.href = 'Mentors.html';
         return;
@@ -789,11 +789,11 @@
         window.location.href = 'Dashboard.html';
         return;
       }
-	  if (page === 'mentor') {
+      if (page === 'mentor') {
         window.location.href = 'Mentors.html';
         return;
       }
-	  if (page === 'encouragement') {
+      if (page === 'encouragement') {
         window.location.href = 'EncouragementWall.html';
         return;
       }
@@ -829,7 +829,7 @@
   // Initial render
   renderMentors();
   updateFollowingCount();
-  
+
   // Demo: auto-save notification badge
   let notificationCount = 3;
   setInterval(() => {
