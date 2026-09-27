@@ -677,6 +677,9 @@ body{
 .sidebar li:hover:not(.active) {
   background-color: #f1f5f9;
 }
+.sidebar li:hover:not(.active) {
+  color: #2e7d32;
+}
 /* Sidebar footer with BIGGER logo */
 .sidebar-footer {
   margin-top: 40px;

@@ -12,7 +12,7 @@ public interface MentorRequestRepository extends JpaRepository<Mentorrequest, St
     @Override
     List<Mentorrequest> findAll();
 
-    List<Mentorrequest> findMentorRequestById(String requestId);
+    List<Mentorrequest> findByRequestId(String requestId);
 
     List<Mentorrequest> findByStudentId(String studentId);
 

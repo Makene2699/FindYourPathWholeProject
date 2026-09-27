@@ -49,7 +49,7 @@ public class MentorrequestServiceImp implements MentorrequestService {
 
     @Override
     public List<Mentorrequest> findMentorRequestById(String requestId) {
-        return mentorRequestRepository.findMentorRequestById(requestId);
+        return mentorRequestRepository.findByRequestId(requestId);
     }
 
     @Override

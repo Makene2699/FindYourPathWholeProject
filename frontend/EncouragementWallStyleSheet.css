@@ -1,93 +1,23 @@
-/* Hexagon Image Masking */
-.hexagon-wrap {
-    width: 240px;
-    height: 270px;
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    overflow: hidden;
+/* General resets and fonts */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-.hexagon-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+body {
+    position: relative;
+    font-family: "Montserrat", sans-serif;
+    background: #f5f6fa;
 }
 
-/* Sidebar Styling */
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 700;
-    color: #64748b;
-    transition: all 0.2s;
-}
-.logo-text {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-}
-
-.text-green {
-    color: #5FA43A;
-}
-.header-logo-image {
-    width: 28px;   /* Match the height and width of the original SVG */
-    height: 28px;
-    object-fit: contain; /* Ensures the logo image isn't stretched */
-}
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.active-nav {
-    color: #16a34a;
-    background: #f1f5f9;
-    margin: 0 -1.5rem;
-    padding: 0.5rem 1.5rem;
-    border-left: 4px solid #16a34a;
-}
-
-/* Form Styling */
-.form-group label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #94a3b8;
-    margin-bottom: 0.25rem;
-}
-
-.form-group input, 
-.form-group textarea {
-    width: 100%;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    padding: 0.6rem 1rem;
-    background-color: #f8fafc;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-/* Misc UI */
-.noti-dot {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    background: #22c55e;
-    color: white;
-    font-size: 9px;
-    height: 14px;
-    width: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 99px;
-}
-
-.brand-card {
-    /*background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);*/
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+/* Common Card style (grey bg, round corners, subtle shadow) */
+.card {
+    background-color: #FFFFFF; /* Specific grey background */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 /* ========== TOP NAVBAR ========== */
 .top-nav {
@@ -289,10 +219,15 @@
   background-color: #f1f5f9;
   color: #2e7d32;
 }
-.main-layout{
-	 display: flex;
-     flex: 1;
+
+/* --- Main Layout: Three Columns --- */
+.main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 300px;
+    gap: 20px;
+    align-items: start;
 }
+/* --- Sidebar Styling --- */
 .sidebar {
   width: 260px;
   background-color: white;
@@ -338,7 +273,10 @@
 }
 
 .sidebar li:hover:not(.active) {
-  background-color: #f1f5f9;
+    background-color: #f1f5f9;
+}
+.sidebar li:hover:not(.active) {
+    color: #2e7d32;
 }
 /* Sidebar footer with BIGGER logo */
 .sidebar-footer {
@@ -359,8 +297,7 @@
   width: 80px;
   height: 80px;
   object-fit: contain;
-  margin-bottom: 20px;
-  margin-left: 50px;
+  margin-bottom: 16px;
 }
 
 .footer-text {
@@ -377,4 +314,141 @@
   margin-bottom: 4px;
   font-weight: 700;
   color: #1e3a5f;
+}
+
+/* --- Encouragement Wall Styling (Center Column) --- */
+.encouragement-wall {
+	margin-top: 10px;
+	margin-left:-5px;
+    grid-column: 2;
+}
+
+.wall-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.create-card-input {
+    background-color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-card-input input {
+    border: none;
+    flex-grow: 1;
+    font-size: 18px;
+    padding: 5px;
+    color: #777;
+}
+
+.create-card-input input:focus {
+    outline: none;
+}
+
+.post-btn {
+    background-color: #00A896;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 25px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.wall-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 25px 15px;
+    min-height: 200px;
+    color: white;
+}
+
+.wall-card p {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+.card-author {
+    font-size: 12px;
+    color: white;
+    margin-top: 15px;
+}
+
+/* Wall Card Colours (Direct matches from image) */
+.blue-card { background-color: #3f729b; }
+.green-card { background-color: #77ab59; }
+.yellow-card { background-color: #ffff99; color: #333; }
+.yellow-card .card-author { color: #333; }
+.orange-card { background-color: #f4a261; }
+.bright-blue-card { background-color: #0077c2; }
+.dark-blue-card { background-color: #1c3d5a; }
+
+/* --- Mentors Sidebar Styling (Right Column) --- */
+.mentors-sidebar {
+	margin-top: 10px;
+	margin-right: 5px;
+    background-color: white;
+}
+
+.mentors-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.mentors-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mentor-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mentor-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #ddd;
+}
+
+.mentor-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.mentor-name {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.mentor-role {
+    font-size: 12px;
+    color: #777;
+    margin-top: 2px;
+}
+
+.view-more-link {
+    display: block;
+    text-decoration: none;
+    color: #00A896;
+    margin-top: 20px;
+    font-size: 14px;
 }

@@ -10,7 +10,6 @@
 </head>
 <body class="register-page">
   <div class="register-container">
-    <!-- LEFT: Form Card -->
     <div class="form-card">
       <h2>Register</h2>
       <form id="registerForm">
@@ -30,15 +29,12 @@
       </form>
     </div>
 
-    <!-- RIGHT: Picture + Login Link -->
     <div class="right-section">
-     <!-- Replace with your own image -->
 <img src="RegisterLoggo.png" alt="Career illustration" class="registration-image">
 <p class="login-link">Already have an account? <a href="#" id="toggle-login-link">Login</a></p>
     </div>
   </div>
 
-  <!-- Login Modal (hidden by default) -->
   <div id="login-modal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -50,9 +46,13 @@
       </form>
     </div>
   </div>
- <!-- Custom toast for success message -->
-  <div id="custom-toast" class="toast-message">✅ Registration successful!</div>
 
+  <div id="custom-toast" class="toast-message"> Registration successful!</div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>

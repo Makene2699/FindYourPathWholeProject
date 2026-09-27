@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MentorDashboard</title>
+    <meta name="descrption" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="MentorDashboardStyleSheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo-area" onclick="window.location.reload()">
+            <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+            <div class="logo-text">Find<span class="green">Your</span>Path</div>
+        </div>
+
+        <div class="admin-card">
+            <img src="Polygon 1.png" alt="Admin" class="admin-avatar">
+            <div>
+                <div class="admin-name">Ms. Emily Thompson</div>
+                <div class="admin-role">Administrator</div>
+                <div class="admin-status"><span class="dot"></span> Online</div>
+            </div>
+        </div>
+
+        <ul>
+            <li class="active" data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li data-nav="users"><i class="fas fa-users"></i> Users</li>
+            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
+            <li data-nav="mentors"><i class="fas fa-user-friends"></i> Mentors</li>
+            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+            <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
+            <li data-nav="career"><i class="fas fa-briefcase"></i> Career Explorer</li>
+            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
+            <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="promo-card">
+                <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
+                <div class="promo-text">
+                    Real guidance.<br>Local mentors.<br>Brighter futures.
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-area">
+        <header class="top-bar">
+            <div class="welcome-block">
+                <h1>Welcome back, Emily!</h1>
+                <p>Here's what happening across FindYourPath today.</p>
+            </div>
+
+            <div class="top-bar-right">
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" placeholder="Search users, mentors, bookings">
+                </div>
+
+                <button class="icon-btn" id="notificationBtn" type="button">
+                    <i class="far fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+
+                <div class="profile-preview" id="profileBtn">
+                    <img src="Polygon 1.png" alt="profile">
+                    <div class="info">
+                        <div class="name">Administrator</div>
+                    </div>
+                    <i class="fas fa-chevron-down arrow-down"></i>
+
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+
+        </main>
+    </div>
+</div>
+</body>
+</html>

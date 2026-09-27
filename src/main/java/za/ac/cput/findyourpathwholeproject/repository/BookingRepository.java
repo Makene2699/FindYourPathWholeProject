@@ -13,7 +13,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     @Override
     List<Booking> findAll();
 
-    List<Booking> findBookingById(String bookingId);
+    List<Booking> findByBookingId(String bookingId);
 
     // Needed by BookingService to check for overlapping sessions before creating a new booking
     List<Booking> findByMentorIdAndSessionDate(String mentorId, LocalDate sessionDate);

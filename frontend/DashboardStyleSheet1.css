@@ -4,7 +4,6 @@
 	margin: 0;
 	padding: 0;
 }
-/* ========== TOP NAVBAR ========== */
 .top-nav {
   background-color: white;
   display: flex;
@@ -23,7 +22,6 @@
   cursor: pointer;
 }
 
-/* Top navbar logo - smaller size */
 .logo-img {
   width: 38px;
   height: 38px;
@@ -258,7 +256,10 @@ body{
 }
 
 .sidebar li:hover:not(.active) {
-  background-color: #f1f5f9;
+    background-color: #f1f5f9;
+}
+.sidebar li:hover:not(.active) {
+    color: #2e7d32;
 }
 /* Sidebar footer with BIGGER logo */
 .sidebar-footer {

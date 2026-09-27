@@ -143,8 +143,8 @@ body {
 }
 
 .sidebar-item:hover, .sidebar-item.active {
-    background-color: #c9e8e2; /* Light Teal background for active */
-    color: #008170; /* Text colour */
+    background-color: #f1f5f9; /* Light Teal background for active */
+    color: #2e7d32; /* Text colour */
 }
 
 .sidebar-divider {

@@ -56,7 +56,7 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public List<Booking> findBookingById(String bookingId) {
-        return bookingRepository.findBookingById(bookingId);
+        return bookingRepository.findByBookingId(bookingId);
     }
 
     private boolean hasSchedulingConflict(Booking candidate) {
