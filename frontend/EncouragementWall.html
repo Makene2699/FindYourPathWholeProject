@@ -6,7 +6,6 @@
     <title>Find Your Path - Encouragement Wall</title>
     <link rel="stylesheet" href="EncouragementWallStyleSheet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="Untitled.js" defer></script>
 </head>
 <body>
 
@@ -115,7 +114,7 @@
         <h2 class="mentors-title">Mentors for you</h2>
         <div class="mentors-list">
             <div class="mentor-item">
-                <img src="Mentor1.jpg"Jessica Motaung" class="mentor-pic">
+                <img src="Mentor1.jpg" alt="Jessica Motaung" class="mentor-pic">
                 <div class="mentor-details">
                     <span class="mentor-name">Jessica Motaung</span>
                     <span class="mentor-role">Assistant Coach | University of western Cape</span>
@@ -199,6 +198,11 @@
         });
     });
 </script>
+
+<!-- Supabase connection and Encouragement Wall logic (order matters) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="EncouragementWall.js"></script>
 
 </body>
 </html>

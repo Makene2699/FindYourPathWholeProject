@@ -475,17 +475,11 @@
     .btn-green-sm svg { width:10px; height:10px; fill:#fff; }
     .clearfix::after { content:''; display:table; clear:both; }
 
-    /* ── ROUND BLACK BADGE (like the Figma prototype circle) ── */
-    .round-badge {
-      width: 50px; height: 50px;
-      background: #111;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      position: fixed; bottom: 24px; right: 24px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.35);
-      cursor: pointer; z-index: 999;
+    /* Highlight flash when Contact Expert scrolls to the form */
+    .report-card.flash {
+      box-shadow: 0 0 0 3px rgba(45,122,79,.35), 0 1px 4px rgba(0,0,0,.06);
+      transition: box-shadow .3s;
     }
-    .round-badge svg { width:22px; height:22px; fill:#fff; }
 
   </style>
 </head>
@@ -663,7 +657,7 @@
         <div class="help-card" style="min-height:130px;">
           <div class="help-card-title">Still need help?</div>
           <div class="help-card-text">Our support team is here to assist you with anything you need</div>
-          <button class="btn-green">
+          <button class="btn-green" id="contactExpertBtn">
             Contact Expert
             <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
@@ -679,12 +673,12 @@
           <div class="dots-badge">···</div>
         </div>
 
-        <!-- Report an issue -->
+        <!-- Report an issue (connected to Supabase) -->
         <div class="report-card">
           <h3>Report an Issue</h3>
           <p>Let us know which problem arose and we'll get it fixed.</p>
           <label class="form-label">Issue type</label>
-          <select class="form-select">
+          <select class="form-select" id="issueType">
             <option value="" disabled selected>Select issue type</option>
             <option>Account Problem</option>
             <option>Payment Issue</option>
@@ -692,24 +686,20 @@
             <option>Mentor Issue</option>
             <option>Other</option>
           </select>
-          <label class="form-label">Issue type</label>
-          <textarea class="form-textarea" placeholder="Describe your issue in detail..."></textarea>
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="issueMessage" placeholder="Describe your issue in detail..."></textarea>
           <div class="clearfix">
-            <button class="btn-green-sm">
+            <button class="btn-green-sm" id="supBtn">
               Contact Support
               <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
+          <p id="supStatus" style="margin-top:10px; font-size:12px;"></p>
         </div>
 
       </div>
     </div>
   </main>
-</div>
-
-<!-- BLACK ROUND BADGE (bottom-right, like in prototype) -->
-<div class="round-badge" title="[image placeholder]">
-  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
 </div>
 
 <script>
@@ -788,6 +778,11 @@
     });
   });
 </script>
-</div>
+
+<!-- Supabase connection and Help & Support logic (order matters) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="HelpAndSupport.js"></script>
+
 </body>
 </html>
