@@ -8,10 +8,7 @@ const colorClasses = ['blue-card', 'green-card', 'yellow-card', 'orange-card', '
  */
 function buildCard(post) {
     const card = document.createElement('div');
-    card.className = 'wall-card card';
-    card.classList.add(colorClasses[post.id % colorClasses.length]);
-    card.dataset.fromDb = 'true'; // marks cards that came from Supabase
-
+    card.className = 'wall-card card';card.classList.add(colorClasses[post.id % colorClasses.length]);card.dataset.fromDb = 'true'; // marks cards that came from Supabase
     const cardText = document.createElement('p');
     cardText.textContent = post.message; // textContent stops script injection
 
@@ -50,8 +47,8 @@ async function loadCards() {
 }
 
 /**
- * Reads the input, saves the message to Supabase,
- * then refreshes the wall.
+ * Reads the input, asks for the user's name (only the first time),
+ * saves the message to Supabase, then refreshes the wall.
  */
 async function addCard() {
     const inputField = document.getElementById('newCardText');
@@ -64,11 +61,19 @@ async function addCard() {
     // Do nothing if input is empty
     if (!text) return;
 
+    // Remember the name so the user is only asked once
+    let userName = localStorage.getItem('fyp_name');
+    if (!userName) {
+        userName = (prompt('What is your name?') || '').trim();
+        if (!userName) return;
+        localStorage.setItem('fyp_name', userName);
+    }
+
     inputField.disabled = true; // stops double-posting while saving
 
     const { error } = await window.sb
         .from('encouragement_posts')
-        .insert({ name: 'Anonymous', message: text });
+        .insert({ name: userName, message: text });
 
     inputField.disabled = false;
 
