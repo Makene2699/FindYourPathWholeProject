@@ -1,805 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>FindYourPath — Mentors & Community</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindYourPath — Mentors & Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
+        body { background-color: #f4f7fc; display: flex; flex-direction: column; min-height: 100vh; }
+        button { font-family: inherit; }
+        :focus-visible { outline: 3px solid rgba(46,125,50,.45); outline-offset: 2px; }
 
-    body {
-      background-color: #f4f7fc;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+        /* ===== TOP NAV ===== */
+        .top-nav { background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 12px 32px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 16px; }
+        .logo-area { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo-img { width: 38px; height: 38px; object-fit: contain; }
+        .logo-text { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.3px; color: #1e3a5f; }
+        .logo-text .green { color: #2e7d32; }
+        .nav-middle { display: flex; gap: 28px; }
+        .nav-middle a { text-decoration: none; font-weight: 600; color: #1e293b; font-size: .95rem; transition: .2s; padding: 6px 0; cursor: pointer; }
+        .nav-middle a.active { background: #1e3a5f; color: #fff; padding: 8px 18px; border-radius: 40px; }
+        .nav-middle a:not(.active):hover { color: #2e7d32; }
+        .nav-tools { display: flex; gap: 16px; align-items: center; }
+        .search-input { padding: 8px 16px; border-radius: 40px; border: 1px solid #cbd5e1; background: #fff; width: 240px; font-size: .85rem; outline: none; transition: .2s; }
+        .search-input:focus { border-color: #2e7d32; box-shadow: 0 0 0 2px rgba(46,125,50,.2); }
+        .right-actions { display: flex; align-items: center; gap: 20px; position: relative; }
+        .icon-group { display: flex; gap: 18px; align-items: center; }
+        .icon-btn { position: relative; font-size: 1.2rem; cursor: pointer; color: #5b6e8c; transition: color .2s; background: none; border: none; }
+        .icon-btn:hover { color: #2e7d32; }
+        .badge { position: absolute; top: -8px; right: -10px; background: #2e7d32; color: #fff; font-size: .65rem; font-weight: bold; padding: 2px 6px; border-radius: 40px; line-height: 1; }
+        .divider-vertical { width: 1px; height: 32px; background: #e2e8f0; }
+        .profile-preview { display: flex; align-items: center; gap: 10px; cursor: pointer; background: none; border: none; text-align: left; }
+        .profile-preview img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #e9f5eb; }
+        .profile-preview .info { line-height: 1.3; }
+        .profile-preview .name { font-weight: 700; font-size: .9rem; color: #0f172a; }
+        .profile-preview .role { font-size: .7rem; color: #5b6e8c; }
+        .arrow-down { font-size: .7rem; color: #5b6e8c; }
+        .dropdown-menu { position: absolute; top: 54px; right: 0; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.1); width: 200px; display: none; z-index: 100; overflow: hidden; }
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu a { display: block; padding: 12px 20px; text-decoration: none; color: #1e293b; transition: .2s; }
+        .dropdown-menu a:hover { background: #f1f5f9; color: #2e7d32; }
 
-    /* ========== TOP NAVBAR ========== */
-    .top-nav {
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 32px;
-      border-bottom: 1px solid #e2e8f0;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
+        /* ===== LAYOUT ===== */
+        .app-layout { display: flex; flex: 1; }
+        .sidebar { width: 260px; background: #fff; border-right: 1px solid #e9eef3; padding: 28px 16px; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar ul { list-style: none; }
+        .sidebar li a { padding: 12px 16px; margin: 4px 0; font-size: .95rem; font-weight: 500; color: #2c3e50; border-radius: 14px; text-decoration: none; transition: all .2s; display: flex; align-items: center; gap: 12px; }
+        .sidebar li a i { width: 20px; font-size: 1rem; color: #5b6e8c; }
+        .sidebar li a.active { background: #e8f5e9; color: #2e7d32; font-weight: 700; }
+        .sidebar li a.active i { color: #2e7d32; }
+        .sidebar li a:hover:not(.active) { background: #f1f5f9; }
+        .sidebar-footer { margin-top: 40px; padding: 20px 12px; text-align: center; background: #f8fafc; border-radius: 20px; cursor: pointer; transition: .2s; }
+        .sidebar-footer:hover { background: #eef2ff; }
+        .footer-logo { width: 80px; height: 80px; object-fit: contain; margin-bottom: 16px; }
+        .footer-text { font-size: .85rem; font-weight: 500; color: #1e3a5f; line-height: 1.6; }
+        .footer-text strong { font-size: .9rem; display: block; margin-bottom: 4px; font-weight: 700; }
+        .main-content { flex: 1; padding: 28px 32px; background: #f8fafc; min-width: 0; }
 
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
+        /* ===== TABS + FILTER ===== */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+        .tabs-header { display: flex; gap: 12px; }
+        .tab-btn { border: 2px solid #1e3a5f; padding: 8px 24px; border-radius: 40px; font-weight: 600; font-size: .9rem; cursor: pointer; transition: .2s; background: #fff; color: #1e3a5f; }
+        .tab-btn:hover { background: #eef2f8; }
+        .tab-btn.active { background: #1e3a5f; color: #fff; }
+        .tab-btn.active:hover { background: #15304e; }
+        .location-select { padding: 9px 16px; border-radius: 40px; border: 1px solid #cbd5e1; background: #fff; font-size: .85rem; color: #1e293b; cursor: pointer; }
+        .result-count { font-size: .85rem; color: #5b6e8c; margin-bottom: 16px; }
 
-    .logo-img {
-      width: 38px;
-      height: 38px;
-      object-fit: contain;
-    }
+        /* ===== CARDS ===== */
+        .mentors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
+        .card { background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,.03), 0 2px 6px rgba(0,0,0,.05); transition: transform .2s, box-shadow .2s; cursor: pointer; }
+        .card:hover, .card:focus-visible { transform: translateY(-4px); box-shadow: 0 20px 30px -12px rgba(0,0,0,.1); }
+        .card-cover { height: 95px; background: linear-gradient(130deg, #c0e0c8, #b8d4e3); background-size: cover; background-position: center; }
+        .avatar-wrapper { text-align: center; margin-top: -38px; }
+        .avatar-wrapper img { width: 78px; height: 78px; border-radius: 50%; border: 4px solid #fff; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,.05); background: #fff; }
+        .card-info { text-align: center; padding: 12px 18px 24px; }
+        .card-info h3 { font-size: 1.25rem; font-weight: 700; margin: 8px 0 4px; color: #0f172a; }
+        .job-title { font-size: .8rem; color: #475569; margin-bottom: 6px; font-weight: 500; }
+        .card-location { font-size: .75rem; color: #5b6e8c; margin-bottom: 16px; }
+        .card-location i { margin-right: 4px; }
+        .follow-button { background: transparent; border: 2px solid #2e7d32; color: #2e7d32; padding: 8px 24px; border-radius: 40px; font-weight: 700; font-size: .85rem; cursor: pointer; transition: .2s; }
+        .follow-button:hover, .follow-button.following { background: #2e7d32; color: #fff; }
+        .follow-button:disabled { opacity: .6; cursor: wait; }
 
-    .logo-text {
-      font-weight: 800;
-      font-size: 1.5rem;
-      letter-spacing: -0.3px;
-      color: #1e3a5f;
-    }
+        /* ===== STATES ===== */
+        .state-box { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #5b6e8c; }
+        .state-box i { font-size: 44px; margin-bottom: 16px; display: block; }
+        .state-box p.sub { font-size: .85rem; margin-top: 8px; }
+        .state-box.error { color: #dc2626; }
+        .retry-btn { margin-top: 18px; background: #1e3a5f; color: #fff; border: none; padding: 9px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        .demo-banner { background: #fff8e1; border: 1px solid #ffe08a; color: #7a5b00; padding: 10px 16px; border-radius: 12px; font-size: .85rem; margin-bottom: 20px; }
+        .skeleton { height: 280px; border-radius: 24px; background: linear-gradient(90deg, #eef2f6 25%, #e3e9f0 50%, #eef2f6 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+        @keyframes shimmer { to { background-position: -200% 0; } }
 
-    .logo-text .green {
-      color: #2e7d32;
-    }
+        /* ===== MODAL ===== */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.55); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 500; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #fff; border-radius: 24px; width: 100%; max-width: 420px; overflow: hidden; position: relative; }
+        .modal .card-info { padding-bottom: 28px; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,.9); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: #1e3a5f; }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .book-button { background: #1e3a5f; border: 2px solid #1e3a5f; color: #fff; padding: 8px 24px; border-radius: 40px; font-weight: 700; font-size: .85rem; cursor: pointer; }
+        .book-button:hover { background: #15304e; }
 
-    .nav-middle {
-      display: flex;
-      gap: 28px;
-      background: white;
-    }
+        /* ===== TOAST ===== */
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #2e7d32; color: #fff; padding: 12px 24px; border-radius: 12px; font-size: .9rem; z-index: 1000; animation: slideIn .3s ease; box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+        .toast.error { background: #dc2626; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
-    .nav-middle a {
-      text-decoration: none;
-      font-weight: 600;
-      color: #1e293b;
-      font-size: 0.95rem;
-      transition: 0.2s;
-      padding: 6px 0;
-      cursor: pointer;
-    }
-
-    .nav-middle a.active {
-      background-color: #1e3a5f;
-      color: white;
-      padding: 8px 18px;
-      border-radius: 40px;
-    }
-
-    .nav-middle a:not(.active):hover {
-      color: #2e7d32;
-    }
-
-    .search-input {
-      padding: 8px 16px;
-      border-radius: 40px;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      width: 220px;
-      font-size: 0.85rem;
-      outline: none;
-      transition: 0.2s;
-    }
-
-    .search-input:focus {
-      border-color: #2e7d32;
-      box-shadow: 0 0 0 2px rgba(46,125,50,0.2);
-    }
-
-    .right-actions {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .icon-group {
-      display: flex;
-      gap: 18px;
-      align-items: center;
-    }
-
-    .icon-btn {
-      position: relative;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: #5b6e8c;
-      transition: color 0.2s;
-    }
-
-    .icon-btn:hover {
-      color: #2e7d32;
-    }
-
-    .badge {
-      position: absolute;
-      top: -8px;
-      right: -10px;
-      background-color: #2e7d32;
-      color: white;
-      font-size: 0.65rem;
-      font-weight: bold;
-      padding: 2px 6px;
-      border-radius: 40px;
-      line-height: 1;
-    }
-
-    .divider-vertical {
-      width: 1px;
-      height: 32px;
-      background-color: #e2e8f0;
-    }
-
-    .profile-preview {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .profile-preview img {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #e9f5eb;
-    }
-
-    .profile-preview .info {
-      line-height: 1.3;
-    }
-
-    .profile-preview .name {
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: #0f172a;
-    }
-
-    .profile-preview .role {
-      font-size: 0.7rem;
-      color: #5b6e8c;
-    }
-
-    .arrow-down {
-      font-size: 0.7rem;
-      color: #5b6e8c;
-    }
-
-    .dropdown-menu {
-      position: absolute;
-      top: 50px;
-      right: 0;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      width: 200px;
-      display: none;
-      z-index: 100;
-      overflow: hidden;
-    }
-
-    .dropdown-menu.show {
-      display: block;
-    }
-
-    .dropdown-menu a {
-      display: block;
-      padding: 12px 20px;
-      text-decoration: none;
-      color: #1e293b;
-      transition: 0.2s;
-    }
-
-    .dropdown-menu a:hover {
-      background-color: #f1f5f9;
-      color: #2e7d32;
-    }
-
-    /* ========== MAIN LAYOUT ========== */
-    .app-layout {
-      display: flex;
-      flex: 1;
-    }
-
-    .sidebar {
-      width: 260px;
-      background-color: white;
-      border-right: 1px solid #e9eef3;
-      padding: 28px 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .sidebar ul {
-      list-style: none;
-    }
-
-    .sidebar li {
-      padding: 12px 16px;
-      margin: 4px 0;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: #2c3e50;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .sidebar li i {
-      width: 20px;
-      font-size: 1rem;
-      color: #5b6e8c;
-    }
-
-    .sidebar li.active {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-      font-weight: 700;
-    }
-
-    .sidebar li.active i {
-      color: #2e7d32;
-    }
-
-    .sidebar li:hover:not(.active) {
-      background-color: #f1f5f9;
-    }
-
-    .sidebar-footer {
-      margin-top: 40px;
-      padding: 20px 12px;
-      text-align: center;
-      background: #f8fafc;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .sidebar-footer:hover {
-      background: #eef2ff;
-    }
-
-    .footer-logo {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      margin-bottom: 16px;
-    }
-
-    .footer-text {
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #1e3a5f;
-      line-height: 1.6;
-    }
-
-    .footer-text strong {
-      font-size: 0.9rem;
-      display: block;
-      margin-bottom: 4px;
-      font-weight: 700;
-      color: #1e3a5f;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 28px 32px;
-      background: #f8fafc;
-    }
-
-    .tabs-header {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .tab-btn {
-      border: none;
-      padding: 8px 24px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: 0.2s;
-      background-color: #1e3a5f;
-      color: white;
-    }
-
-    .tab-btn.secondary {
-      background-color: #1e3a5f;
-      color: white;
-    }
-
-    .tab-btn.secondary:hover {
-      background-color: #15304e;
-    }
-
-    .tab-btn.primary:hover {
-      background-color: #15304e;
-    }
-
-    .mentors-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 28px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-cover {
-      height: 95px;
-      background: linear-gradient(130deg, #c0e0c8, #b8d4e3);
-      background-size: cover;
-      background-position: center;
-    }
-
-    .avatar-wrapper {
-      text-align: center;
-      margin-top: -38px;
-    }
-
-    .avatar-wrapper img {
-      width: 78px;
-      height: 78px;
-      border-radius: 50%;
-      border: 4px solid white;
-      object-fit: cover;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      background: white;
-    }
-
-    .card-info {
-      text-align: center;
-      padding: 12px 18px 24px;
-    }
-
-    .card-info h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin: 8px 0 4px;
-      color: #0f172a;
-    }
-
-    .job-title {
-      font-size: 0.8rem;
-      color: #475569;
-      margin-bottom: 16px;
-      font-weight: 500;
-    }
-
-    .follow-button {
-      background: transparent;
-      border: 2px solid #2e7d32;
-      color: #2e7d32;
-      padding: 8px 24px;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .follow-button:hover {
-      background-color: #2e7d32;
-      color: white;
-      border-color: #2e7d32;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #1e3a5f;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      z-index: 1000;
-      animation: slideIn 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 950px) {
-      .top-nav {
-        flex-wrap: wrap;
-        padding: 12px 20px;
-      }
-      .nav-middle {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 20px;
-      }
-      .sidebar {
-        width: 220px;
-      }
-      .main-content {
-        padding: 24px 20px;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .app-layout {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e2e8f0;
-        padding: 16px;
-      }
-      .sidebar ul {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-      }
-      .sidebar li {
-        padding: 8px 12px;
-        font-size: 0.85rem;
-      }
-      .sidebar-footer {
-        display: none;
-      }
-    }
-  </style>
+        @media (max-width: 950px) {
+            .top-nav { padding: 12px 20px; }
+            .nav-middle { order: 3; width: 100%; justify-content: center; gap: 20px; }
+            .sidebar { width: 220px; }
+            .main-content { padding: 24px 20px; }
+        }
+        @media (max-width: 700px) {
+            .app-layout { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; padding: 16px; }
+            .sidebar ul { display: flex; flex-wrap: wrap; gap: 4px; }
+            .sidebar li a { padding: 8px 12px; font-size: .85rem; }
+            .sidebar-footer { display: none; }
+            .top-nav { padding: 12px 15px; }
+            .nav-tools { width: 100%; justify-content: space-between; }
+            .search-input { width: 100%; min-width: 0; }
+            .profile-preview .info { display: none; }
+        }
+    </style>
 </head>
 <body>
 
 <!-- TOP NAVIGATION -->
-<div class="top-nav">
-  <div class="logo-area" onclick="window.location.reload()">
-    <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-    <div class="logo-text">Find<span class="green">Your</span>Path</div>
-  </div>
-
-  <div class="nav-middle">
-    <a href="Dashboard.html"  data-page="home">Home</a>
-    <a href="Mentors.html" class="active" data-page="mentor">Find Mentor</a>
-    <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-    <a href="InformationTechnology.html" data-page="resources">Resources</a>
-  </div>
-
-  <div style="display: flex; gap: 16px; align-items: center;">
-    <input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
-    <div class="right-actions">
-      <div class="icon-group">
-        <div class="icon-btn" id="notificationBtn">
-          <i class="far fa-bell"></i>
-          <span class="badge" id="notificationBadge">3</span>
-        </div>
-        <div class="icon-btn" id="messageBtn">
-          <i class="far fa-comment-dots"></i>
-        </div>
-      </div>
-      <div class="divider-vertical"></div>
-      <div class="profile-preview" id="profileBtn">
-        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="profile">
-        <div class="info">
-          <div class="name">Angle M.</div>
-          <div class="role">Youth</div>
-        </div>
-        <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-      </div>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="#"><i class="fas fa-user"></i> My Profile</a>
-        <a href="#"><i class="fas fa-cog"></i> Settings</a>
-        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-      </div>
+<header class="top-nav">
+    <div class="logo-area" id="logoArea">
+        <img src="PROJECT.png" alt="FindYourPath logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+        <div class="logo-text">Find<span class="green">Your</span>Path</div>
     </div>
-  </div>
-</div>
+
+    <nav class="nav-middle" aria-label="Main">
+        <a href="Dashboard.html">Home</a>
+        <a href="Mentors.html" class="active" aria-current="page">Find Mentor</a>
+        <a href="EncouragementWall.html">Encouragement</a>
+        <a href="InformationTechnology.html">Resources</a>
+    </nav>
+
+    <div class="nav-tools">
+        <input type="search" class="search-input" id="searchInput" placeholder="Search mentor by name or role..." aria-label="Search mentors">
+
+        <div class="right-actions">
+            <div class="icon-group">
+                <button class="icon-btn" id="notificationBtn" aria-label="Notifications" type="button">
+                    <i class="far fa-bell"></i>
+                    <span class="badge" id="notificationBadge">3</span>
+                </button>
+                <button class="icon-btn" id="messageBtn" aria-label="Messages" type="button">
+                    <i class="far fa-comment-dots"></i>
+                </button>
+            </div>
+
+            <div class="divider-vertical"></div>
+
+            <button class="profile-preview" id="profileBtn" type="button" aria-haspopup="true">
+                <img id="profileImg" src="https://ui-avatars.com/api/?name=Student&background=e2e8f0&color=64748b" alt="Your profile">
+                <div class="info">
+                    <div class="name" id="profileName">Student</div>
+                    <div class="role" id="profileRole">Student</div>
+                </div>
+                <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
+            </button>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#" data-soon="Profile"><i class="fas fa-user"></i> My Profile</a>
+                <a href="Settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+            </div>
+        </div>
+    </div>
+</header>
 
 <!-- MAIN LAYOUT -->
 <div class="app-layout">
-  <div class="sidebar">
-    <ul>
-      <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-      <li data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
-      <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
-      <li class="active" data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
-      <li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-      <li data-nav="experiances"><i class="fas fa-folder-open"></i> Experiances</li>
-      <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
-      <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
-      <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
-    </ul>
 
-    <div class="sidebar-footer" id="aboutFooter">
-      <img src="PROJECT.png" alt="logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
-      <div class="footer-text">
-        <strong>Real guidance.</strong>
-        <strong>Local mentors.</strong>
-        <strong>Brighter futures.</strong>
-      </div>
-    </div>
-  </div>
+    <aside class="sidebar">
+        <ul>
+            <li><a href="Dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="Messages.html"><i class="far fa-envelope"></i> Messages</a></li>
+            <li><a href="Booking.html"><i class="far fa-calendar-alt"></i> Booking</a></li>
+            <li><a href="Mentors.html" class="active"><i class="fas fa-users"></i> Mentors</a></li>
+            <li><a href="EncouragementWall.html"><i class="fas fa-globe"></i> Encouragement Cards</a></li>
+            <li><a href="ExperianceWall.html"><i class="fas fa-folder-open"></i> Experiences</a></li>
+            <li><a href="Settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="HelpAndSupport.html"><i class="far fa-question-circle"></i> Help &amp; Support</a></li>
+            <li><a href="#" id="sidebarLogout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+        </ul>
 
-  <div class="main-content">
-    <div class="tabs-header">
-      <button class="tab-btn primary" id="allTab">All</button>
-      <button class="tab-btn secondary" id="followingTab">Following</button>
-    </div>
+        <div class="sidebar-footer" id="aboutFooter">
+            <img src="PROJECT.png" alt="" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
+            <div class="footer-text">
+                <strong>Real guidance.</strong>
+                <strong>Local mentors.</strong>
+                <strong>Brighter futures.</strong>
+            </div>
+        </div>
+    </aside>
 
-    <div class="mentors-grid" id="mentorsGrid">
-      <!-- Mentors will be dynamically loaded here -->
-    </div>
-  </div>
+    <main class="main-content">
+        <div class="toolbar">
+            <div class="tabs-header" role="tablist">
+                <button class="tab-btn active" id="allTab" type="button" role="tab" aria-selected="true">All</button>
+                <button class="tab-btn" id="followingTab" type="button" role="tab" aria-selected="false">Following</button>
+            </div>
+            <select class="location-select" id="locationFilter" aria-label="Filter by location">
+                <option value="">All locations</option>
+            </select>
+        </div>
+
+        <div id="demoBanner" class="demo-banner" hidden></div>
+        <p class="result-count" id="resultCount" aria-live="polite"></p>
+
+        <div class="mentors-grid" id="mentorsGrid">
+            <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+        </div>
+    </main>
 </div>
 
-<script type="module">
-// import { supabase } from './supabaseClient.js';
-import { supabase } from './supabaseClientModule.js';
+<!-- MENTOR DETAILS MODAL -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalName">
+    <div class="modal" id="modalBody"></div>
+</div>
 
-// ---------- state ----------
-let allMentors   = [];          // [{id, full_name, avatar_url}]
-let followingSet = new Set();   // set of mentor ids I follow
-let currentFilter = 'all';
-let currentSearch = '';
-let me = null;
-
-// ---------- helpers ----------
-function showToast(message, isError = false) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.style.background = isError ? '#dc2626' : '#2e7d32';
-  t.textContent = message;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2000);
-}
-
-// ---------- data ----------
-async function loadData() {
-  const { data: { user } } = await supabase.auth.getUser();
-  me = user;
-
-  // 1. Load mentor profiles
-  const { data: mentors, error: mErr } = await supabase
-    .from('profiles')
-    .select('id, full_name, avatar_url, role')
-    .eq('role', 'mentor')
-    .order('full_name');
-
-  if (mErr) { console.error(mErr); showToast('Failed to load mentors', true); return; }
-  allMentors = mentors || [];
-
-  // 2. Load my connections (where I am the student)
-    // 2. Load my connections (where I am the student)
-  followingSet = new Set();
-  if (me) {
-    const { data: connections, error: cErr } = await supabase
-      .from('connections')
-      .select('mentor_id, status')
-      .eq('student_id', me.id);
-
-    if (cErr) { console.error(cErr); }
-    else { 
-      // ONLY add to the list if the mentor accepted it
-      followingSet = new Set(
-        (connections || [])
-          .filter(c => c.status === 'accepted' || c.status === 'approved')
-          .map(c => c.mentor_id)
-      ); 
-    }
-  }
-
-  renderMentors();
-  updateFollowingCount();
-}
-
-// ---------- render ----------
-function renderMentors() {
-  const grid = document.getElementById('mentorsGrid');
-
-  let filtered = [...allMentors];
-
-  if (currentFilter === 'following') {
-    filtered = filtered.filter(m => followingSet.has(m.id));
-  }
-  if (currentSearch) {
-    const q = currentSearch.toLowerCase();
-    filtered = filtered.filter(m => m.full_name.toLowerCase().includes(q));
-  }
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:60px;color:#5b6e8c;">
-        <i class="fas fa-user-friends" style="font-size:48px;margin-bottom:16px;display:block;"></i>
-        <p>${currentFilter === 'following' ? 'You are not connected to any mentors yet.' : 'No mentors found.'}</p>
-        ${currentFilter === 'following' ? `<p style="font-size:.85rem;margin-top:8px;">Switch to “All” and click Connect.</p>` : ''}
-      </div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(m => {
-    const following = followingSet.has(m.id);
-    const avatar = m.avatar_url || 'https://via.placeholder.com/78';
-    const cover  = 'https://picsum.photos/id/88/400/150';
-    
-    // Get my name from the local storage (saved during login) or from the DB
-    const myProfile = JSON.parse(localStorage.getItem('careerUser') || '{}');
-    const myName = myProfile.fullname || 'A Student';
-
-    return `
-      <div class="card" data-mentor-id="${m.id}">
-        <div class="card-cover" style="background-image:url('${cover}');background-size:cover;"></div>
-        <div class="avatar-wrapper">
-          <img src="${avatar}" alt="${m.full_name}">
-        </div>
-        <div class="card-info">
-          <h3>${m.full_name}</h3>
-          <div class="job-title">Mentor</div>
-          <button class="follow-button" data-id="${m.id}" data-name="${m.full_name}">
-            ${following ? 'Connected ✓' : 'Connect'}
-          </button>
-        </div>
-      </div>`;
-  }).join('');
-
-  // Attach follow handlers
-  grid.querySelectorAll('.follow-button').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      e.stopPropagation();
-      if (!me) { showToast('Please sign in first', true); return; }
-      
-      const id = btn.dataset.id;
-      const wasFollowing = followingSet.has(id);
-      btn.disabled = true;
-
-      // Get my profile name (fallback to email prefix if missing)
-      const myProfile = JSON.parse(localStorage.getItem('careerUser') || '{}');
-      const myName = myProfile.fullname || me.email.split('@')[0];
-
-      if (wasFollowing) {
-        // UNFOLLOW (Delete connection)
-        const { error } = await supabase
-          .from('connections')
-          .delete()
-          .eq('student_id', me.id)
-          .eq('mentor_id', id);
-          
-        if (error) { console.error(error); showToast('Failed to disconnect', true); }
-        else { followingSet.delete(id); showToast('Disconnected', true); }
-      } else {
-        // FOLLOW (Insert connection)
-        const { error } = await supabase
-          .from('connections')
-          .insert({ 
-            student_id: me.id, 
-            mentor_id: id,
-            student_name: myName,
-            status: 'pending' // or 'accepted', depending on your teammate's flow
-          });
-          
-        if (error) { console.error(error); showToast('Failed to connect', true); }
-        else { followingSet.add(id); showToast('Connection request sent ✅'); }
-      }
-
-      btn.disabled = false;
-      renderMentors();
-      updateFollowingCount();
-    });
-  });
-}
-
-function updateFollowingCount() {
-  const btn = document.getElementById('followingTab');
-  const n = followingSet.size;
-  btn.textContent = n > 0 ? `Following (${n})` : 'Following';
-}
-
-// ---------- filters ----------
-document.getElementById('searchInput').addEventListener('input', (e) => {
-  currentSearch = e.target.value;
-  renderMentors();
-});
-
-document.getElementById('allTab').addEventListener('click', () => {
-  currentFilter = 'all';
-  document.getElementById('allTab').classList.add('primary');
-  document.getElementById('allTab').classList.remove('secondary');
-  document.getElementById('followingTab').classList.add('secondary');
-  document.getElementById('followingTab').classList.remove('primary');
-  renderMentors();
-});
-
-document.getElementById('followingTab').addEventListener('click', () => {
-  currentFilter = 'following';
-  document.getElementById('followingTab').classList.add('primary');
-  document.getElementById('followingTab').classList.remove('secondary');
-  document.getElementById('allTab').classList.add('secondary');
-  document.getElementById('allTab').classList.remove('primary');
-  renderMentors();
-});
-
-// ---------- nav / dropdown (unchanged behavior) ----------
-const profileBtn = document.getElementById('profileBtn');
-const dropdown   = document.getElementById('dropdownMenu');
-profileBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); });
-document.addEventListener('click', () => dropdown.classList.remove('show'));
-
-document.getElementById('notificationBtn').addEventListener('click', () => {
-  showToast('🔔 You have 3 new notifications');
-  document.getElementById('notificationBadge').style.display = 'none';
-});
-document.getElementById('messageBtn').addEventListener('click', () => showToast('💬 No new messages'));
-
-document.querySelectorAll('.sidebar li').forEach(item => {
-  item.addEventListener('click', () => {
-    const nav = item.dataset.nav;
-    document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-    item.classList.add('active');
-    const map = {
-      dashboard: 'Dashboard.html', messages: 'Messages.html', booking: 'Booking.html',
-      mentors: 'Mentors.html', encouragement: 'EncouragementWall.html',
-      experiances: 'ExperianceWall.html', settings: 'Settings.html', help: 'HelpAndSupport.html'
-    };
-    if (nav === 'logout') {
-      if (confirm('Are you sure you want to log out?')) window.location.href = 'Home.html';
-    } else if (map[nav]) {
-      window.location.href = map[nav];
-    }
-  });
-});
-
-document.querySelectorAll('.nav-middle a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const page = link.dataset.page;
-    const map = {
-      home: 'Dashboard.html', mentor: 'Mentors.html',
-      encouragement: 'EncouragementWall.html', resources: 'InformationTechnology.html'
-    };
-    if (map[page]) window.location.href = map[page];
-  });
-});
-
-document.getElementById('aboutFooter').addEventListener('click', () =>
-  showToast('✨ FindYourPath - Connecting youth with local mentors'));
-
-// ---------- boot ----------
-loadData();
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="Mentors.js"></script>
 </body>
 </html>
