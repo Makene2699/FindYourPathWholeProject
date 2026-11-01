@@ -79,8 +79,10 @@
         // Redirect based on role
                 // Redirect based on role (case-insensitive)
         const userRole = (profile.role || '').toLowerCase();
-        
-        if (userRole === 'mentor') {
+
+        if (profile.role === 'Admin') {
+            window.location.href = 'AdminDashboard.html';
+        } else if (profile.role === 'Mentor') {
             window.location.href = 'MentorDashboard.html';
         } else {
             window.location.href = 'Dashboard.html';

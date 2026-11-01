@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | FindYourPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f4f6fa; color: #0e2a47; }
+
+        .layout { display: flex; min-height: 100%; }
+
+        /* Sidebar */
+        .sidebar { width: 322px; flex-shrink: 0; background: #0e2a47; padding: 36px 18px 24px; display: flex; flex-direction: column; gap: 22px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .logo-card { background: #fff; border-radius: 16px; padding: 14px 18px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 26px; font-weight: 800; color: #0e2a47; cursor: pointer; }
+        .logo-card img { height: 38px; width: auto; }
+        .logo-card .g { color: #2e7d32; }
+        .me-card { background: rgba(255,255,255,.07); border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 12px; color: #fff; }
+        .me-name { font-weight: 700; font-size: 15px; }
+        .me-role { font-size: 13px; color: #cbd5e1; }
+        .online { font-size: 12px; color: #4ade80; }
+        .avatar { width: 56px; height: 56px; border-radius: 50%; background: #2e7d32; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; flex-shrink: 0; }
+        .avatar.sm { width: 50px; height: 50px; font-size: 18px; }
+
+        .nav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+        .nav li { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-radius: 14px; color: #e2e8f0; font-size: 17px; cursor: pointer; transition: background .15s; }
+        .nav li i { width: 20px; text-align: center; color: #94a3b8; }
+        .nav li:hover { background: rgba(255,255,255,.08); }
+        .nav li.active { background: #e6f4ea; color: #1b6b2f; font-weight: 700; }
+        .nav li.active i { color: #2e7d32; }
+        .nav-badge { margin-left: auto; background: #f97316; color: #fff; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 9px; display: none; }
+
+        /* Main */
+        .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 22px 40px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .topbar h1 { margin: 0; font-size: 30px; }
+        .topbar p { margin: 4px 0 0; color: #64748b; font-size: 16px; }
+        .profile { display: flex; align-items: center; gap: 12px; font-size: 15px; white-space: nowrap; }
+        .profile b { font-size: 16px; }
+
+        .content { padding: 36px 40px; }
+
+        /* Pills */
+        .pills { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+        .pill { border: 1px solid #e2e8f0; background: #fff; color: #0e2a47; border-radius: 999px; padding: 11px 24px; font-size: 16px; font-weight: 700; cursor: pointer; }
+        .pill span { font-weight: 400; color: #64748b; margin-left: 8px; }
+        .pill.active { background: #0e2a47; color: #fff; border-color: #0e2a47; }
+        .pill.active span { color: #cbd5e1; }
+
+        /* Table card */
+        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; overflow-x: auto; max-width: 1200px; }
+        table { width: 100%; border-collapse: collapse; min-width: 720px; }
+        th, td { text-align: left; padding: 16px 22px; font-size: 15px; border-bottom: 1px solid #eef2f7; }
+        th { color: #64748b; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+        tbody tr:last-child td { border-bottom: 0; }
+        .btn { border: 0; border-radius: 10px; padding: 8px 16px; color: #fff; cursor: pointer; font-weight: 700; font-size: 14px; }
+        .approve { background: #2e7d32; } .reject { background: #dc2626; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; background: #e2e8f0; color: #334155; }
+        .badge.Admin { background: #fee2e2; color: #b91c1c; }
+        .badge.Mentor { background: #e6f4ea; color: #1b6b2f; }
+
+        .empty { max-width: 1200px; border: 1px dashed #cbd5e1; border-radius: 18px; padding: 44px 24px; text-align: center; color: #64748b; font-size: 17px; background: #fff; display: none; }
+
+        @media (max-width: 860px) {
+            .layout { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; padding: 20px; }
+            .topbar, .content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo-card" onclick="window.location.reload()">
+            <img src="PROJECT 3 LOGO 2  3.png" alt="" onerror="this.style.display='none'">
+            <span>Find<span class="g">Your</span>Path</span>
+        </div>
+
+        <div class="me-card">
+            <div class="avatar" id="sbAvatar">AD</div>
+            <div>
+                <div class="me-name" id="sbName">Admin</div>
+                <div class="me-role">Admin</div>
+                <div class="online">&#9679; Online</div>
+            </div>
+        </div>
+
+        <ul class="nav">
+            <li class="active" data-view="approvals"><i class="fas fa-user-check"></i> Mentor Approvals <span class="nav-badge" id="navBadge"></span></li>
+            <li data-view="users"><i class="fas fa-users"></i> Users</li>
+            <li id="navLogout"><i class="fas fa-sign-out-alt"></i> Log out</li>
+        </ul>
+    </aside>
+
+    <div class="main">
+        <header class="topbar">
+            <div>
+                <h1 id="pageTitle">Mentor Approvals</h1>
+                <p id="pageSub">Mentors who registered and are waiting for your decision.</p>
+            </div>
+            <div class="profile">
+                <div class="avatar sm" id="tbAvatar">AD</div>
+                <div><b id="tbName">Admin</b><br>Admin</div>
+            </div>
+        </header>
+
+        <main class="content">
+            <!-- Approvals view -->
+            <div id="viewApprovals">
+                <div class="pills">
+                    <button class="pill active" data-status="pending">Pending <span id="cPending">0</span></button>
+                    <button class="pill" data-status="approved">Approved <span id="cApproved">0</span></button>
+                    <button class="pill" data-status="rejected">Rejected <span id="cRejected">0</span></button>
+                </div>
+                <div class="card" id="mentorCard">
+                    <table>
+                        <thead><tr><th>Name</th><th>Email</th><th>Cell</th><th>Career field</th><th>Address</th><th>Actions</th></tr></thead>
+                        <tbody id="mentorRows"></tbody>
+                    </table>
+                </div>
+                <div class="empty" id="mentorEmpty"></div>
+            </div>
+
+            <!-- Users view -->
+            <div id="viewUsers" style="display:none">
+                <div class="card" id="userCard">
+                    <table>
+                        <thead><tr><th>Name</th><th>Email</th><th>Cell</th><th>Role</th></tr></thead>
+                        <tbody id="userRows"></tbody>
+                    </table>
+                </div>
+                <div class="empty" id="userEmpty">No users found.</div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script>
+    let currentStatus = 'pending';
+
+    const EMPTY_TEXT = {
+        pending:  'No pending mentors. New mentor registrations will show up here for approval.',
+        approved: 'No approved mentors yet.',
+        rejected: 'No rejected mentors.'
+    };
+
+    function initials(name) {
+        return (name || 'Admin').split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || 'AD';
+    }
+
+    // Page guard (UX only). The real protection is the RLS policies in Supabase.
+    async function requireAdmin() {
+        const { data: { user } } = await sb.auth.getUser();
+        if (!user) { window.location.href = 'Register.html'; return false; }
+        const { data: prof } = await sb.from('profiles').select('role, full_name').eq('id', user.id).single();
+        if (!prof || prof.role !== 'Admin') { window.location.href = 'Home.html'; return false; }
+        const name = prof.full_name || 'Admin';
+        document.getElementById('sbName').textContent = name;
+        document.getElementById('tbName').textContent = name;
+        document.getElementById('sbAvatar').textContent = initials(name);
+        document.getElementById('tbAvatar').textContent = initials(name);
+        return true;
+    }
+
+    function cell(text) {
+        const td = document.createElement('td');
+        td.textContent = text || '-';   // textContent avoids injecting HTML from user input
+        return td;
+    }
+
+    async function loadCounts() {
+        const counts = {};
+        for (const [status, id] of [['pending', 'cPending'], ['approved', 'cApproved'], ['rejected', 'cRejected']]) {
+            const { count } = await sb.from('profiles')
+                .select('id', { count: 'exact', head: true })
+                .eq('role', 'Mentor').eq('approval_status', status);
+            counts[status] = count || 0;
+            document.getElementById(id).textContent = counts[status];
+        }
+        const badge = document.getElementById('navBadge');
+        badge.textContent = counts.pending;
+        badge.style.display = counts.pending > 0 ? 'inline-block' : 'none';
+    }
+
+    async function loadMentors() {
+        const rows = document.getElementById('mentorRows');
+        rows.innerHTML = '';
+        const { data, error } = await sb.from('profiles')
+            .select('id, full_name, email, cell_number, career_field, address')
+            .eq('role', 'Mentor').eq('approval_status', currentStatus)
+            .order('full_name');
+        if (error) { console.error(error); return; }
+
+        const empty = document.getElementById('mentorEmpty');
+        empty.textContent = EMPTY_TEXT[currentStatus];
+        empty.style.display = data.length ? 'none' : 'block';
+        document.getElementById('mentorCard').style.display = data.length ? 'block' : 'none';
+
+        data.forEach(m => {
+            const tr = document.createElement('tr');
+            tr.append(cell(m.full_name), cell(m.email), cell(m.cell_number), cell(m.career_field), cell(m.address));
+
+            const actions = document.createElement('td');
+            if (currentStatus !== 'approved') actions.append(actionBtn('Approve', 'approve', m.id, 'approved'));
+            if (currentStatus !== 'rejected') actions.append(' ', actionBtn('Reject', 'reject', m.id, 'rejected'));
+            tr.append(actions);
+            rows.append(tr);
+        });
+    }
+
+    function actionBtn(label, cls, id, newStatus) {
+        const b = document.createElement('button');
+        b.className = 'btn ' + cls;
+        b.textContent = label;
+        b.addEventListener('click', () => setStatus(id, newStatus));
+        return b;
+    }
+
+    async function setStatus(id, status) {
+        if (!confirm(`Mark this mentor as ${status}?`)) return;
+        const { error } = await sb.from('profiles').update({ approval_status: status }).eq('id', id);
+        if (error) { alert('Could not update: ' + error.message); return; }
+        loadCounts();
+        loadMentors();
+    }
+
+    async function loadUsers() {
+        const rows = document.getElementById('userRows');
+        rows.innerHTML = '';
+        const { data, error } = await sb.from('profiles')
+            .select('full_name, email, cell_number, role').order('full_name');
+        if (error) { console.error(error); return; }
+
+        document.getElementById('userEmpty').style.display = data.length ? 'none' : 'block';
+        document.getElementById('userCard').style.display = data.length ? 'block' : 'none';
+
+        data.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.append(cell(u.full_name), cell(u.email), cell(u.cell_number));
+            const td = document.createElement('td');
+            const b = document.createElement('span');
+            b.className = 'badge ' + (u.role || '');
+            b.textContent = u.role || '-';
+            td.append(b);
+            tr.append(td);
+            rows.append(tr);
+        });
+    }
+
+    // Navigation between views
+    function showView(view) {
+        const isUsers = view === 'users';
+        document.getElementById('viewApprovals').style.display = isUsers ? 'none' : 'block';
+        document.getElementById('viewUsers').style.display = isUsers ? 'block' : 'none';
+        document.querySelectorAll('.nav li[data-view]').forEach(li =>
+            li.classList.toggle('active', li.dataset.view === view));
+        document.getElementById('pageTitle').textContent = isUsers ? 'Users' : 'Mentor Approvals';
+        document.getElementById('pageSub').textContent = isUsers
+            ? 'Everyone registered on FindYourPath.'
+            : 'Mentors who registered and are waiting for your decision.';
+        if (isUsers) loadUsers(); else loadMentors();
+    }
+
+    document.querySelectorAll('.nav li[data-view]').forEach(li =>
+        li.addEventListener('click', () => { location.hash = li.dataset.view; }));
+    window.addEventListener('hashchange', () => showView(location.hash === '#users' ? 'users' : 'approvals'));
+
+    document.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => {
+        document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+        p.classList.add('active');
+        currentStatus = p.dataset.status;
+        loadMentors();
+    }));
+
+    document.getElementById('navLogout').addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to log out?')) return;
+        await sb.auth.signOut();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('careerUser');
+        window.location.href = 'Home.html';
+    });
+
+    (async () => {
+        if (!(await requireAdmin())) return;
+        loadCounts();
+        showView(location.hash === '#users' ? 'users' : 'approvals');
+    })();
+</script>
+</body>
+</html>

@@ -1,8 +1,22 @@
-
 //Register
 const registerForm = document.getElementById('registerForm');
 
 if (registerForm) {
+    // Show the extra mentor fields only when the role is Mentor
+    const roleSelect = document.getElementById('role');
+    const mentorFields = document.getElementById('mentorFields');
+    const careerFieldInput = document.getElementById('careerField');
+    const addressInput = document.getElementById('address');
+
+    if (roleSelect && mentorFields) {
+        roleSelect.addEventListener('change', () => {
+            const isMentor = roleSelect.value === 'Mentor';
+            mentorFields.style.display = isMentor ? 'block' : 'none';
+            careerFieldInput.required = isMentor;
+            addressInput.required = isMentor;
+        });
+    }
+
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -12,9 +26,15 @@ if (registerForm) {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const confirm = document.getElementById('confirmPassword').value;
+        const careerField = careerFieldInput ? careerFieldInput.value.trim() : '';
+        const address = addressInput ? addressInput.value.trim() : '';
 
         if (!fullname || !role || !cell || !email || !password || !confirm) {
             alert('Please fill all fields');
+            return;
+        }
+        if (role === 'Mentor' && (!careerField || !address)) {
+            alert('Mentors must enter their career field and address');
             return;
         }
         if (password !== confirm) {
@@ -47,6 +67,9 @@ if (registerForm) {
             role: role,
             cell_number: cell,
             email: email,
+            // approval_status is set by the database trigger (mentors start as 'pending')
+            career_field: role === 'Mentor' ? careerField : null,
+            address: role === 'Mentor' ? address : null,
         });
 
         if (profileError) {
@@ -55,12 +78,17 @@ if (registerForm) {
         }
 
         if (role === 'Mentor') {
-            window.location.href = 'MentorDashboard.html';
-
-        } else {
-            window.location.href = 'Dashboard.html';
+            // Mentors wait for admin approval, so don't log them in
+            await sb.auth.signOut();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('careerUser');
+            alert('Thanks! Your mentor application has been submitted and is awaiting admin approval. You will be able to log in once approved.');
+            registerForm.reset();
+            if (mentorFields) mentorFields.style.display = 'none';
+            return;
         }
 
+        window.location.href = 'Dashboard.html';
     });
 }
 
@@ -101,12 +129,24 @@ if (loginForm) {
 
         const { data: profile, error: profileError } = await sb
             .from('profiles')
-            .select('full_name, role, cell_number, email')
+            .select('full_name, role, cell_number, email, approval_status')
             .eq('id', data.user.id)
             .single();
 
         if (profileError || !profile) {
+            await sb.auth.signOut();
             alert('Profile not found');
+            return;
+        }
+
+        // Block mentors who are not approved yet
+        if (profile.role === 'Mentor' && profile.approval_status !== 'approved') {
+            await sb.auth.signOut();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('careerUser');
+            alert(profile.approval_status === 'rejected'
+                ? 'Your mentor application was not approved.'
+                : 'Your account is still awaiting admin approval. Please try again later.');
             return;
         }
 
@@ -122,7 +162,9 @@ if (loginForm) {
             })
         );
 
-        if (profile.role === 'Mentor') {
+        if (profile.role === 'Admin') {
+            window.location.href = 'AdminDashboard.html';
+        } else if (profile.role === 'Mentor') {
             window.location.href = 'MentorDashboard.html';
         } else {
             window.location.href = 'Dashboard.html';

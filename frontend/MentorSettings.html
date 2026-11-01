@@ -115,6 +115,18 @@
                             <input type="text" id="fLocation" placeholder="e.g. Cape Town, Western Cape">
                         </div>
                         <div class="field">
+                            <label for="fEducation">Education</label>
+                            <input type="text" id="fEducation" placeholder="e.g. University of Western Cape">
+                        </div>
+                        <div class="field">
+                            <label for="fWork">Work</label>
+                            <input type="text" id="fWork" placeholder="company name ">
+                        </div>
+                        <div class="field">
+                            <label for="fExperience">Experience</label>
+                            <input type="text" id="fExperience" placeholder="Tell us about your work experience">
+                        </div>
+                        <div class="field">
                             <label for="fBio">Bio</label>
                             <textarea id="fBio" rows="3" maxlength="300" placeholder="Tell students a little about yourself"></textarea>
                         </div>
@@ -168,7 +180,7 @@
 
         const { data: p, error } = await sb
             .from('profiles')
-            .select('full_name, role, cell_number, email, location, bio, avatar_url')
+            .select('full_name, role, cell_number, email, location, education, work, experience, bio, avatar_url')
             .eq('id', user.id)
             .single();
 
@@ -182,6 +194,9 @@
         $('fEmail').value = p.email || user.email || '';
         $('fPhone').value = p.cell_number || '';
         $('fLocation').value = p.location || '';
+        $('fEducation').value = p.education || '';
+        $('fWork').value = p.work || '';
+        $('fExperience').value = p.experience || '';
         $('fBio').value = p.bio || '';
         originalEmail = $('fEmail').value;
 
@@ -217,7 +232,7 @@
         const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true, contentType: file.type });
         if (error) throw error;
         const { data } = sb.storage.from('avatars').getPublicUrl(path);
-        return data.publicUrl + '?t=' + Date.now(); // cache-bust so the new picture shows straight away
+        return data.publicUrl + '?t=' + Date.now();
     }
 
     $('settingsForm').addEventListener('submit', async e => {
@@ -251,12 +266,14 @@
                 email: email,
                 cell_number: $('fPhone').value.trim() || null,
                 location: $('fLocation').value.trim() || null,
+                education: $('fEducation').value.trim() || null,
+                work: $('fWork').value.trim() || null,
+                experience: $('fExperience').value.trim() || null,
                 bio: $('fBio').value.trim() || null,
                 avatar_url: avatarUrl
             }).eq('id', currentUser.id);
             if (error) throw error;
 
-            // keep the cached login info in step with the database
             const raw = localStorage.getItem('careerUser');
             const cached = raw ? JSON.parse(raw) : {};
             cached.fullname = name;
