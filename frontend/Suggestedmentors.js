@@ -6,7 +6,7 @@
    ===================================================== */
 (function () {
   const VIEW = 'mentors_public';            // same view Mentors.js uses
-  const COLUMNS = 'id, full_name';          // add job_title, company once they are in the view
+  const COLUMNS = 'id, full_name, job_title, company, avatar_url';
   const HOW_MANY = 3;
 
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -38,7 +38,7 @@
       const name = m.full_name || 'Mentor';
       const title = [m.job_title, m.company].filter(Boolean).join(' | ') || 'Mentor';
       return `<div class="mentor-item">
-        <img src="${esc(avatar(name))}" alt="">
+        <img src="${esc(/^https?:\/\//i.test(m.avatar_url || '') ? m.avatar_url : avatar(name))}" alt="" data-fallback="${esc(avatar(name))}" onerror="this.onerror=null;this.src=this.dataset.fallback">
         <div class="mentor-info"><h4>${esc(name)}</h4><p>${esc(title)}</p></div>
         <a href="MentorProfileView.html?id=${encodeURIComponent(m.id)}" class="connect-btn">Connect</a>
       </div>`;

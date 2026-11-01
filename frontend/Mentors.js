@@ -9,7 +9,7 @@
 const MENTORS_TABLE = 'mentors_public';   // public view over profiles (role = mentor), created in the SQL Editor
 const MENTOR_ROLE_COLUMN = 'role';        // column that says who is a mentor
 const MENTOR_ROLE_VALUE = '';             // empty because the view already only contains mentors
-const MENTOR_COLUMNS = 'id, full_name';   // add job_title, company here once they are in the view
+const MENTOR_COLUMNS = 'id, full_name, job_title, company, location, avatar_url, banner_url, career_field, education, studied_at';  // columns of the mentors_public view
 const FOLLOWS_TABLE = 'mentor_follows';   // columns: user_id, mentor_id
 /* ------------------------------------------------------------------ */
 
@@ -51,10 +51,34 @@ function esc(value) {
 
 // Only allow http(s) image URLs
 function safeUrl(url, fallback) {
+  if (!url) return fallback;
   try {
     const u = new URL(url, location.href);
     return ['http:', 'https:'].includes(u.protocol) ? u.href : fallback;
   } catch { return fallback; }
+}
+
+// Initials avatar drawn locally (no external service, never breaks)
+function avatarFor(name) {
+  const letters = (name || '?').trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='156' height='156'><rect width='100%' height='100%' fill='#e8f5e9'/><text x='50%' y='50%' dy='.35em' text-anchor='middle' font-family='Arial,sans-serif' font-size='60' font-weight='700' fill='#2e7d32'>${esc(letters)}</text></svg>`;
+  return 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+
+// Background pictures used on the cards (same ones the booking page picks from).
+// Add every image file name from your booking page here, e.g. 'image 3.png'.
+// Each mentor always gets the same one (chosen from their id), so it doesn't change on refresh.
+const COVER_IMAGES = ['image 3.png', 'image 6.png', 'image 7.png'];
+const hashOf = (v) => [...String(v)].reduce((a, c) => a + c.charCodeAt(0), 0);
+
+// Default cover when a mentor has none: a brand-coloured gradient picked from their name
+const COVER_GRADIENTS = [
+  ['#c0e0c8', '#b8d4e3'], ['#b8d4e3', '#c9d6f2'], ['#d4e8c2', '#a8d5ba'], ['#c9d6f2', '#c0e0c8'], ['#a8d5ba', '#b8d4e3']
+];
+function defaultCover(name) {
+  const hash = [...String(name)].reduce((a, c) => a + c.charCodeAt(0), 0);
+  const [c1, c2] = COVER_GRADIENTS[hash % COVER_GRADIENTS.length];
+  return `linear-gradient(130deg, ${c1}, ${c2})`;
 }
 
 function initials(name) {
@@ -69,8 +93,11 @@ function normalise(row) {
     name,
     role: [row.job_title || row.title, row.company].filter(Boolean).join(' | ') || 'Mentor',
     location: row.location || row.city || '',
-    img: safeUrl(row.img || row.avatar_url || row.image_url || row.photo, `https://via.placeholder.com/78x78?text=${initials(name)}`),
-    cover: safeUrl(row.cover || row.cover_url || row.cover_image, '')
+    field: row.career_field || '',                                        // what they mentor in
+    studied: [row.education, row.studied_at].filter(Boolean).join(' · '), // what / where they studied
+    img: safeUrl(row.img || row.avatar_url || row.image_url || row.photo, '') || avatarFor(name),
+    fallback: avatarFor(name),
+    cover: safeUrl(row.cover || row.banner_url || row.cover_url || row.cover_image, '')
   };
 }
 
@@ -157,30 +184,37 @@ async function loadFollows() {
   try { JSON.parse(localStorage.getItem('following') || '[]').forEach((id) => state.followed.add(id)); } catch { /* ignore */ }
 }
 
+function saveFollowLocally(id, wasFollowing) {
+  const next = new Set(state.followed);
+  wasFollowing ? next.delete(id) : next.add(id);
+  localStorage.setItem('following', JSON.stringify([...next]));
+}
+
 async function toggleFollow(id, button) {
-  const mentor = state.mentors.find((m) => m.id === id);
+  const mentor = state.mentors.find((m) => String(m.id) === String(id));
   if (!mentor) return;
   const wasFollowing = state.followed.has(id);
   button.disabled = true;
 
-  try {
-    if (db && state.user && !state.demo) {
+  let savedInDb = false;
+  if (db && state.user && !state.demo) {
+    try {
       const q = wasFollowing
         ? db.from(FOLLOWS_TABLE).delete().eq('user_id', state.user.id).eq('mentor_id', id)
         : db.from(FOLLOWS_TABLE).insert({ user_id: state.user.id, mentor_id: id });
       const { error } = await q;
       if (error) throw error;
-    } else {
-      const next = new Set(state.followed);
-      wasFollowing ? next.delete(id) : next.add(id);
-      localStorage.setItem('following', JSON.stringify([...next]));
+      savedInDb = true;
+    } catch (e) {
+      console.warn('Could not save follow in Supabase (is the mentor_follows table created?). Saving on this device instead.', e);
     }
-    wasFollowing ? state.followed.delete(id) : state.followed.add(id);
-    showToast(wasFollowing ? `Unfollowed ${mentor.name}` : `Following ${mentor.name} ✅`, wasFollowing);
-  } catch (e) {
-    console.error('Follow failed', e);
-    showToast('Could not update follow. Please try again.', true);
   }
+  if (!savedInDb) {
+    try { saveFollowLocally(id, wasFollowing); } catch (e) { console.warn(e); }
+  }
+
+  wasFollowing ? state.followed.delete(id) : state.followed.add(id);
+  showToast(wasFollowing ? `Unfollowed ${mentor.name}` : `Following ${mentor.name} ✅`, wasFollowing);
   render();
   if (modalOpenId === id) openModal(id);
 }
@@ -200,8 +234,16 @@ function visibleMentors() {
   return state.mentors.filter((m) =>
     (state.filter === 'all' || state.followed.has(m.id)) &&
     (!state.location || m.location === state.location) &&
-    (!q || m.name.toLowerCase().includes(q) || m.role.toLowerCase().includes(q) || m.location.toLowerCase().includes(q))
+    (!q || [m.name, m.role, m.location, m.field, m.studied].some((t) => t.toLowerCase().includes(q)))
   );
+}
+
+// "Studied" and "Mentors in" lines (only shown when the mentor has filled them in)
+function metaLines(m) {
+  let html = '';
+  if (m.studied) html += `<div class="card-meta" title="${esc(m.studied)}"><i class="fas fa-graduation-cap"></i><span><b>Studied:</b> ${esc(m.studied)}</span></div>`;
+  if (m.field) html += `<div class="card-meta"><i class="fas fa-bullseye"></i><span><b>Mentors in:</b> ${esc(m.field)}</span></div>`;
+  return html ? `<div class="card-meta-wrap">${html}</div>` : '';
 }
 
 function followButton(m) {
@@ -210,7 +252,15 @@ function followButton(m) {
 }
 
 function coverStyle(m) {
-  return m.cover ? ` style="background-image:url('${esc(m.cover)}')"` : '';
+  const gradient = defaultCover(m.name);   // shows if the picture is missing or fails to load
+  const file = m.cover || (COVER_IMAGES.length ? encodeURI(COVER_IMAGES[hashOf(m.id) % COVER_IMAGES.length]) : '');
+  const bg = file ? `url('${esc(file)}'), ${gradient}` : gradient;
+  return ` style="background-image:${bg}"`;
+}
+
+// <img> that swaps to the initials avatar if the picture fails to load
+function avatarImg(m, lazy) {
+  return `<img src="${esc(m.img)}" alt="" ${lazy ? 'loading="lazy" ' : ''}data-fallback="${esc(m.fallback)}" onerror="this.onerror=null;this.src=this.dataset.fallback">`;
 }
 
 function render() {
@@ -231,10 +281,11 @@ function render() {
   grid.innerHTML = list.map((m) => `
     <div class="card" data-mentor-id="${esc(m.id)}" tabindex="0" role="button" aria-label="View ${esc(m.name)}'s profile">
       <div class="card-cover"${coverStyle(m)}></div>
-      <div class="avatar-wrapper"><img src="${esc(m.img)}" alt="" loading="lazy"></div>
+      <div class="avatar-wrapper">${avatarImg(m, true)}</div>
       <div class="card-info">
         <h3>${esc(m.name)}</h3>
         <div class="job-title">${esc(m.role)}</div>
+        ${metaLines(m)}
         ${m.location ? `<div class="card-location"><i class="fas fa-location-dot"></i>${esc(m.location)}</div>` : ''}
         ${followButton(m)}
       </div>
@@ -258,10 +309,11 @@ function openModal(id) {
   $('modalBody').innerHTML = `
     <button class="modal-close" id="modalClose" type="button" aria-label="Close">✕</button>
     <div class="card-cover"${coverStyle(m)}></div>
-    <div class="avatar-wrapper"><img src="${esc(m.img)}" alt=""></div>
+    <div class="avatar-wrapper">${avatarImg(m, false)}</div>
     <div class="card-info">
       <h3 id="modalName">${esc(m.name)}</h3>
       <div class="job-title">${esc(m.role)}</div>
+      ${metaLines(m)}
       ${m.location ? `<div class="card-location"><i class="fas fa-location-dot"></i>${esc(m.location)}</div>` : ''}
       <div class="modal-actions">
         ${followButton(m)}
