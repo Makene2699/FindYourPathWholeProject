@@ -1,256 +1,579 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Booking</title>
-	<meta name="descrption" content="">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="BookingStyleSheet.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Session — FindYourPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
+        body { background-color: #f4f7fc; display: flex; flex-direction: column; min-height: 100vh; }
+        button { font-family: inherit; }
+        :focus-visible { outline: 3px solid rgba(46,125,50,.45); outline-offset: 2px; }
+
+        /* ===== TOP NAV ===== */
+        .top-nav { background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 12px 32px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 16px; }
+        .logo-area { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo-img { width: 38px; height: 38px; object-fit: contain; }
+        .logo-text { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.3px; color: #1e3a5f; }
+        .logo-text .green { color: #2e7d32; }
+        .nav-middle { display: flex; gap: 28px; }
+        .nav-middle a { text-decoration: none; font-weight: 600; color: #1e293b; font-size: .95rem; transition: .2s; padding: 6px 0; cursor: pointer; }
+        .nav-middle a.active { background: #1e3a5f; color: #fff; padding: 8px 18px; border-radius: 40px; }
+        .nav-middle a:not(.active):hover { color: #2e7d32; }
+        .nav-tools { display: flex; gap: 16px; align-items: center; }
+        .search-input { padding: 8px 16px; border-radius: 40px; border: 1px solid #cbd5e1; background: #fff; width: 240px; font-size: .85rem; outline: none; transition: .2s; }
+        .search-input:focus { border-color: #2e7d32; box-shadow: 0 0 0 2px rgba(46,125,50,.2); }
+        .right-actions { display: flex; align-items: center; gap: 20px; position: relative; }
+        .icon-group { display: flex; gap: 18px; align-items: center; }
+        .icon-btn { position: relative; font-size: 1.2rem; cursor: pointer; color: #5b6e8c; transition: color .2s; background: none; border: none; }
+        .icon-btn:hover { color: #2e7d32; }
+        .badge { position: absolute; top: -8px; right: -10px; background: #2e7d32; color: #fff; font-size: .65rem; font-weight: bold; padding: 2px 6px; border-radius: 40px; line-height: 1; }
+        .divider-vertical { width: 1px; height: 32px; background: #e2e8f0; }
+        .profile-preview { display: flex; align-items: center; gap: 10px; cursor: pointer; background: none; border: none; text-align: left; }
+        .profile-preview img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #e9f5eb; }
+        .profile-preview .info { line-height: 1.3; }
+        .profile-preview .name { font-weight: 700; font-size: .9rem; color: #0f172a; }
+        .profile-preview .role { font-size: .7rem; color: #5b6e8c; }
+        .arrow-down { font-size: .7rem; color: #5b6e8c; }
+        .dropdown-menu { position: absolute; top: 54px; right: 0; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.1); width: 200px; display: none; z-index: 100; overflow: hidden; }
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu a { display: block; padding: 12px 20px; text-decoration: none; color: #1e293b; transition: .2s; }
+        .dropdown-menu a:hover { background: #f1f5f9; color: #2e7d32; }
+
+        /* ===== LAYOUT ===== */
+        .app-layout { display: flex; flex: 1; }
+        .sidebar { width: 260px; background: #fff; border-right: 1px solid #e9eef3; padding: 28px 16px; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar ul { list-style: none; }
+        .sidebar li a { padding: 12px 16px; margin: 4px 0; font-size: .95rem; font-weight: 500; color: #2c3e50; border-radius: 14px; text-decoration: none; transition: all .2s; display: flex; align-items: center; gap: 12px; }
+        .sidebar li a i { width: 20px; font-size: 1rem; color: #5b6e8c; }
+        .sidebar li a.active { background: #e8f5e9; color: #2e7d32; font-weight: 700; }
+        .sidebar li a.active i { color: #2e7d32; }
+        .sidebar li a:hover:not(.active) { background: #f1f5f9; }
+        .sidebar-footer { margin-top: 40px; padding: 20px 12px; text-align: center; background: #f8fafc; border-radius: 20px; cursor: pointer; transition: .2s; }
+        .sidebar-footer:hover { background: #eef2ff; }
+        .footer-logo { width: 80px; height: 80px; object-fit: contain; margin-bottom: 16px; }
+        .footer-text { font-size: .85rem; font-weight: 500; color: #1e3a5f; line-height: 1.6; }
+        .footer-text strong { font-size: .9rem; display: block; margin-bottom: 4px; font-weight: 700; }
+        .main-content { flex: 1; padding: 28px 32px; background: #f8fafc; min-width: 0; }
+
+        /* ===== TABS + FILTER ===== */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+        .tabs-header { display: flex; gap: 12px; }
+        .tab-btn { border: 2px solid #1e3a5f; padding: 8px 24px; border-radius: 40px; font-weight: 600; font-size: .9rem; cursor: pointer; transition: .2s; background: #fff; color: #1e3a5f; }
+        .tab-btn:hover { background: #eef2f8; }
+        .tab-btn.active { background: #1e3a5f; color: #fff; }
+        .tab-btn.active:hover { background: #15304e; }
+        .location-select { padding: 9px 16px; border-radius: 40px; border: 1px solid #cbd5e1; background: #fff; font-size: .85rem; color: #1e293b; cursor: pointer; }
+        .result-count { font-size: .85rem; color: #5b6e8c; margin-bottom: 16px; }
+
+        /* ===== CARDS ===== */
+        .mentors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
+        .card { background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,.03), 0 2px 6px rgba(0,0,0,.05); transition: transform .2s, box-shadow .2s; cursor: pointer; }
+        .card:hover, .card:focus-visible { transform: translateY(-4px); box-shadow: 0 20px 30px -12px rgba(0,0,0,.1); }
+        .card-cover { height: 95px; background: linear-gradient(130deg, #c0e0c8, #b8d4e3); background-size: cover; background-position: center; }
+        .avatar-wrapper { text-align: center; margin-top: -38px; }
+        .avatar-wrapper img { width: 78px; height: 78px; border-radius: 50%; border: 4px solid #fff; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,.05); background: #fff; }
+        .card-info { text-align: center; padding: 12px 18px 24px; }
+        .card-info h3 { font-size: 1.25rem; font-weight: 700; margin: 8px 0 4px; color: #0f172a; }
+        .job-title { font-size: .8rem; color: #475569; margin-bottom: 6px; font-weight: 500; }
+        .card-location { font-size: .75rem; color: #5b6e8c; margin-bottom: 16px; }
+        .card-location i { margin-right: 4px; }
+        .follow-button { background: transparent; border: 2px solid #2e7d32; color: #2e7d32; padding: 8px 24px; border-radius: 40px; font-weight: 700; font-size: .85rem; cursor: pointer; transition: .2s; }
+        .follow-button:hover, .follow-button.following { background: #2e7d32; color: #fff; }
+        .follow-button:disabled { opacity: .6; cursor: wait; }
+
+        .card-meta-wrap { margin: 2px 0 10px; }
+        .card-meta { display: flex; gap: 8px; align-items: flex-start; justify-content: center; font-size: .75rem; color: #475569; margin-bottom: 4px; text-align: left; }
+        .card-meta i { color: #2e7d32; margin-top: 2px; }
+        .card-meta span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .modal .card-meta span { -webkit-line-clamp: unset; }
+
+        .page-title { font-size: 1.5rem; color: #0f172a; margin-bottom: 4px; }
+        .page-sub { color: #5b6e8c; font-size: .9rem; margin-bottom: 20px; }
+        .section-title { margin: 36px 0 14px; font-size: 1.2rem; color: #0f172a; }
+        .muted { color: #5b6e8c; font-size: .85rem; }
+        .modal { max-height: 92vh; overflow-y: auto; }
+        .book-form { padding: 0 24px 24px; display: grid; gap: 12px; text-align: left; }
+        .book-form label { display: grid; gap: 6px; font-size: .8rem; font-weight: 700; color: #0f172a; }
+        .book-form input, .book-form select, .book-form textarea { padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: .9rem; font-weight: 400; background: #fff; outline: none; }
+        .book-form input:focus, .book-form select:focus, .book-form textarea:focus { border-color: #2e7d32; box-shadow: 0 0 0 3px rgba(46,125,50,.2); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-error { display: none; color: #c62828; font-size: .85rem; font-weight: 600; }
+        .form-error.show { display: block; }
+        .book-button { cursor: pointer; }
+        .book-button.full { width: 100%; padding: 12px; }
+        .book-button:disabled { opacity: .6; cursor: wait; }
+        .success-box { padding: 36px 24px; text-align: center; }
+        .success-box i { font-size: 44px; color: #2e7d32; margin-bottom: 12px; }
+        .success-box h3 { color: #0f172a; margin-bottom: 8px; }
+        .success-box .book-button { margin-top: 18px; }
+        .booking-row { background: #fff; border-radius: 16px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.05); margin-bottom: 10px; }
+        .status-badge { padding: 4px 12px; border-radius: 40px; font-size: .75rem; font-weight: 700; text-transform: capitalize; background: #e2e8f0; color: #334155; white-space: nowrap; }
+        .status-badge.pending { background: #fff3cd; color: #7a5b00; }
+        .status-badge.good { background: #e8f5e9; color: #1b5e20; }
+        .status-badge.bad { background: #fdecea; color: #b71c1c; }
+
+        .back-link { display: inline-flex; gap: 8px; align-items: center; color: #1e3a5f; text-decoration: none; font-weight: 600; font-size: .9rem; margin-bottom: 14px; }
+        .back-link:hover { color: #2e7d32; }
+        .booking-layout { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; }
+        .mentor-panel, .session-panel, .pick-box { background: #fff; border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,.03), 0 2px 6px rgba(0,0,0,.05); }
+        .mentor-panel { overflow: hidden; }
+        .session-panel.book-form { padding: 28px; gap: 14px; }
+        .session-panel h2 { font-size: 1.2rem; color: #0f172a; }
+        .summary { margin: 0 22px 22px; padding-top: 16px; border-top: 1px solid #e9eef3; }
+        .summary h4 { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: #5b6e8c; margin-bottom: 10px; }
+        .summary dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: .85rem; }
+        .summary dt { color: #5b6e8c; }
+        .summary dd { font-weight: 600; color: #0f172a; text-align: right; }
+        .pick-box { padding: 28px; max-width: 520px; display: grid; gap: 14px; }
+        .pick-box select { padding: 11px 12px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: .95rem; background: #fff; }
+        .success-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+        .success-actions .book-button { text-decoration: none; display: inline-block; }
+        .book-button.light { background: #fff; color: #1e3a5f; }
+        .session-panel[hidden], .book-form[hidden], .summary[hidden] { display: none !important; }
+        .gate .success-box { padding: 20px 10px; }
+        .gate .success-box i { color: #1e3a5f; }
+        @media (max-width: 900px) { .booking-layout { grid-template-columns: 1fr; } }
+
+        /* ===== STATES ===== */
+        .state-box { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #5b6e8c; }
+        .state-box i { font-size: 44px; margin-bottom: 16px; display: block; }
+        .state-box p.sub { font-size: .85rem; margin-top: 8px; }
+        .state-box.error { color: #dc2626; }
+        .retry-btn { margin-top: 18px; background: #1e3a5f; color: #fff; border: none; padding: 9px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        .demo-banner { background: #fff8e1; border: 1px solid #ffe08a; color: #7a5b00; padding: 10px 16px; border-radius: 12px; font-size: .85rem; margin-bottom: 20px; }
+        .skeleton { height: 280px; border-radius: 24px; background: linear-gradient(90deg, #eef2f6 25%, #e3e9f0 50%, #eef2f6 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        /* ===== MODAL ===== */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.55); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 500; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #fff; border-radius: 24px; width: 100%; max-width: 420px; overflow: hidden; position: relative; }
+        .modal .card-info { padding-bottom: 28px; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,.9); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: #1e3a5f; }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .book-button { background: #1e3a5f; border: 2px solid #1e3a5f; color: #fff; padding: 8px 24px; border-radius: 40px; font-weight: 700; font-size: .85rem; cursor: pointer; }
+        .book-button:hover { background: #15304e; }
+
+        /* ===== TOAST ===== */
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #2e7d32; color: #fff; padding: 12px 24px; border-radius: 12px; font-size: .9rem; z-index: 1000; animation: slideIn .3s ease; box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+        .toast.error { background: #dc2626; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+        @media (max-width: 950px) {
+            .top-nav { padding: 12px 20px; }
+            .nav-middle { order: 3; width: 100%; justify-content: center; gap: 20px; }
+            .sidebar { width: 220px; }
+            .main-content { padding: 24px 20px; }
+        }
+        @media (max-width: 700px) {
+            .app-layout { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; padding: 16px; }
+            .sidebar ul { display: flex; flex-wrap: wrap; gap: 4px; }
+            .sidebar li a { padding: 8px 12px; font-size: .85rem; }
+            .sidebar-footer { display: none; }
+            .top-nav { padding: 12px 15px; }
+            .nav-tools { width: 100%; justify-content: space-between; }
+            .search-input { width: 100%; min-width: 0; }
+            .profile-preview .info { display: none; }
+        }
+    </style>
 </head>
 <body>
-<div class="top-nav">
-	<div class="logo-area" onclick="window.location.reload()">
-		<img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-		<div class="logo-text">Find<span class="green">Your</span>Path</div>
-	</div>
 
-	<div class="nav-middle">
-		<a href="Dashboard.html" class="active"  data-page="home">Home</a>
-		<a href="Mentors.html" data-page="mentor">Find Mentor</a>
-		<a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-		<a href="InformationTechnology.html" data-page="resources">Resources</a>
-	</div>
+<!-- TOP NAVIGATION -->
+<header class="top-nav">
+    <div class="logo-area" id="logoArea">
+        <img src="PROJECT.png" alt="FindYourPath logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+        <div class="logo-text">Find<span class="green">Your</span>Path</div>
+    </div>
 
-	<div style="display: flex; gap: 16px; align-items: center;">
-		<input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
-		<div class="right-actions">
-			<div class="icon-group">
-				<div class="icon-btn" id="notificationBtn">
-					<i class="far fa-bell"></i>
-					<span class="badge" id="notificationBadge">3</span>
-				</div>
-				<div class="icon-btn" id="messageBtn">
-					<i class="far fa-comment-dots"></i>
-				</div>
-			</div>
-			<div class="divider-vertical"></div>
-			<div class="profile-preview" id="profileBtn">
-				<img id="profileAvatar" src="Polygon 1.png" alt="profile">
-				<div class="info">
-					<div class="name" id="profileName">Student</div>
-					<div class="role" id="profileRole">Student</div>
-				</div>
-				<span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-			</div>
-			<div class="dropdown-menu" id="dropdownMenu">
-				<a href="#"><i class="fas fa-user"></i> My Profile</a>
-				<a href="#"><i class="fas fa-cog"></i> Settings</a>
-				<a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-			</div>
-		</div>
-	</div>
+    <nav class="nav-middle" aria-label="Main">
+        <a href="Dashboard.html">Home</a>
+        <a href="Mentors.html">Find Mentor</a>
+        <a href="EncouragementWall.html">Encouragement</a>
+        <a href="InformationTechnology.html">Resources</a>
+    </nav>
+
+    <div class="nav-tools">
+        <input type="search" class="search-input" id="searchInput" placeholder="Search mentors to book..." aria-label="Search mentors">
+
+        <div class="right-actions">
+            <div class="icon-group">
+                <button class="icon-btn" id="notificationBtn" aria-label="Notifications" type="button">
+                    <i class="far fa-bell"></i>
+                    <span class="badge" id="notificationBadge">3</span>
+                </button>
+                <button class="icon-btn" id="messageBtn" aria-label="Messages" type="button">
+                    <i class="far fa-comment-dots"></i>
+                </button>
+            </div>
+
+            <div class="divider-vertical"></div>
+
+            <button class="profile-preview" id="profileBtn" type="button" aria-haspopup="true">
+                <img id="profileImg" src="https://ui-avatars.com/api/?name=Student&background=e2e8f0&color=64748b" alt="Your profile">
+                <div class="info">
+                    <div class="name" id="profileName">Student</div>
+                    <div class="role" id="profileRole">Student</div>
+                </div>
+                <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
+            </button>
+
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#" data-soon="Profile"><i class="fas fa-user"></i> My Profile</a>
+                <a href="Settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="Dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="Messages.html"><i class="far fa-envelope"></i> Messages</a></li>
+            <li><a href="Booking.html" class="active"><i class="far fa-calendar-alt"></i> Booking</a></li>
+            <li><a href="Mentors.html"><i class="fas fa-users"></i> Mentors</a></li>
+            <li><a href="EncouragementWall.html"><i class="fas fa-globe"></i> Encouragement Cards</a></li>
+            <li><a href="ExperianceWall.html"><i class="fas fa-folder-open"></i> Experiences</a></li>
+            <li><a href="Settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="HelpAndSupport.html"><i class="far fa-question-circle"></i> Help &amp; Support</a></li>
+            <li><a href="#" id="sidebarLogout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+        </ul>
+
+        <div class="sidebar-footer" id="aboutFooter">
+            <img src="PROJECT.png" alt="" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
+            <div class="footer-text">
+                <strong>Real guidance.</strong>
+                <strong>Local mentors.</strong>
+                <strong>Brighter futures.</strong>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <a href="Mentors.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to mentors</a>
+        <h1 class="page-title">Book a session</h1>
+        <p class="page-sub" id="pageSub">Loading…</p>
+
+        <section class="booking-layout" id="bookingView" hidden>
+            <aside class="mentor-panel" id="mentorPanel"></aside>
+
+            <form class="session-panel book-form" id="bookForm" novalidate>
+                <h2>Session details</h2>
+                <label>Date<input type="date" id="bDate" required></label>
+                <div class="form-row">
+                    <label>Start time<input type="time" id="bStart" min="08:00" max="18:00" step="900" required></label>
+                    <label>Duration<select id="bDur"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>60 minutes</option></select></label>
+                </div>
+                <label>Session type<select id="bType"><option>Online</option><option>In person</option></select></label>
+                <label>Meeting link or place (optional)<input type="text" id="bLoc" maxlength="120" placeholder="e.g. Zoom, campus library"></label>
+                <label>What would you like help with?<textarea id="bMsg" rows="4" maxlength="500" required placeholder="Tell your mentor what you want to talk about"></textarea></label>
+                <div class="form-error" id="bErr" role="alert"></div>
+                <button class="book-button full" id="bSubmit" type="submit">Send booking request</button>
+            </form>
+            <div class="session-panel gate" id="gatePanel" hidden></div>
+        </section>
+
+        <section id="pickView" class="pick-box" hidden>
+            <h2>Who do you want to book?</h2>
+            <select id="mentorSelect" aria-label="Choose a mentor"></select>
+            <button class="book-button" id="pickGo" type="button">Continue</button>
+            <a class="back-link" href="Mentors.html">Or browse all mentors</a>
+        </section>
+
+        <h2 class="section-title">My bookings</h2>
+        <div id="myBookings" class="my-bookings"><p class="muted">Loading…</p></div>
+    </main>
 </div>
-<div class="main-layout">
-	<div class="sidebar">
-		<ul>
-			<li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-			<li data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
-			<li class="active" data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
-			<li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
-			<li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-			<li data-nav="experiances"><i class="fas fa-folder-open"></i> Experiances</li>
-			<li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
-			<li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
-			<li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
-		</ul>
 
-
-		<div class="sidebar-footer" id="aboutFooter">
-			<img src="PROJECT.png" alt="logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
-			<div class="footer-text">
-				<strong>Real guidance.</strong>
-				<strong>Local mentors.</strong>
-				<strong>Brighter futures.</strong>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="middle-layout">
-	<div class="booking-tabs">
-		<a href="All.html" class="All-btn">All</a>
-		<a href="Following.html" class="Following-btn">Following</a>
-	</div>
-	<div class="booking-grid">
-		<div class="bottom-card1">
-			<div class ="imgBx">
-				<a href="#"><img class="background3" src="image 7 - Copy.png"></a>
-				<a href="#"><img class="profile3" src="Ellipse 13.png"></a>
-			</div>
-			<div class="card-info">
-				<h2>Mduduzi Zwane</h2>
-				<p>Manager | First National Bank</p>
-			</div>
-			<a href="profile.html" class="btn3">Book</a>
-		</div>
-		<div class ="bottom-card2">
-			<div class ="imgBx">
-				<a href="#"><img class="background4" src="image 6 - Copy.png"></a>
-				<a href="#"><img class="profile4" src="Ellipse 5.png"></a>
-			</div>
-			<div class="card-info">
-				<h2>Aron Smith</h2>
-				<p>Data Analyst | Standard  Bank</p>
-			</div>
-			<a href="profile.html" class="btn3">Book</a>
-		</div>
-		<div class ="bottom-card3">
-			<div class ="imgBx">
-				<a href="#"><img class="background5" src="image 7 - Copy.png"></a>
-				<a href="#"><img class="profile5" src="Ellipse 7.png"></a>
-			</div>
-			<div class="card-info">
-				<h2>Asiphe Dosi</h2>
-				<p>Lecture | University Of kwaZulu-Natal</p>
-			</div>
-			<a href="profile.html" class="btn3">Book</a>
-		</div>
-		<div class ="bottom-card4">
-			<div class="imgBx">
-				<a href="#"><img class="background" src="image 6 - Copy.png"></a>
-				<a href="#"><img class="profile" src="Ellipse 8.png"></a>
-			</div>
-			<div class="card-info">
-				<h2>Aaliya Bilal</h2>
-				<p>Coach | UWC women soccer coach</p>
-			</div>
-			<a href="profile.html" class="btn2">Book</a>
-		</div>
-		<div class ="bottom-card5">
-			<div class ="imgBx">
-				<a href="#"><img class="background2" src="image 7 - Copy.png"></a>
-				<a href="#"><img class="profile2" src="Ellipse 9.png"></a>
-			</div>
-			<div class="card-info">
-				<h2>Kylan Shane</h2>
-				<p>Software Developer | Durban </p>
-
-			</div>
-			<a href="profile.html" class="btn3">Book</a>
-		</div>
-		<div class ="bottom-card6">
-			<div class ="imgBx">
-				<a href="#"><img class="background6" src="image 6 - Copy.png"></a>
-				<a href="#"><img class="profile6" src="Ellipse 10.png"></a>
-			</div>
-			<div class="card-info">
-				<h2>Angelo Author</h2>
-				<p>Fashion Designer | Port Elizeberth</p>
-			</div>
-			<a href="profile.html" class="btn3">Book</a>
-		</div>
-	</div>
-
-</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
-<script src="bookings.js"></script>
 <script>
-	// LOAD LOGGED-IN USER
-	function loadUserIntoBooking() {
-		const raw = localStorage.getItem('careerUser');
-		if (!raw) {
-			window.location.href = 'Home.html';   // or Register.html
-			return;
-		}
+    /* =====================================================
+       FindYourPath — Booking page (student side)
+       Opened from "Book a session" on the Mentors page:
+       Booking.html?mentor=<id>. Shows the mentor and the
+       session details, and saves the request in `bookings`.
+       ===================================================== */
+    const MENTORS_VIEW = 'mentors_public';
+    const BOOKINGS_TABLE = 'bookings';
+    const NEW_STATUS = 'pending';               // must be allowed by your bookings.status column
+    const BUSY_SLOTS_FN = 'mentor_busy_slots';  // optional SQL function (see setup SQL)
+    const COVER_IMAGES = ['image 3.png', 'image 6.png', 'image 7.png'];  // same list as Mentors.js
+    const DAY_START = '08:00', DAY_END = '18:00';
+    const DEBUG = true;   // shows the real database error on screen while you test. Set to false before you hand the project in.
 
-		const user = JSON.parse(raw);
-		const fullName = user.fullname || 'Student';
+    const db = window.sb || window.supabaseClient || window.db || null;
+    const $ = (id) => document.getElementById(id);
+    const state = { mentors: [], user: null, saved: null, current: null };
 
-		const profileName = document.getElementById('profileName');
-		const profileRole = document.getElementById('profileRole');
-		const profileAvatar = document.getElementById('profileAvatar');
+    /* ---------- helpers ---------- */
+    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const hashOf = (v) => [...String(v)].reduce((a, c) => a + c.charCodeAt(0), 0);
+    const toMin = (t) => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
+    const fromMin = (n) => String(Math.floor(n / 60)).padStart(2, '0') + ':' + String(n % 60).padStart(2, '0');
+    const isoDay = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const prettyDay = (iso) => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); };
 
-		if (profileName) profileName.textContent = fullName;
-		if (profileRole) profileRole.textContent = user.role || 'Student';
+    function safeUrl(url, fallback) {
+      if (!url) return fallback;
+      try { const u = new URL(url, location.href); return ['http:', 'https:'].includes(u.protocol) ? u.href : fallback; } catch { return fallback; }
+    }
+    function avatarFor(name) {
+      const letters = (name || '?').trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='156' height='156'><rect width='100%' height='100%' fill='#e8f5e9'/><text x='50%' y='50%' dy='.35em' text-anchor='middle' font-family='Arial,sans-serif' font-size='60' font-weight='700' fill='#2e7d32'>${esc(letters)}</text></svg>`;
+      return 'data:image/svg+xml,' + encodeURIComponent(svg);
+    }
+    function normalise(row) {
+      const name = row.full_name || 'Mentor';
+      return {
+        id: row.id, name,
+        role: [row.job_title, row.company].filter(Boolean).join(' | ') || 'Mentor',
+        location: row.location || '',
+        field: row.career_field || '',
+        studied: [row.education, row.studied_at].filter(Boolean).join(' · '),
+        img: safeUrl(row.avatar_url, '') || avatarFor(name),
+        fallback: avatarFor(name),
+        cover: safeUrl(row.banner_url, '')
+      };
+    }
+    function coverStyle(m) {
+      const file = m.cover || encodeURI(COVER_IMAGES[hashOf(m.id) % COVER_IMAGES.length]);
+      return ` style="background-image:url('${esc(file)}'), linear-gradient(130deg,#c0e0c8,#b8d4e3)"`;
+    }
+    function toast(message, isError = false) {
+      const t = document.createElement('div');
+      t.className = 'toast' + (isError ? ' error' : '');
+      t.setAttribute('role', 'status');
+      t.textContent = message;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2400);
+    }
 
-		if (profileAvatar) {
-			if (user.avatar) {
-				profileAvatar.src = user.avatar;
-			} else {
-				profileAvatar.src =
-						'https://ui-avatars.com/api/?name=' +
-						encodeURIComponent(fullName) +
-						'&background=e2e8f0&color=64748b';
-			}
-		}
-	}
+    /* ---------- user + data ---------- */
+    async function loadUser() {
+      try { state.saved = JSON.parse(localStorage.getItem('careerUser') || 'null'); } catch { /* ignore */ }
+      if (!state.saved) { window.location.href = 'Register.html'; return false; }
+      const name = state.saved.fullname || 'Student';
+      const fb = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=e2e8f0&color=64748b';
+      $('profileName').textContent = name;
+      $('profileRole').textContent = state.saved.role || 'Student';
+      $('profileImg').src = state.saved.avatar ? safeUrl(state.saved.avatar, fb) : fb;
+      if (db && db.auth) {
+        try { const { data } = await db.auth.getUser(); state.user = data?.user || null; } catch (e) { console.warn('Could not load user', e); }
+      }
+      return true;
+    }
 
-	loadUserIntoBooking();
+    async function loadMentors() {
+      if (!db) return false;
+      const base = 'id, full_name, job_title, company, location, avatar_url, banner_url';
+      let res = await db.from(MENTORS_VIEW).select(base + ', career_field, education, studied_at').order('full_name', { ascending: true });
+      if (res.error) {
+        console.warn('Extra mentor columns not available, retrying:', res.error.message);
+        res = await db.from(MENTORS_VIEW).select(base).order('full_name', { ascending: true });
+      }
+      if (res.error) { console.error('Mentor load failed', res.error); return false; }
+      state.mentors = (res.data || []).map(normalise);
+      return true;
+    }
 
-	initStudentBookingButtons();
+    async function loadBookings() {
+      const box = $('myBookings');
+      if (!db || !state.user) { box.innerHTML = '<p class="muted">Log in again to see your bookings.</p>'; return; }
+      const { data, error } = await db.from(BOOKINGS_TABLE)
+        .select('id, mentor_name, session_date, start_time, end_time, status, session_type')
+        .eq('student_id', state.user.id).order('created_at', { ascending: false }).limit(10);
+      if (error) { console.error('Bookings load failed', error); box.innerHTML = '<p class="muted">Could not load your bookings.</p>'; return; }
+      if (!data.length) { box.innerHTML = '<p class="muted">No bookings yet.</p>'; return; }
+      box.innerHTML = data.map((b) => {
+        const s = String(b.status || '').toLowerCase();
+        const cls = s === 'pending' ? 'pending' : ['confirmed', 'accepted', 'approved', 'completed'].includes(s) ? 'good' : ['cancelled', 'canceled', 'declined', 'rejected'].includes(s) ? 'bad' : '';
+        const times = b.start_time ? ' · ' + String(b.start_time).slice(0, 5) + (b.end_time ? '–' + String(b.end_time).slice(0, 5) : '') : '';
+        const when = b.session_date ? esc(b.session_date) + esc(times) : 'Date to be confirmed';
+        return `<div class="booking-row"><div><strong>${esc(b.mentor_name)}</strong><div class="muted">${when}${b.session_type ? ' · ' + esc(b.session_type) : ''}</div></div><span class="status-badge ${cls}">${esc(b.status)}</span></div>`;
+      }).join('');
+    }
 
-	const profileBtn = document.getElementById('profileBtn');
-	const dropdown = document.getElementById('dropdownMenu');
+    /* ---------- views ---------- */
+    function showPick(message) {
+      $('bookingView').hidden = true;
+      $('pickView').hidden = false;
+      $('pageSub').textContent = message || 'Choose the mentor you want to book.';
+      $('mentorSelect').innerHTML = '<option value="">Choose a mentor…</option>' +
+        state.mentors.map((m) => `<option value="${esc(m.id)}">${esc(m.name)}${m.role !== 'Mentor' ? ' — ' + esc(m.role) : ''}</option>`).join('');
+    }
 
-	profileBtn.addEventListener('click', (e) => {
-		e.stopPropagation();
-		dropdown.classList.toggle('show');
-	});
+    async function showBooking(m) {
+      state.current = m;
+      $('pickView').hidden = true;
+      $('bookingView').hidden = false;
+      $('pageSub').textContent = `Choose when you would like to meet ${m.name}.`;
+      const meta = (m.studied ? `<div class="card-meta"><i class="fas fa-graduation-cap"></i><span><b>Studied:</b> ${esc(m.studied)}</span></div>` : '') +
+                   (m.field ? `<div class="card-meta"><i class="fas fa-bullseye"></i><span><b>Mentors in:</b> ${esc(m.field)}</span></div>` : '');
+      $('mentorPanel').innerHTML = `
+        <div class="card-cover"${coverStyle(m)}></div>
+        <div class="avatar-wrapper"><img src="${esc(m.img)}" alt="" data-fallback="${esc(m.fallback)}" onerror="this.onerror=null;this.src=this.dataset.fallback"></div>
+        <div class="card-info">
+          <h3>${esc(m.name)}</h3>
+          <div class="job-title">${esc(m.role)}</div>
+          ${meta ? `<div class="card-meta-wrap">${meta}</div>` : ''}
+          ${m.location ? `<div class="card-location"><i class="fas fa-location-dot"></i>${esc(m.location)}</div>` : ''}
+        </div>
+        <div class="summary"><h4>Your session</h4><dl id="summaryList"></dl></div>`;
+      const conn = await getConnectionStatus(m.id);
+      const connected = String(conn || '').toLowerCase() === 'approved';
+      $('bookForm').hidden = !connected;
+      $('gatePanel').hidden = connected;
+      if (!connected) { renderGate(m, conn); $('mentorPanel').querySelector('.summary').hidden = true; return; }
+      $('bDate').min = isoDay(new Date());
+      updateSummary();
+      $('bDate').focus();
+    }
 
-	document.addEventListener('click', () => {
-		dropdown.classList.remove('show');
-	});
+    function updateSummary() {
+      const day = $('bDate').value, start = $('bStart').value, mins = Number($('bDur').value);
+      const end = start ? fromMin(toMin(start) + mins) : '';
+      const rows = [
+        ['Student', state.saved.fullname || 'You'],
+        ['Mentor (leads the session)', state.current.name],
+        ['Date', day ? prettyDay(day) : '—'],
+        ['Time', start ? `${start} – ${end}` : '—'],
+        ['Duration', `${mins} minutes`],
+        ['Type', $('bType').value],
+        ['Status', 'Pending mentor approval']
+      ];
+      $('summaryList').innerHTML = rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
+    }
 
-	// Sidebar navigation (same as before)
-	document.querySelectorAll('.sidebar li').forEach(item => {
-		item.addEventListener('click', () => {
-			const navItem = item.dataset.nav;
-			document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-			item.classList.add('active');
+    /* ---------- connection check (students must be connected to a mentor before booking) ---------- */
+    async function getConnectionStatus(mentorId) {
+      if (!db || !state.user) return null;
+      const { data, error } = await db.from('connections').select('status')
+        .eq('student_id', state.user.id).eq('mentor_id', mentorId).order('created_at', { ascending: false }).limit(1);
+      if (error) { console.warn('Connection check failed:', error.message); return null; }
+      return data && data[0] ? data[0].status : null;
+    }
 
-			if (navItem === 'dashboard') {
-				window.location.href = 'Dashboard.html';
-			} else if (navItem === 'logout') {
-				const confirmed = confirm('Are you sure you want to log out?');
-				if (confirmed) {
-					localStorage.removeItem('careerUser');
-					localStorage.removeItem('isLoggedIn');
-					window.location.href = 'Home.html';
-				}
-			} else if (navItem === 'mentors') {
-				window.location.href = 'Mentors.html';
-			} else if (navItem === 'messages') {
-				window.location.href = 'Messages.html';
-			} else if (navItem === 'booking') {
-				window.location.href = 'Booking.html';
-			} else if (navItem === 'encouragement') {
-				window.location.href = 'EncouragementWall.html';
-			} else if (navItem === 'experiances') {
-				window.location.href = 'ExperianceWall.html';
-			} else if (navItem === 'settings') {
-				window.location.href = 'Settings.html';
-			} else if (navItem === 'help') {
-				window.location.href = 'HelpAndSupport.html';
-			}
-		});
-	});
+    function renderGate(m, status) {
+      const s = String(status || '').toLowerCase();
+      let body;
+      if (s === 'pending') body = `<i class="fas fa-hourglass-half"></i><h2>Waiting for ${esc(m.name)}</h2><p class="muted">Your connection request has been sent. You can book a session as soon as ${esc(m.name)} approves it.</p>`;
+      else if (s === 'declined' || s === 'rejected') body = `<i class="fas fa-circle-xmark"></i><h2>Connection not approved</h2><p class="muted">${esc(m.name)} did not approve your connection request, so you can't book this mentor right now.</p><a class="book-button" href="Mentors.html">Find other mentors</a>`;
+      else body = `<i class="fas fa-user-plus"></i><h2>Connect with ${esc(m.name)} first</h2><p class="muted">Students connect with a mentor before booking. Send a request and ${esc(m.name)} will review it.</p><button class="book-button" id="connectBtn" type="button">Send connection request</button><div class="form-error" id="cErr" role="alert"></div>`;
+      $('gatePanel').innerHTML = `<div class="success-box">${body}</div>`;
+      const btn = $('connectBtn');
+      if (!btn) return;
+      btn.addEventListener('click', async () => {
+        const err = $('cErr');
+        const fail = (t) => { btn.disabled = false; btn.textContent = 'Send connection request'; err.textContent = t; err.classList.add('show'); };
+        if (!db || !state.user) return fail('Please log in again.');
+        btn.disabled = true; btn.textContent = 'Sending…'; err.classList.remove('show');
+        const { error } = await db.from('connections').insert({ student_id: state.user.id, mentor_id: m.id, student_name: state.saved.fullname || 'Student', status: 'pending' });
+        if (error) { console.error('Connection request failed', error); return fail('We could not send your request.' + (DEBUG ? ` [${error.code || 'error'}] ${error.message}` : ' Please try again.')); }
+        renderGate(m, 'pending');
+      });
+    }
 
-	const logoutBtn = document.getElementById('logoutBtn');
-	if (logoutBtn) {
-		logoutBtn.addEventListener('click', (e) => {
-			e.preventDefault();
-			const confirmed = confirm('Are you sure you want to log out?');
-			if (confirmed) {
-				localStorage.removeItem('careerUser');
-				localStorage.removeItem('isLoggedIn');
-				window.location.href = 'Home.html';
-			}
-		});
-	}
+    /* ---------- save the booking ---------- */
+    async function mentorIsBusy(mentorId, day, start, end) {
+      try {
+        const { data, error } = await db.rpc(BUSY_SLOTS_FN, { p_mentor: mentorId, p_day: day });
+        if (error) throw error;
+        return (data || []).some((b) => b.start_time && b.end_time && toMin(String(b.start_time).slice(0, 5)) < toMin(end) && toMin(String(b.end_time).slice(0, 5)) > toMin(start));
+      } catch (e) { console.warn('Busy-time check skipped:', e.message); return false; }
+    }
+
+    async function submitBooking(e) {
+      e.preventDefault();
+      const m = state.current, err = $('bErr'), btn = $('bSubmit');
+      const fail = (text) => { err.textContent = text; err.classList.add('show'); };
+      err.classList.remove('show');
+
+      const day = $('bDate').value, start = $('bStart').value, mins = Number($('bDur').value);
+      const message = $('bMsg').value.trim();
+      if (!state.user || !db) return fail('Please log in again to book a session.');
+      if (!day || day < isoDay(new Date())) return fail('Choose a date from today onwards.');
+      if (!start) return fail('Choose a start time.');
+      const end = fromMin(toMin(start) + mins);
+      if (toMin(start) < toMin(DAY_START) || toMin(end) > toMin(DAY_END)) return fail(`Sessions run between ${DAY_START} and ${DAY_END}.`);
+      const now = new Date();
+      if (day === isoDay(now) && toMin(start) <= now.getHours() * 60 + now.getMinutes()) return fail('That time has already passed.');
+      if (message.length < 5) return fail('Please tell your mentor what you want help with.');
+
+      btn.disabled = true; btn.textContent = 'Sending…';
+      const reset = () => { btn.disabled = false; btn.textContent = 'Send booking request'; };
+      if (await mentorIsBusy(m.id, day, start, end)) { reset(); return fail('This mentor already has a session at that time. Please pick another time.'); }
+
+      const { error } = await db.from(BOOKINGS_TABLE).insert({
+        student_id: state.user.id,
+        student_name: state.saved.fullname || 'Student',
+        mentor_id: m.id,
+        mentor_name: m.name,
+        mentor_detail: m.role === 'Mentor' ? null : m.role,
+        message,
+        status: NEW_STATUS,
+        session_date: day,
+        start_time: start,
+        end_time: end,
+        session_type: $('bType').value,
+        location: $('bLoc').value.trim() || null
+      });
+      if (error) { console.error('Booking failed', error); reset(); return fail('We could not send your request.' + (DEBUG ? ` [${error.code || 'error'}] ${error.message}` : ' Please try again.')); }
+
+      const done = document.createElement('div');
+      done.className = 'session-panel success-box';
+      done.innerHTML = `<i class="fas fa-circle-check"></i><h2>Request sent!</h2>
+        <p class="muted">${esc(m.name)} will review your request for ${esc(prettyDay(day))} at ${esc(start)}. You can follow its status under My bookings.</p>
+        <div class="success-actions"><a class="book-button" href="Dashboard.html">Go to dashboard</a><a class="book-button light" href="Mentors.html">Find more mentors</a></div>`;
+      $('bookForm').replaceWith(done);
+      loadBookings();
+    }
+
+    /* ---------- events ---------- */
+    $('bookForm').addEventListener('submit', submitBooking);
+    ['bDate', 'bStart', 'bDur', 'bType'].forEach((id) => $(id).addEventListener('input', () => state.current && updateSummary()));
+    $('pickGo').addEventListener('click', () => { const id = $('mentorSelect').value; if (id) window.location.href = 'Booking.html?mentor=' + encodeURIComponent(id); });
+    $('searchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') window.location.href = 'Mentors.html'; });
+
+    $('profileBtn').addEventListener('click', (e) => { e.stopPropagation(); $('dropdownMenu').classList.toggle('show'); });
+    document.addEventListener('click', () => $('dropdownMenu').classList.remove('show'));
+    $('notificationBtn').addEventListener('click', () => { toast('🔔 You have 3 new notifications'); $('notificationBadge').style.display = 'none'; });
+    $('messageBtn').addEventListener('click', () => toast('💬 No new messages'));
+    $('logoArea').addEventListener('click', () => window.location.reload());
+    $('aboutFooter').addEventListener('click', () => toast('✨ FindYourPath - Connecting youth with local mentors'));
+    document.querySelectorAll('[data-soon]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); toast(`${a.dataset.soon} is coming soon!`); }));
+
+    async function logout(e) {
+      e.preventDefault();
+      if (!confirm('Are you sure you want to log out?')) return;
+      try { if (db && db.auth) await db.auth.signOut(); } catch (err) { console.warn('Sign out failed', err); }
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('careerUser');
+      window.location.href = 'Home.html';
+    }
+    $('logoutBtn').addEventListener('click', logout);
+    $('sidebarLogout').addEventListener('click', logout);
+
+    /* ---------- start ---------- */
+    (async function init() {
+      if (!(await loadUser())) return;
+      const ok = await loadMentors();
+      const wanted = new URLSearchParams(window.location.search).get('mentor');   // from "Book a session"
+      const mentor = state.mentors.find((x) => String(x.id) === String(wanted));
+      if (!ok) { $('bookingView').hidden = true; $('pageSub').textContent = 'We could not load mentors right now. Please try again later.'; }
+      else if (mentor && state.user && String(mentor.id) === String(state.user.id)) showPick('You cannot book a session with yourself. Choose another mentor.');
+      else if (mentor) await showBooking(mentor);
+      else showPick(wanted ? 'That mentor is not available. Choose another mentor.' : '');
+      loadBookings();
+    })();
 </script>
 </body>
-</html>				
-	
-					
-	
+</html>

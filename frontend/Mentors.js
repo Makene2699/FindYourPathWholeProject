@@ -323,7 +323,8 @@ function openModal(id) {
   $('modalOverlay').classList.add('show');
   $('modalClose').focus();
   $('modalClose').addEventListener('click', closeModal);
-  $('bookBtn').addEventListener('click', () => showToast('📅 Booking is coming soon!'));
+  // Opens the student Booking page with this mentor selected
+  $('bookBtn').addEventListener('click', () => { window.location.href = 'Booking.html?mentor=' + encodeURIComponent(m.id); });
 }
 
 function closeModal() {
