@@ -520,8 +520,7 @@
         <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
       </div>
       <div class="dropdown-menu" id="dropdownMenu">
-        <a href="#"><i class="fas fa-user"></i> My Profile</a>
-        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        <a href="Settings.html"><i class="fas fa-user"></i> My Profile</a>
         <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
       </div>
     </div>
@@ -781,30 +780,10 @@
 
 <!-- Supabase connection and Help & Support logic (order matters) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabaseClient.js"></script>
 <script src="HelpAndSupport.js"></script>
-
-<script>
-  (function () {
-    var raw = localStorage.getItem('careerUser');
-    if (!raw) return;
-    var user;
-    try { user = JSON.parse(raw); } catch (e) { return; }
-    var box = document.querySelector('.profile-preview');
-    if (!box) return;
-    var fullName = user.fullname || 'Student';
-    var nameEl = box.querySelector('.name');
-    var roleEl = box.querySelector('.role');
-    var img = box.querySelector('img');
-    if (nameEl) nameEl.textContent = fullName;
-    if (roleEl) roleEl.textContent = user.role || 'Student';
-    if (img) {
-      img.src = user.avatar ||
-              'https://ui-avatars.com/api/?name=' + encodeURIComponent(fullName) +
-              '&background=e2e8f0&color=64748b';
-    }
-  })();
-</script>
-
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
+<script src="studentBookingNotifications.js"></script>
+<script src="studentSearch.js"></script>
 </body>
 </html>

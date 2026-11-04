@@ -1,4 +1,3 @@
-
 const LOGIN_PAGE = 'Home.html';
 
 const BookingStore = {
@@ -144,6 +143,45 @@ function initMentorNav() {
     });
 }
 
+/* ---------- Booking page: mentor card helpers ---------- */
+
+// Same cover pictures the Mentors page uses, so a mentor looks identical on both pages.
+// Keep this list in sync with COVER_IMAGES in Mentors.js.
+const BOOKING_COVER_IMAGES = ['image 3.png', 'image 6.png', 'image 7.png'];
+const hashOf = (v) => [...String(v)].reduce((a, c) => a + c.charCodeAt(0), 0);
+
+function coverFor(m) {
+    if (m.banner) return m.banner;
+    return encodeURI(BOOKING_COVER_IMAGES[hashOf(m.id) % BOOKING_COVER_IMAGES.length]);
+}
+
+// Builds the "Studied / Mentors in / location" block (text only, so no HTML injection)
+function buildMentorMeta(m) {
+    const wrap = document.createElement('div');
+    wrap.className = 'card-meta-wrap';
+
+    function line(iconClass, label, text) {
+        const row = document.createElement('div');
+        row.className = 'card-meta';
+        const i = document.createElement('i');
+        i.className = iconClass;
+        const span = document.createElement('span');
+        if (label) {
+            const b = document.createElement('b');
+            b.textContent = label + ' ';
+            span.appendChild(b);
+        }
+        span.appendChild(document.createTextNode(text));
+        row.append(i, span);
+        wrap.appendChild(row);
+    }
+
+    if (m.studied) line('fas fa-graduation-cap', 'Studied:', m.studied);
+    if (m.field)   line('fas fa-bullseye', 'Mentors in:', m.field);
+    if (m.location) line('fas fa-location-dot', '', m.location);
+    return wrap;
+}
+
 async function initStudentBookingButtons() {
     const grid = document.querySelector('.booking-grid');
     if (!grid) return;
@@ -151,9 +189,10 @@ async function initStudentBookingButtons() {
     const cards = Array.from(grid.querySelectorAll(':scope > div[class^="bottom-card"]'));
     if (cards.length === 0) return;
 
-    let mentors = [];          // [{ id, name, detail, photo }]
+    let mentors = [];          // [{ id, name, detail, location, field, studied, photo, banner }]
     let states = {};           // booking state per mentor id
     let emptyEl = null;
+    let view = 'all';          // 'all' or 'booked'
 
     function setState(btn, mode, title) {
         const look = {
@@ -191,10 +230,10 @@ async function initStudentBookingButtons() {
             } catch (err) {
                 console.error(err);
                 if (err.code === '23505') {
-                    await refresh();                       // already pending
+                    await refresh();
                 } else if (err.code === '42501') {
                     setState(btn, 'book');
-                    alert('You need to be connected with this mentor before you can book a session.');
+                    alert('You need to follow this mentor before you can book a session.');
                 } else {
                     setState(btn, 'book');
                     alert('Could not send your request. Please try again.');
@@ -204,7 +243,7 @@ async function initStudentBookingButtons() {
     }
 
     function paint() {
-        // More connected mentors than cards: clone the last card
+        // More mentors than cards: clone the last card
         while (cards.length < mentors.length) {
             const copy = cards[cards.length - 1].cloneNode(true);
             grid.appendChild(copy);
@@ -218,7 +257,9 @@ async function initStudentBookingButtons() {
             grid.appendChild(emptyEl);
         }
         emptyEl.style.display = mentors.length ? 'none' : 'block';
-        emptyEl.textContent = 'You are not connected with any mentors yet. Press Connect on a mentor from your dashboard, and once they approve, they will appear here.';
+        emptyEl.textContent = view === 'booked'
+            ? 'No confirmed bookings yet. When a mentor confirms a session it will show up here.'
+            : 'No mentors yet. Press Connect on a suggested mentor on your dashboard, or Follow a mentor on the Mentors page, and they will appear here.';
 
         cards.forEach((card, i) => {
             const m = mentors[i];
@@ -227,15 +268,27 @@ async function initStudentBookingButtons() {
             card._mentor = m;
 
             const imgs = card.querySelectorAll('.imgBx > a > img');      // [banner, avatar]
+            const banner = imgs[0];
             const avatar = imgs[1];
+
+            if (banner) banner.src = coverFor(m);
+
             if (avatar) {
                 const fallback = initialsAvatar(m.name);
                 avatar.onerror = () => { avatar.onerror = null; avatar.src = fallback; };
                 avatar.src = m.photo || fallback;
                 avatar.alt = m.name;
             }
-            card.querySelector('.card-info h2').textContent = m.name;
-            card.querySelector('.card-info p').textContent = m.detail;
+
+            const info = card.querySelector('.card-info');
+            info.querySelector('h2').textContent = m.name;
+            info.querySelector('p').textContent = m.detail;
+
+            // Replace any previous meta block, then add the fresh one after the role line
+            const old = info.querySelector('.card-meta-wrap');
+            if (old) old.remove();
+            const meta = buildMentorMeta(m);
+            if (meta.children.length) info.querySelector('p').after(meta);
 
             const btn = card.querySelector(':scope > a');
             const b = states[m.id];
@@ -248,28 +301,69 @@ async function initStudentBookingButtons() {
     async function loadMentors() {
         const user = await BookingStore.requireUser();
         if (!user) return;
-        const { data: conns, error } = await sb.from('connections')
-            .select('mentor_id')
-            .eq('student_id', user.id)
-            .eq('status', 'approved');
-        if (error) throw error;
 
-        const ids = Array.from(new Set(conns.map(c => c.mentor_id)));
-        let profiles = [];
-        if (ids.length) {
-            const r = await sb.from('profiles').select('*').in('id', ids);
-            if (r.error) throw r.error;
-            profiles = r.data;
+        let ids = [];
+
+        if (view === 'booked') {
+            // Mentors who have confirmed a session that hasn't ended yet
+            const { data, error } = await sb.from('bookings')
+                .select('mentor_id, session_date, end_time')
+                .eq('student_id', user.id)
+                .eq('status', 'confirmed');
+            if (error) throw error;
+
+            const today = localToday();
+            const nowTime = new Date().toTimeString().slice(0, 8);
+            ids = Array.from(new Set((data || [])
+                .filter(b => b.session_date > today || (b.session_date === today && b.end_time > nowTime))
+                .map(b => b.mentor_id)));
+        } else {
+            // Approved connections + followed mentors
+            const [connRes, followRes] = await Promise.all([
+                sb.from('connections')
+                    .select('mentor_id')
+                    .eq('student_id', user.id)
+                    .eq('status', 'approved'),
+                sb.from('mentor_follows')
+                    .select('mentor_id')
+                    .eq('user_id', user.id)
+            ]);
+            if (connRes.error) throw connRes.error;
+            if (followRes.error) console.warn('Could not load follows:', followRes.error);
+
+            // Follows saved on this device (used when the DB save failed on the Mentors page)
+            let localIds = [];
+            try {
+                localIds = JSON.parse(localStorage.getItem('following') || '[]')
+                    .filter(id => typeof id === 'string');   // ignore numeric sample-data ids
+            } catch (e) { /* ignore */ }
+
+            ids = Array.from(new Set([
+                ...(connRes.data || []).map(r => r.mentor_id),
+                ...((followRes.data) || []).map(r => r.mentor_id),
+                ...localIds
+            ]));
         }
-        mentors = profiles.map(p => {
-            const col = PROFILE_AVATAR_COLUMNS.find(c => p[c]);
-            return {
-                id: p.id,
-                name: p.full_name,
-                detail: [p.job_title, p.company || p.city].filter(Boolean).join(' | '),
-                photo: col ? p[col] : null
-            };
-        }).sort((a, b) => a.name.localeCompare(b.name));
+
+        // Same view and columns the Mentors page uses
+        let rows = [];
+        if (ids.length) {
+            const r = await sb.from('mentors_public')
+                .select('id, full_name, job_title, company, location, avatar_url, banner_url, career_field, education, studied_at')
+                .in('id', ids);
+            if (r.error) throw r.error;
+            rows = r.data;
+        }
+        mentors = rows.map(p => ({
+            id: p.id,
+            name: p.full_name,
+            detail: [p.job_title, p.company].filter(Boolean).join(' | ') || 'Mentor',
+            location: p.location || '',
+            field: p.career_field || '',
+            studied: [p.education, p.studied_at].filter(Boolean).join(' · '),
+            photo: p.avatar_url || null,
+            banner: p.banner_url || null
+        })).sort((a, b) => a.name.localeCompare(b.name));
     }
 
     async function refresh() {
@@ -282,10 +376,23 @@ async function initStudentBookingButtons() {
         }
     }
 
+    /* All / Booked tabs */
+    const allTab = document.getElementById('allTab');
+    const bookedTab = document.getElementById('bookedTab');
+
+    function setView(v) {
+        view = v;
+        if (allTab) allTab.classList.toggle('active', v === 'all');
+        if (bookedTab) bookedTab.classList.toggle('active', v === 'booked');
+        refresh();
+    }
+    if (allTab) allTab.addEventListener('click', e => { e.preventDefault(); setView('all'); });
+    if (bookedTab) bookedTab.addEventListener('click', e => { e.preventDefault(); setView('booked'); });
+
     cards.forEach(c => { c.style.display = 'none'; });   // hide the hard-coded cards until real data arrives
     await refresh();
     BookingStore.watchMyBookings(refresh);               // a mentor confirmed or declined a booking
-    ConnectionStore.watchMine(refresh);                  // a mentor approved a connection
+    ConnectionStore.watchMine(refresh);                  // a connection changed
     window.addEventListener('focus', refresh);           // fallback if Realtime is off
 }
 
@@ -774,6 +881,7 @@ const ConnectionStore = {
     }
 };
 
+/* Dashboard "Suggested Mentors": Connect works like Follow (saved in mentor_follows, no approval) */
 async function initSuggestedMentors() {
     const box = document.querySelector('.suggested-mentors');
     if (!box) return;
@@ -782,9 +890,9 @@ async function initSuggestedMentors() {
 
     function setBtn(btn, mode) {
         const look = {
-            connect:   { text: 'Connect',    off: false },
-            busy:      { text: 'Sending...', off: true },
-            requested: { text: 'Requested',  off: true }
+            connect:   { text: 'Connect',     off: false },
+            busy:      { text: 'Sending...',  off: true },
+            requested: { text: 'Following ✓', off: true }
         }[mode];
         btn.textContent = look.text;
         btn.style.pointerEvents = look.off ? 'none' : '';
@@ -802,7 +910,7 @@ async function initSuggestedMentors() {
         note.style.display = 'block';
     }
 
-    function fillItem(item, m, status) {
+    function fillItem(item, m) {
         const col = PROFILE_AVATAR_COLUMNS.find(c => m[c]);
         const fallback = initialsAvatar(m.full_name);
         const img = item.querySelector('img');
@@ -815,21 +923,20 @@ async function initSuggestedMentors() {
         item.querySelector('.mentor-info span').textContent = m.company || m.city || '';
 
         const btn = item.querySelector('.connect-btn');
-        setBtn(btn, status === 'pending' ? 'requested' : 'connect');
+        setBtn(btn, 'connect');
         btn.onclick = async e => {
             e.preventDefault();
             setBtn(btn, 'busy');
             try {
-                await ConnectionStore.request(m.id);
+                const { data: auth } = await sb.auth.getUser();
+                const { error } = await sb.from('mentor_follows')
+                    .insert({ user_id: auth.user.id, mentor_id: m.id });
+                if (error && error.code !== '23505') throw error;   // 23505 = already following
                 setBtn(btn, 'requested');
             } catch (err) {
                 console.error(err);
-                if (err.code === '23505') {
-                    setBtn(btn, 'requested');
-                } else {
-                    setBtn(btn, 'connect');
-                    alert('Could not send your request. Please try again.');
-                }
+                setBtn(btn, 'connect');
+                alert('Could not follow this mentor. Please try again.');
             }
         };
     }
@@ -839,30 +946,24 @@ async function initSuggestedMentors() {
             const { data: auth } = await sb.auth.getUser();
             if (!auth || !auth.user) { showNote('Log in to see suggested mentors.'); return; }
 
-            const [mentorsRes, connsRes] = await Promise.all([
+            const [mentorsRes, followsRes] = await Promise.all([
                 sb.from('profiles').select('*').eq('role', 'Mentor'),
-                sb.from('connections').select('mentor_id, status').eq('student_id', auth.user.id)
+                sb.from('mentor_follows').select('mentor_id').eq('user_id', auth.user.id)
             ]);
             if (mentorsRes.error) throw mentorsRes.error;
-            if (connsRes.error) throw connsRes.error;
+            if (followsRes.error) throw followsRes.error;
 
-            // One status per mentor: approved beats pending beats declined
-            const rank = { declined: 1, pending: 2, approved: 3 };
-            const state = {};
-            connsRes.data.forEach(c => {
-                if (!state[c.mentor_id] || rank[c.status] > rank[state[c.mentor_id]]) state[c.mentor_id] = c.status;
-            });
+            const followed = new Set((followsRes.data || []).map(r => r.mentor_id));
 
             const candidates = mentorsRes.data
-                .filter(m => state[m.id] !== 'approved' && state[m.id] !== 'declined')
+                .filter(m => !followed.has(m.id))
                 .sort((a, b) =>
-                    ((state[a.id] === 'pending') - (state[b.id] === 'pending')) ||
                     ((!!b.job_title) - (!!a.job_title)) ||
                     a.full_name.localeCompare(b.full_name))
                 .slice(0, items.length);
 
             if (candidates.length === 0) {
-                showNote('You are connected with every available mentor. New mentors will show up here.');
+                showNote('You are following every available mentor. New mentors will show up here.');
                 return;
             }
             if (note) note.style.display = 'none';
@@ -870,7 +971,7 @@ async function initSuggestedMentors() {
                 const m = candidates[i];
                 if (!m) { item.style.display = 'none'; return; }
                 item.style.display = '';
-                fillItem(item, m, state[m.id]);
+                fillItem(item, m);
             });
         } catch (e) {
             console.error('Could not load suggested mentors:', e);
