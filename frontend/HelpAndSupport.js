@@ -1,3 +1,12 @@
+// Name of the logged-in user (saved at login as "careerUser")
+function getLoggedInName() {
+    try {
+        const user = JSON.parse(localStorage.getItem('careerUser') || 'null');
+        if (user && user.fullname) return user.fullname;
+    } catch (e) { /* ignore */ }
+    return 'Guest';
+}
+
 // ---------- Contact Support (saves the issue to Supabase) ----------
 document.getElementById('supBtn').addEventListener('click', async () => {
     const typeEl = document.getElementById('issueType');
@@ -17,7 +26,7 @@ document.getElementById('supBtn').addEventListener('click', async () => {
 
     const { error } = await window.sb
         .from('support_requests')
-        .insert({ name: 'Angle M.', subject, message });
+        .insert({ name: getLoggedInName(), subject, message });
 
     btn.disabled = false;
 
