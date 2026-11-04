@@ -131,9 +131,10 @@ const BookingStore = {
 function initMentorNav() {
     const routes = {
         dashboard: 'MentorDashboard.html',
+        users: 'usersList.html',
         booking: 'MentorBookings.html',
         calendar: 'MentorCalendar.html',
-        messages: 'Messages.html',
+        messages: 'mentorMessages.html',
         settings: 'MentorSettings.html',
     };
     document.querySelectorAll('.sidebar li[data-nav]').forEach(li => {

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Users</title>
+    <meta name="descrption" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="usersList.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="logo-area" onclick="window.location.reload()">
+                <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img"
+                    onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+                <div class="logo-text">Find<span class="green">Your</span>Path</div>
+            </div>
+
+            <div class="admin-card">
+                <img class="admin-avatar" id="sidebarAvatar">
+                <div>
+                    <div class="admin-name" id="sidebarName">Mentor</div>
+                    <div class="admin-role" id="sidebarRole">Mentor</div>
+                    <div class="admin-status"><span class="dot"></span> Online</div>
+                </div>
+            </div>
+
+            <ul>
+                <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+                <li class="active" data-nav="users"><i class="fas fa-users"></i> Users</li>
+                <li data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
+                <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>
+                <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+                <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
+                <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
+                <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
+                <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="promo-card">
+                    <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
+                    <div class="promo-text">
+                        Real guidance.<br>Local mentors.<br>Brighter futures.
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-area">
+            <header class="top-bar">
+                <div class="welcome-block">
+                    <h1 id="welcomeTitle">Welcome back!</h1>
+                    <p>Here's what happening across FindYourPath today.</p>
+                </div>
+
+                <div class="top-bar-right">
+                    <div class="search-wrap">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Search users, mentors, bookings">
+                    </div>
+
+                    <button class="icon-btn" id="notificationBtn" type="button">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+
+                    <div class="profile-preview" id="profileBtn">
+                        <img class="admin-avatar" id="profileAvatar">
+                        <div class="info">
+                            <div class="name" id="profileName">Student</div>
+                            <div class="role" id="profileRole">Student</div>
+                        </div>
+                        <i class="fas fa-chevron-down arrow-down"></i>
+
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="MentorSettings.html"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                <div class="heading">
+                    <h1 id="">Users</h1>
+                </div>
+
+                            <section class="users-list">
+                <div class="toolbar">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search users...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button class="filter-btn active" id="btnAllUsers" onclick="setFilter('all')">All Users</button>
+                        <button class="filter-btn" id="btnConnected" onclick="setFilter('connected')">Connected</button>
+                    </div>
+
+                    <select id="sortSelect" class="sort-select" onchange="handleSort(this.value)">
+                        <option value="az">Sort: Name (A-Z)</option>
+                        <option value="za">Sort: Name (Z-A)</option>
+                        <option value="newest">Sort: Newest First</option>
+                    </select>
+                </div>
+                
+                <div class="list-header">
+                    <div class="col-name">Name</div>
+                    <div class="col-email">Email</div>
+                    <div class="col-role">Role</div>
+                    <div class="col-action">Action</div>
+                </div>
+
+                <div class="users-list-container" id="usersGrid">
+                </div>
+            </section>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
+    <script src="bookings.js"></script>
+
+    <script>
+        if (typeof initMentorNav === 'function') initMentorNav();
+        if (typeof initMentorNotifications === 'function') initMentorNotifications();
+
+        const profileBtn = document.getElementById('profileBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        if (profileBtn && dropdown) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', () => dropdown.classList.remove('show'));
+        }
+
+        if (document.getElementById('activityChart')) {
+            let activityData = {
+                month: { completed: [0, 0, 0, 0, 0], scheduled: [0, 0, 0, 0, 0] },
+                lastMonth: { completed: [0, 0, 0, 0, 0], scheduled: [0, 0, 0, 0, 0] }
+            };
+
+            const valueLabels = {
+                id: 'valueLabels',
+                afterDatasetsDraw(chart) {
+                    const { ctx } = chart;
+                    chart.data.datasets.forEach((ds, i) => {
+                        chart.getDatasetMeta(i).data.forEach((point, idx) => {
+                            ctx.save();
+                            ctx.font = '600 13px Montserrat, sans-serif';
+                            ctx.fillStyle = ds.borderColor;
+                            ctx.textAlign = 'center';
+                            ctx.fillText(ds.data[idx], point.x, point.y - 12);
+                            ctx.restore();
+                        });
+                    });
+                }
+            };
+
+            function areaGradient(chart, rgb) {
+                const { ctx, chartArea } = chart;
+                if (!chartArea) return 'transparent';
+                const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                g.addColorStop(0, `rgba(${rgb}, 0.15)`);
+                g.addColorStop(1, `rgba(${rgb}, 0)`);
+                return g;
+            }
+
+            const activityChart = new Chart(document.getElementById('activityChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                    datasets: [
+                        { label: 'Completed', data: activityData.month.completed, borderColor: '#22b04b', backgroundColor: (c) => areaGradient(c.chart, '34, 176, 75'), fill: true, tension: 0.4, borderWidth: 2, pointRadius: 5, pointBackgroundColor: '#22b04b' },
+                        { label: 'Scheduled', data: activityData.month.scheduled, borderColor: '#1a6bff', backgroundColor: (c) => areaGradient(c.chart, '26, 107, 255'), fill: true, tension: 0.4, borderWidth: 2, pointRadius: 5, pointBackgroundColor: '#1a6bff' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } },
+                    plugins: { legend: { display: false }, tooltip: { enabled: true } },
+                    scales: {
+                        y: { min: 0, ticks: { color: '#0f172a', font: { size: 13, weight: 600 } }, grid: { color: '#e2e8f0' }, border: { display: false, dash: [4, 4] } },
+                        x: { ticks: { color: '#0f172a', font: { size: 13, weight: 600 } }, grid: { display: false } }
+                    }
+                },
+                plugins: [valueLabels]
+            });
+        }
+
+        function loadUserIntoDashboard() {
+            const raw = localStorage.getItem('careerUser');
+            if (!raw) {
+                window.location.href = 'Home.html';
+                return;
+            }
+
+            const user = JSON.parse(raw);
+            const fullName = user.fullname || 'Mentor';
+            const firstName = fullName.split(' ')[0];
+
+            if (document.getElementById('profileName')) document.getElementById('profileName').textContent = fullName;
+            if (document.getElementById('profileRole')) document.getElementById('profileRole').textContent = user.role || 'Mentor';
+            if (document.getElementById('welcomeTitle')) document.getElementById('welcomeTitle').textContent = `Welcome back, ${firstName}!`;
+
+            if (document.getElementById('sidebarName')) document.getElementById('sidebarName').textContent = fullName;
+            if (document.getElementById('sidebarRole')) document.getElementById('sidebarRole').textContent = user.role || 'Mentor';
+        }
+
+        async function loadMentorPhoto() {
+            const imgs = [
+                document.getElementById('sidebarAvatar'),
+                document.getElementById('profileAvatar')
+            ].filter(Boolean);
+            if (!imgs.length) return;
+
+            try {
+                const { data } = await sb.auth.getUser();
+                if (!data || !data.user) return;
+
+                const raw = localStorage.getItem('careerUser');
+                const name = (raw && JSON.parse(raw).fullname) || 'Mentor';
+                const fallback = 'https://via.placeholder.com/40';
+
+                const photo = typeof mentorPhotoUrl === 'function' ? await mentorPhotoUrl(data.user.id) : fallback;
+
+                imgs.forEach(img => {
+                    img.onerror = () => { img.onerror = null; img.src = fallback; };
+                    img.src = photo || fallback;
+                    img.alt = name;
+                });
+            } catch (e) {
+                console.error('Could not load profile picture:', e);
+            }
+        }
+
+        let currentMentorId = null;
+        let allStudents = []; 
+        let connectedStudentIds = new Set();
+        
+        // State for UI
+        let currentFilter = 'all';
+        let currentSort = 'az';
+        let currentSearch = '';
+
+        async function loadUsers() {
+            const grid = document.getElementById('usersGrid');
+            grid.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b;">Loading users...</div>`;
+
+            try {
+                const { data: { user } } = await sb.auth.getUser();
+                if (!user) return;
+                currentMentorId = user.id;
+
+                const { data: students, error: sErr } = await sb
+                    .from('profiles')
+                    .select('id, full_name, email, role')
+                    .in('role', ['youth', 'Student', 'student']);
+
+                if (sErr) throw sErr;
+                
+                allStudents = (students || []).map(s => ({
+                    ...s,
+                    full_name: s.full_name || 'Unknown User',
+                    email: s.email || 'No email'
+                }));
+
+                const { data: connections, error: cErr } = await sb
+                    .from('connections')
+                    .select('student_id')
+                    .eq('mentor_id', currentMentorId);
+
+                if (cErr) throw cErr;
+                connectedStudentIds = new Set((connections || []).map(c => c.student_id));
+
+                applyFiltersAndRender();
+
+            } catch (error) {
+                console.error("Error loading users:", error);
+                grid.innerHTML = `<div style="text-align:center; color:red; padding:20px;">Failed to load users. Check console.</div>`;
+            }
+        }
+
+        window.setFilter = function(type) {
+            currentFilter = type;
+            
+            document.getElementById('btnAllUsers').classList.remove('active');
+            document.getElementById('btnConnected').classList.remove('active');
+            
+            if (type === 'all') document.getElementById('btnAllUsers').classList.add('active');
+            if (type === 'connected') document.getElementById('btnConnected').classList.add('active');
+            
+            applyFiltersAndRender();
+        };
+
+        window.handleSort = function(sortValue) {
+            currentSort = sortValue;
+            applyFiltersAndRender();
+        };
+
+        function applyFiltersAndRender() {
+            let filtered = [...allStudents];
+
+            if (currentSearch) {
+                filtered = filtered.filter(s => 
+                    s.full_name.toLowerCase().includes(currentSearch) || 
+                    s.email.toLowerCase().includes(currentSearch)
+                );
+            }
+
+            if (currentFilter === 'connected') {
+                filtered = filtered.filter(s => connectedStudentIds.has(s.id));
+            }
+
+            filtered.sort((a, b) => {
+                if (currentSort === 'az') return a.full_name.localeCompare(b.full_name);
+                if (currentSort === 'za') return b.full_name.localeCompare(a.full_name);
+                return 0;
+            });
+
+            renderTable(filtered);
+        }
+
+        function renderTable(studentsToRender) {
+            const grid = document.getElementById('usersGrid');
+            
+            if (studentsToRender.length === 0) {
+                grid.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b; background:white; border-radius:12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">No users found matching your criteria.</div>`;
+                return;
+            }
+
+            grid.innerHTML = studentsToRender.map(student => {
+                const isConnected = connectedStudentIds.has(student.id);
+                const roleDisplay = student.role.toLowerCase() === 'youth' ? 'Student' : student.role;
+                
+                const initials = (student.full_name || 'U')
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .substring(0, 2)
+                    .toUpperCase();
+
+                const buttonHtml = isConnected 
+                    ? `<button onclick="toggleConnection('${student.id}', true)" style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; padding:6px 16px; border-radius:6px; cursor:pointer; font-weight:600; font-family:inherit; font-size:0.85rem; transition: 0.2s; width:100%;">Remove</button>`
+                    : `<button onclick="toggleConnection('${student.id}', false)" style="background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; padding:6px 16px; border-radius:6px; cursor:pointer; font-weight:600; font-family:inherit; font-size:0.85rem; transition: 0.2s; width:100%;">Connect</button>`;
+
+                return `
+                    <div class="user-row-card">
+                        <div class="user-col name-col">
+                            <div class="user-avatar">${initials}</div>
+                            ${student.full_name}
+                        </div>
+                        <div class="user-col email-col">${student.email}</div>
+                        <div class="user-col role-col">${roleDisplay}</div>
+                        <div class="user-col action-col">
+                            ${buttonHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+                window.toggleConnection = async function (studentId, isConnected) {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Wait...';
+
+            try {
+                if (isConnected) {
+                    const { error } = await sb.from('connections').delete().eq('mentor_id', currentMentorId).eq('student_id', studentId);
+                    if (error) throw error;
+                    connectedStudentIds.delete(studentId);
+                } else {
+                    const student = allStudents.find(s => s.id === studentId);
+                    const { error } = await sb.from('connections').insert({
+                        student_id: studentId,
+                        mentor_id: currentMentorId,
+                        student_name: student.full_name,
+                        status: 'approved'
+                    });
+                    if (error) throw error;
+                    connectedStudentIds.add(studentId);
+                }
+                
+                applyFiltersAndRender();
+                
+            } catch (error) {
+                console.error("Connection error:", error);
+                alert("Failed to update connection.");
+                applyFiltersAndRender();
+            }
+        };
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase().trim();
+            applyFiltersAndRender();
+        });
+
+        async function handleLogout() {
+            const confirmed = confirm('Are you sure you want to log out?');
+            if (!confirmed) return;
+            try { await sb.auth.signOut(); } catch (e) { }
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('careerUser');
+            window.location.href = 'Home.html';
+        }
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            handleLogout();
+        });
+
+        loadUserIntoDashboard();
+        loadMentorPhoto();
+        loadUsers(); 
+    </script>
+
+</body>
+
+</html>
