@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,7 +18,7 @@
         </div>
 
         <div class="admin-card">
-            <img  class="admin-avatar" id="bookingSidebarAvatar">
+            <img class="admin-avatar" id="bookingSidebarAvatar" alt="">
             <div>
                 <div class="admin-name" id="sidebarName">Mentor</div>
                 <div class="admin-role" id="sidebarRole">Mentor</div>
@@ -29,10 +30,9 @@
             <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
             <li data-nav="users"><i class="fas fa-users"></i> Users</li>
             <li class="active" data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
-            <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+            <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>
             <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
-            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
-            <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
+            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
         </ul>
 
         <div class="sidebar-footer">
@@ -55,9 +55,10 @@
                 <div class="profile-preview" id="profileBtn">
                     <img class="admin-avatar" id="bookingProfileAvatar" alt="profile">
                     <div class="info">
-                        <div class="name" id="profileName">Student</div>
-                        <div class="role" id="profileRole">Student</div>
+                        <div class="name" id="profileName">Mentor</div>
+                        <div class="role" id="profileRole">Mentor</div>
                     </div>
+                </div>
             </div>
         </header>
 
@@ -78,21 +79,35 @@
 <script src="supabaseClient.js"></script>
 <script src="bookings.js"></script>
 <script>
-    initMentorNav();
+    if (typeof initMentorNav === 'function') initMentorNav();
 
     let currentFilter = 'all';
     let bookings = [];
     const listEl = document.getElementById('bookingList');
 
+    const COVER_GRADIENTS = [
+        ['#c0e0c8', '#b8d4e3'],
+        ['#b8d4e3', '#c9d6f2'],
+        ['#d4e8c2', '#a8d5ba'],
+        ['#c9d6f2', '#c0e0c8'],
+        ['#a8d5ba', '#b8d4e3']
+    ];
+
     function initials(name) {
-        return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        return (name || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    function coverFor(name) {
+        const hash = [...String(name || '')].reduce((a, c) => a + c.charCodeAt(0), 0);
+        const [c1, c2] = COVER_GRADIENTS[hash % COVER_GRADIENTS.length];
+        return `linear-gradient(130deg, ${c1}, ${c2})`;
     }
 
     function formatSlot(b) {
         if (b.status !== 'confirmed') return 'Not scheduled yet';
         const d = new Date(b.session_date + 'T00:00');
         const day = d.toLocaleDateString('en-ZA', { weekday: 'short', day: 'numeric', month: 'short' });
-        return day + ', ' + b.start_time.slice(0, 5) + ' - ' + b.end_time.slice(0, 5);
+        return day + ', ' + (b.start_time || '').slice(0, 5) + ' – ' + (b.end_time || '').slice(0, 5);
     }
 
     function showMessage(text) {
@@ -106,7 +121,8 @@
     function render() {
         ['all', 'pending', 'confirmed', 'declined'].forEach(s => {
             const n = s === 'all' ? bookings.length : bookings.filter(b => b.status === s).length;
-            document.getElementById('count' + s[0].toUpperCase() + s.slice(1)).textContent = n;
+            const el = document.getElementById('count' + s[0].toUpperCase() + s.slice(1));
+            if (el) el.textContent = n;
         });
 
         const items = currentFilter === 'all' ? bookings : bookings.filter(b => b.status === currentFilter);
@@ -124,41 +140,58 @@
             row.className = 'booking-row';
             row.href = 'MentorBookingDetails.html?id=' + encodeURIComponent(b.id);
 
+            const cover = document.createElement('div');
+            cover.className = 'booking-cover';
+            cover.style.background = coverFor(b.student_name);
+
+            const avatarWrap = document.createElement('div');
+            avatarWrap.className = 'booking-avatar-wrapper';
             const avatar = document.createElement('div');
             avatar.className = 'booking-avatar';
             avatar.textContent = initials(b.student_name);
+            avatarWrap.appendChild(avatar);
 
+            // Info block
             const info = document.createElement('div');
             info.className = 'booking-info';
+
             const name = document.createElement('div');
             name.className = 'booking-student';
-            name.textContent = b.student_name;
+            name.textContent = b.student_name || 'Student';
+
             const meta = document.createElement('div');
             meta.className = 'booking-meta';
             meta.textContent = b.message ? b.message : 'Wants to book a session with you';
+
             const when = document.createElement('div');
             when.className = 'booking-when';
-            when.textContent = formatSlot(b);
-            info.append(name, meta, when);
+            when.innerHTML = '<i class="far fa-calendar-alt"></i> ' + formatSlot(b);
 
             const side = document.createElement('div');
             side.className = 'booking-side';
+
             const badge = document.createElement('span');
-            badge.className = 'status-badge ' + b.status;
-            badge.textContent = b.status[0].toUpperCase() + b.status.slice(1);
+            badge.className = 'status-badge ' + (b.status || 'pending');
+            badge.textContent = (b.status || 'pending').charAt(0).toUpperCase() + (b.status || 'pending').slice(1);
+
             const req = document.createElement('div');
             req.className = 'booking-requested';
             req.textContent = 'Requested ' + new Date(b.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
-            side.append(badge, req);
 
-            row.append(avatar, info, side);
+            side.append(badge, req);
+            info.append(name, meta, when, side);
+            row.append(cover, avatarWrap, info);
             listEl.appendChild(row);
         });
     }
 
     async function load() {
         try {
-            bookings = await BookingStore.forMentor();
+            if (typeof BookingStore !== 'undefined' && BookingStore.forMentor) {
+                bookings = await BookingStore.forMentor();
+            } else {
+                bookings = [];
+            }
             render();
         } catch (err) {
             console.error(err);
@@ -176,6 +209,7 @@
 
     window.addEventListener('focus', load);
     load();
+
     function loadUserIntoDashboard() {
         const raw = localStorage.getItem('careerUser');
         if (!raw) {
@@ -184,26 +218,19 @@
         }
 
         const user = JSON.parse(raw);
-
         const fullName = user.fullname || 'Mentor';
-        const firstName = fullName.split(' ')[0];
 
         const profileName = document.getElementById('profileName');
         const profileRole = document.getElementById('profileRole');
-        const welcomeTitle = document.getElementById('welcomeTitle');
-        const profileAvatar = document.getElementById('profileAvatar');
-
         if (profileName) profileName.textContent = fullName;
         if (profileRole) profileRole.textContent = user.role || 'Mentor';
-        if (welcomeTitle) welcomeTitle.textContent = `Welcome back, ${firstName}!`;
 
         const sidebarName = document.getElementById('sidebarName');
         const sidebarRole = document.getElementById('sidebarRole');
-
         if (sidebarName) sidebarName.textContent = fullName;
         if (sidebarRole) sidebarRole.textContent = user.role || 'Mentor';
-
     }
+
     async function loadMentorPhoto() {
         const imgs = [
             document.getElementById('bookingSidebarAvatar'),
@@ -212,14 +239,17 @@
         if (!imgs.length) return;
 
         try {
-            const { data } = await sb.auth.getUser();
+            const { data } = await (window.sb || window.supabaseClient).auth.getUser();
             if (!data || !data.user) return;
 
             const raw = localStorage.getItem('careerUser');
             const name = (raw && JSON.parse(raw).fullname) || 'Mentor';
-            const fallback = initialsAvatar(name);
+            const fallback = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=e8f5e9&color=2e7d32';
 
-            const photo = await mentorPhotoUrl(data.user.id);
+            let photo = null;
+            if (typeof mentorPhotoUrl === 'function') {
+                photo = await mentorPhotoUrl(data.user.id);
+            }
 
             imgs.forEach(img => {
                 img.onerror = () => { img.onerror = null; img.src = fallback; };
@@ -233,7 +263,6 @@
 
     loadUserIntoDashboard();
     loadMentorPhoto();
-    loadUserIntoDashboard();
 </script>
 </body>
 </html>
