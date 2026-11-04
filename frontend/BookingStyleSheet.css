@@ -1,442 +1,536 @@
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
-/* ========== TOP NAVBAR ========== */
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: #f4f7fc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+button { font-family: inherit; }
+:focus-visible { outline: 3px solid rgba(46,125,50,.45); outline-offset: 2px; }
+
 .top-nav {
-  background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 32px;
-  border-bottom: 1px solid #e2e8f0;
-  flex-wrap: wrap;
-  gap: 16px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    border-bottom: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .logo-area {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
 }
 
-/* Top navbar logo - smaller size */
 .logo-img {
-  width: 38px;
-  height: 38px;
-  object-fit: contain;
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
 }
 
 .logo-text {
-  font-weight: 800;
-  font-size: 1.5rem;
-  letter-spacing: -0.3px;
-  color: #1e3a5f;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.3px;
+    color: #1e3a5f;
 }
 
-.logo-text .green {
-  color: #2e7d32;
-}
+.logo-text .green { color: #2e7d32; }
 
 .nav-middle {
-  display: flex;
-  gap: 28px;
-  background: white;
-}
-.nav-middle a{
-	display: inline-block;
-    padding: 0 14px;
+    display: flex;
+    gap: 28px;
 }
 
 .nav-middle a {
-  text-decoration: none;
-  font-weight: 600;
-  color: #1e293b;
-  font-size: 0.95rem;
-  transition: 0.2s;
-  padding: 8px 10px;
-  cursor: pointer;
-  border-radius: 10px;
-  text-decoration: none;
+    text-decoration: none;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+    transition: 0.2s;
+    padding: 6px 0;
+    cursor: pointer;
+    border-radius: 40px;
 }
 
 .nav-middle a.active {
-  background-color: #1e3a5f;
-  color: white;
-  padding: 8px 18px;
-  border-radius: 40px;
-}
-.nav-middle a:hover {
-    background-color: #0D2B45;   
-    color: white;
-    box-shadow: 0 4px 10px rgba(106, 27, 154, 0.3); 
+    background: #1e3a5f;
+    color: #fff;
+    padding: 8px 18px;
 }
 
-.nav-middle a:not(.active):hover {
-  color: #2e7d32;
-}
+.nav-middle a:not(.active):hover { color: #2e7d32; }
 
 .search-input {
-  padding: 8px 16px;
-  border-radius: 40px;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  width: 220px;
-  font-size: 0.85rem;
-  outline: none;
-  transition: 0.2s;
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    width: 240px;
+    font-size: 0.85rem;
+    outline: none;
+    transition: 0.2s;
 }
 
 .search-input:focus {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 2px rgba(46,125,50,0.2);
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 2px rgba(46,125,50,.2);
 }
 
 .right-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
 }
 
 .icon-group {
-  display: flex;
-  gap: 18px;
-  align-items: center;
+    display: flex;
+    gap: 18px;
+    align-items: center;
 }
 
 .icon-btn {
-  position: relative;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #5b6e8c;
-  transition: color 0.2s;
+    position: relative;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #5b6e8c;
+    transition: color 0.2s;
+    background: none;
+    border: none;
 }
 
-.icon-btn:hover {
-  color: #2e7d32;
-}
+.icon-btn:hover { color: #2e7d32; }
 
 .badge {
-  position: absolute;
-  top: -8px;
-  right: -10px;
-  background-color: #2e7d32;
-  color: white;
-  font-size: 0.65rem;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 40px;
-  line-height: 1;
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #2e7d32;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 40px;
+    line-height: 1;
 }
 
 .divider-vertical {
-  width: 1px;
-  height: 32px;
-  background-color: #e2e8f0;
+    width: 1px;
+    height: 32px;
+    background: #e2e8f0;
 }
 
 .profile-preview {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
 }
 
 .profile-preview img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #e9f5eb;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e9f5eb;
 }
 
-.profile-preview .info {
-  line-height: 1.3;
-}
+.profile-preview .info { line-height: 1.3; }
+.profile-preview .name { font-weight: 700; font-size: 0.9rem; color: #0f172a; }
+.profile-preview .role { font-size: 0.7rem; color: #5b6e8c; }
+.arrow-down { font-size: 0.7rem; color: #5b6e8c; }
 
-.profile-preview .name {
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: #0f172a;
-}
-
-.profile-preview .role {
-  font-size: 0.7rem;
-  color: #5b6e8c;
-}
-
-.arrow-down {
-  font-size: 0.7rem;
-  color: #5b6e8c;
-}
-
-/* Dropdown menu */
 .dropdown-menu {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  width: 200px;
-  display: none;
-  z-index: 100;
-  overflow: hidden;
+    position: absolute;
+    top: 54px;
+    right: 0;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.1);
+    width: 200px;
+    display: none;
+    z-index: 100;
+    overflow: hidden;
 }
 
-.dropdown-menu.show {
-  display: block;
-}
+.dropdown-menu.show { display: block; }
 
 .dropdown-menu a {
-  display: block;
-  padding: 12px 20px;
-  text-decoration: none;
-  color: #1e293b;
-  transition: 0.2s;
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #1e293b;
+    transition: 0.2s;
 }
 
 .dropdown-menu a:hover {
-  background-color: #f1f5f9;
-  color: #2e7d32;
-}
-body{
-	position: relative;
-    font-family: "Montserrat", sans-serif;
-    background: #f5f6fa;
-}
-.main-layout{
-	 display: flex;
-     flex: 1;
-}
-.sidebar {
-  width: 260px;
-  background-color: white;
-  border-right: 1px solid #e9eef3;
-  padding: 28px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+    background: #f1f5f9;
+    color: #2e7d32;
 }
 
-.sidebar ul {
-  list-style: none;
+/* ========== APP LAYOUT ========== */
+.main-layout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
 }
+
+.sidebar {
+    width: 260px;
+    background: #fff;
+    border-right: 1px solid #e9eef3;
+    padding: 28px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.sidebar ul { list-style: none; }
 
 .sidebar li {
-  padding: 12px 16px;
-  margin: 4px 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #2c3e50;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    padding: 12px 16px;
+    margin: 4px 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2c3e50;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .sidebar li i {
-  width: 20px;
-  font-size: 1rem;
-  color: #5b6e8c;
+    width: 20px;
+    font-size: 1rem;
+    color: #5b6e8c;
 }
 
 .sidebar li.active {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  font-weight: 700;
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-weight: 700;
 }
 
-.sidebar li.active i {
-  color: #2e7d32;
-}
+.sidebar li.active i { color: #2e7d32; }
 
 .sidebar li:hover:not(.active) {
-    background-color: #f1f5f9;
-}
-.sidebar li:hover:not(.active) {
+    background: #f1f5f9;
     color: #2e7d32;
 }
-/* Sidebar footer with BIGGER logo */
+
 .sidebar-footer {
-  margin-top: 40px;
-  padding: 20px 12px;
-  text-align: center;
-  background: #f8fafc;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: 0.2s;
+    margin-top: 40px;
+    padding: 20px 12px;
+    text-align: center;
+    background: #f8fafc;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.sidebar-footer:hover {
-  background: #eef2ff;
-}
-/* BIGGER logo in sidebar footer - 80px instead of 38px */
+.sidebar-footer:hover { background: #eef2ff; }
+
 .footer-logo {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-bottom: 16px;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 16px;
 }
 
 .footer-text {
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #1e3a5f;
-  line-height: 1.6;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #1e3a5f;
+    line-height: 1.6;
 }
 
 .footer-text strong {
-  font-size: 0.9rem;
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 700;
-  color: #1e3a5f;
-}
-.middle-layout {
-    width: 1000px;
-	height: 680px; 
-    position: absolute;
-    left: 280px;
-    top: 90px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-	background: #ffffff;
-	border-radius: 15px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 700;
 }
 
+/* ========== MAIN CONTENT (replaces old absolute middle-layout) ========== */
+.middle-layout {
+    flex: 1;
+    padding: 28px 32px;
+    background: #f8fafc;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Tabs – match Mentors tab style */
 .booking-tabs {
     display: flex;
     gap: 12px;
 }
 
-.All-btn, .Following-btn {
-    padding: 10px 30px;
-    background-color: #0D2B45;
-    color: white;
-    text-decoration: none;
-    font-size: 13px;
+.All-btn,
+.Following-btn {
+    border: 2px solid #1e3a5f;
+    padding: 8px 24px;
+    border-radius: 40px;
     font-weight: 600;
-    border-radius: 10px;
-    transition: 0.3s ease;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+    background: #fff;
+    color: #1e3a5f;
+    text-decoration: none;
 }
 
-.All-btn:hover, .Following-btn:hover {
-    background-color: blue;
+.All-btn:hover,
+.Following-btn:hover {
+    background: #eef2f8;
+}
+
+.All-btn.active,
+.Following-btn.active,
+.All-btn[href="All.html"],
+.Following-btn[href="Following.html"] {
+    /* keep simple; JS or current page can add .active if needed */
+}
+.All-btn.active,
+.Following-btn.active {
+    background: #1e3a5f;
+    color: #fff;
 }
 
 .booking-grid {
     display: grid;
-    grid-template-columns: repeat(3, 290px);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
 }
 
-.bottom-card1, .bottom-card2, .bottom-card3, .bottom-card4, .bottom-card5, .bottom-card6{
-    width: 300px;
-    height: 250px;
-    background: #f5f6fa;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    position: relative;           
-    overflow: hidden;      
+.bottom-card1,
+.bottom-card2,
+.bottom-card3,
+.bottom-card4,
+.bottom-card5,
+.bottom-card6,
+.booking-grid > div[class^="bottom-card"] {
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,.03), 0 2px 6px rgba(0,0,0,.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: auto;
+    height: auto;
 }
-.profile, .profile2, .profile3, .profile4, .profile5, .profile6{
-	position: relative;
-	top: -40px;   
-	left: 18px;   
-	width: 90px;  
-	height: 60px;
-	border-radius: 50%; 
-	border: 3px solid white; 
+
+.bottom-card1:hover,
+.bottom-card2:hover,
+.bottom-card3:hover,
+.bottom-card4:hover,
+.bottom-card5:hover,
+.bottom-card6:hover,
+.booking-grid > div[class^="bottom-card"]:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 30px -12px rgba(0,0,0,.1);
 }
+
+/* Cover area – same height as Mentors */
+.imgBx {
+    position: relative;
+    height: 95px;
+    overflow: visible;
+}
+
+.imgBx > a:first-child {
+    display: block;
+    height: 95px;
+    overflow: hidden;
+}
+
+.imgBx img[class^="background"],
+.imgBx > a:first-child img {
+    width: 100%;
+    height: 95px;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+}
+
+/* Avatar overlaps the cover exactly like Mentors */
+.imgBx > a:last-child {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 57px; /* 95px - 38px */
+    z-index: 2;
+    display: block;
+    line-height: 0;
+}
+
+.imgBx img[class^="profile"],
+.imgBx > a:last-child img {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,.05);
+    background: #fff;
+    position: static;
+    top: auto;
+    left: auto;
+}
+
+/* Info block – centred like Mentors */
 .card-info {
-    padding: 0 10px;
-    margin-top: -30px;
+    text-align: center;
+    padding: 48px 18px 16px; /* space for the overlapping avatar */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .card-info h2 {
-    font-size: 16px;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #222;
-    margin-bottom: 4px;
+    margin: 0 0 4px;
+    color: #0f172a;
+    line-height: 1.3;
 }
-.card-info h4 {
-    font-size: 16px;
-    font-weight: 700;
-    color: #222;
-    margin-bottom: 4px;
-}
+
 .card-info p {
-    font-size: 14px;
-    color: #666;
-    font-family: 'Inter', sans-serif;
-    margin-bottom: 8px;
-}
-hr{
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 15px 0;
-}
-.btn{
-  position: absolute;
-  left: 640px;
-  top: 35%;
-  display: inline-block;
-  padding: 12px 24px;
-  background-color: #ffffff;   
-  color: #5FA43A;              
-  text-decoration: none;
-  border-radius: 6px;
-  font-size: 14px;
-  border: 2px solid #5FA43A;   
-  transition: all 0.3s ease;
-  border-radius: 10px;
-  width: 150px;
-  height: 25px;
-  display: flex;
-  align-items: center;
+    font-size: 0.8rem;
+    color: #475569;
+    margin-bottom: 6px;
+    font-weight: 500;
 }
 
-.btn:hover {
-      background-color: #7ed957;
-	  color: white;	  
-}
-.btn2, .btn3, .btn4{
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 80%;
-  display: inline-block;
-  padding: 12px 59px;
-  background-color: #ffffff;   
-  color: #5FA43A;              
-  text-decoration: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: bold;
-  border: 2px solid #5FA43A;   
-  transition: all 0.3s ease;
-  border-radius: 17px;
-  width: 210px;
-  height: 10px;
-  display: flex;
-  align-items: center;
+/* Meta lines (Studied / Mentors in / location) – same as Mentors */
+.card-meta-wrap {
+    margin: 2px 0 10px;
+    width: 100%;
 }
 
-.btn2:hover, .btn3:hover, .btn4:hover {
-      background-color: #7ed957; 
+.card-meta {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: #475569;
+    margin-bottom: 4px;
+    text-align: left;
 }
-.booking-grid .imgBx img[class^="profile"] {
-    object-fit: cover;
-    object-position: center 20%;
+
+.card-meta i {
+    color: #2e7d32;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.card-meta span {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Book / Requested / Confirmed button – keep functionality, match Mentors button shape */
+.btn2,
+.btn3,
+.btn4,
+.booking-grid > div[class^="bottom-card"] > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 2px solid #2e7d32;
+    color: #2e7d32;
+    padding: 8px 24px;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    margin: 8px auto 22px;
+    width: auto;
+    min-width: 120px;
+    height: auto;
+    position: static;
+    left: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+}
+
+.btn2:hover,
+.btn3:hover,
+.btn4:hover,
+.booking-grid > div[class^="bottom-card"] > a:hover {
+    background: #2e7d32;
+    color: #fff;
+}
+
+/* When JS sets "Requested" / "Confirmed" it may add inline styles;
+   these rules keep the outline look consistent when opacity is lowered */
+.booking-grid > div[class^="bottom-card"] > a[style*="opacity"] {
+    border-color: #2e7d32;
+}
+
+/* Responsive */
+@media (max-width: 950px) {
+    .top-nav { padding: 12px 20px; }
+    .nav-middle { order: 3; width: 100%; justify-content: center; gap: 20px; }
+    .sidebar { width: 220px; }
+    .middle-layout { padding: 24px 20px; }
+}
+
+@media (max-width: 700px) {
+    .main-layout { flex-direction: column; }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 16px;
+    }
+    .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .sidebar li {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    .sidebar-footer { display: none; }
+    .top-nav { padding: 12px 15px; }
+    .search-input { width: 100%; min-width: 0; }
+    .profile-preview .info { display: none; }
+    .middle-layout { padding: 20px 16px; }
+    .booking-grid {
+        grid-template-columns: 1fr;
+    }
 }

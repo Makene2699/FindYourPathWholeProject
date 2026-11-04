@@ -69,7 +69,6 @@ function avatarFor(name) {
 // Add every image file name from your booking page here, e.g. 'image 3.png'.
 // Each mentor always gets the same one (chosen from their id), so it doesn't change on refresh.
 const COVER_IMAGES = ['image 3.png', 'image 6.png', 'image 7.png'];
-const hashOf = (v) => [...String(v)].reduce((a, c) => a + c.charCodeAt(0), 0);
 
 // Default cover when a mentor has none: a brand-coloured gradient picked from their name
 const COVER_GRADIENTS = [
@@ -380,7 +379,6 @@ $('locationFilter').addEventListener('change', (e) => { state.location = e.targe
 // Header: dropdown, notifications, messages, logout
 $('profileBtn').addEventListener('click', (e) => { e.stopPropagation(); $('dropdownMenu').classList.toggle('show'); });
 document.addEventListener('click', () => $('dropdownMenu').classList.remove('show'));
-$('notificationBtn').addEventListener('click', () => { showToast('🔔 You have 3 new notifications'); $('notificationBadge').style.display = 'none'; });
 $('messageBtn').addEventListener('click', () => showToast('💬 No new messages'));
 $('logoArea').addEventListener('click', () => window.location.reload());
 $('aboutFooter').addEventListener('click', () => showToast('✨ FindYourPath - Connecting youth with local mentors'));
@@ -401,6 +399,12 @@ document.querySelectorAll('[data-soon]').forEach((a) => {
   a.addEventListener('click', (e) => { e.preventDefault(); showToast(`${a.dataset.soon} is coming soon!`); });
 });
 
+// Search term passed from another page (Mentors.html?q=...)
+const initialQuery = new URLSearchParams(window.location.search).get('q');
+if (initialQuery) {
+  state.search = initialQuery;
+  $('searchInput').value = initialQuery;
+}
 /* ---------- start ---------- */
 (async function init() {
   await loadUser();
