@@ -477,7 +477,7 @@ body{
     flex-direction: column;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 	margin-top: 10px;
-	margin-right: 5px;
+	margin-right: 20px;
 }
 
 .chat-main-header {

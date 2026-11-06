@@ -131,7 +131,7 @@ function initMentorNav() {
     const routes = {
         dashboard: 'MentorDashboard.html',
         users: 'usersList.html',
-        booking: 'MentorBookings.html',
+        booking: 'MentorBooking.html',
         calendar: 'MentorCalendar.html',
         messages: 'mentorMessages.html',
         settings: 'MentorSettings.html',
