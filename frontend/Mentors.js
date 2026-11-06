@@ -10,7 +10,9 @@ const MENTORS_TABLE = 'mentors_public';   // public view over profiles (role = m
 const MENTOR_ROLE_COLUMN = 'role';        // column that says who is a mentor
 const MENTOR_ROLE_VALUE = '';             // empty because the view already only contains mentors
 const MENTOR_COLUMNS = 'id, full_name, job_title, company, location, avatar_url, banner_url, career_field, education, studied_at';  // columns of the mentors_public view
-const FOLLOWS_TABLE = 'mentor_follows';   // columns: user_id, mentor_id
+// const FOLLOWS_TABLE = 'mentor_follows';
+const FOLLOWS_TABLE = 'connections';
+
 /* ------------------------------------------------------------------ */
 
 // Use whatever client supabaseClient.js created
@@ -173,7 +175,7 @@ async function loadFollows() {
   // Logged in + real data: follows live in Supabase
   if (db && state.user && !state.demo) {
     try {
-      const { data, error } = await db.from(FOLLOWS_TABLE).select('mentor_id').eq('user_id', state.user.id);
+      const { data, error } = await db.from(FOLLOWS_TABLE).select('mentor_id').eq('student_id', state.user.id);
       if (error) throw error;
       (data || []).forEach((r) => state.followed.add(r.mentor_id));
       return;
@@ -198,22 +200,41 @@ async function toggleFollow(id, button) {
   let savedInDb = false;
   if (db && state.user && !state.demo) {
     try {
-      const q = wasFollowing
-        ? db.from(FOLLOWS_TABLE).delete().eq('user_id', state.user.id).eq('mentor_id', id)
-        : db.from(FOLLOWS_TABLE).insert({ user_id: state.user.id, mentor_id: id });
-      const { error } = await q;
+      let error;
+      
+      if (wasFollowing) {
+        // REMOVE CONNECTION
+        const res = await db.from(FOLLOWS_TABLE)
+          .delete()
+          .eq('student_id', state.user.id)
+          .eq('mentor_id', id);
+        error = res.error;
+      } else {
+        // ADD CONNECTION
+        const fullName = $('profileName').textContent || 'Student';
+        const res = await db.from(FOLLOWS_TABLE).insert({ 
+          student_id: state.user.id, 
+          mentor_id: id,
+          student_name: fullName,
+          status: 'pending'
+        });
+        error = res.error;
+      }
+      
       if (error) throw error;
       savedInDb = true;
     } catch (e) {
-      console.warn('Could not save follow in Supabase (is the mentor_follows table created?). Saving on this device instead.', e);
+      console.warn('Could not save follow in Supabase. Saving on this device instead.', e);
+      alert('Database Error: ' + e.message); // Show error so we know why it fails
     }
   }
+  
   if (!savedInDb) {
     try { saveFollowLocally(id, wasFollowing); } catch (e) { console.warn(e); }
   }
 
   wasFollowing ? state.followed.delete(id) : state.followed.add(id);
-  showToast(wasFollowing ? `Unfollowed ${mentor.name}` : `Following ${mentor.name} ✅`, wasFollowing);
+  showToast(wasFollowing ? `Unfollowed ${mentor.name}` : `Follow request sent to ${mentor.name} ✅`, wasFollowing);
   render();
   if (modalOpenId === id) openModal(id);
 }

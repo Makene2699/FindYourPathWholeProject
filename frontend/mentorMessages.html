@@ -130,7 +130,6 @@
 <script src="supabaseClient.js"></script>
 <script src="bookings.js"></script>
 
-
 <script type="module">
     import { supabase } from './supabaseClientModule.js';
 
@@ -216,6 +215,11 @@
     let activeChannel = null;
 
     async function initChat() {
+        if (activeChannel) {
+            supabase.removeChannel(activeChannel);
+            activeChannel = null;
+        }
+
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
             alert('Please log in to access messages.');
@@ -223,7 +227,13 @@
             return;
         }
         me = user;
+        
         await loadChatList();
+
+        document.getElementById('activeChatName').textContent = "Select a student";
+        document.getElementById('activeChatAvatar').src = "https://via.placeholder.com/45";
+        document.getElementById('messageContainer').innerHTML = "";
+        activeConvId = null;
     }
 
     async function loadChatList() {
@@ -254,21 +264,76 @@
 
         if (pErr) return;
 
-        container.innerHTML = profiles.map((contact, index) => `
-            <div class="chat-user-item ${index === 0 ? 'active' : ''}"
+        // Enrich profiles with latest message and unread status
+        const enrichedProfiles = await Promise.all(profiles.map(async (contact) => {
+            const { data: myConvs } = await supabase
+                .from('conversation_participants')
+                .select('conversation_id')
+                .eq('user_id', me.id);
+            
+            const myConvIds = (myConvs || []).map(c => c.conversation_id);
+            
+            let convId = null;
+            if (myConvIds.length > 0) {
+                const { data: match } = await supabase
+                    .from('conversation_participants')
+                    .select('conversation_id')
+                    .eq('user_id', contact.id)
+                    .in('conversation_id', myConvIds)
+                    .maybeSingle();
+                if (match) convId = match.conversation_id;
+            }
+
+            if (!convId) {
+                return { ...contact, latestTime: 0, unread: false };
+            }
+
+            const { data: latestMsg } = await supabase
+                .from('messages')
+                .select('id, created_at, sender_id')
+                .eq('conversation_id', convId)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+
+            let unread = false;
+            if (latestMsg && latestMsg.sender_id !== me.id) {
+                const { data: readReceipt } = await supabase
+                    .from('message_reads')
+                    .select('id')
+                    .eq('message_id', latestMsg.id)
+                    .eq('user_id', me.id)
+                    .maybeSingle();
+                
+                if (!readReceipt) unread = true;
+            }
+
+            return {
+                ...contact,
+                conversationId: convId,
+                latestTime: latestMsg ? new Date(latestMsg.created_at).getTime() : 0,
+                unread: unread
+            };
+        }));
+
+        // Sort by latest message
+        enrichedProfiles.sort((a, b) => b.latestTime - a.latestTime);
+
+        // Render list
+        container.innerHTML = enrichedProfiles.map((contact) => `
+            <div class="chat-user-item"
+                 data-conv-id="${contact.conversationId || ''}"
                  data-student-id="${contact.id}"
-                 onclick="window.__selectChat('${contact.id}', '${contact.full_name.replace(/'/g, "\\'")}', '${contact.avatar_url || ''}')">
+                 data-unread="${contact.unread}"
+                 onclick="window.__selectChat('${contact.id}', '${contact.full_name.replace(/'/g, "\\'")}', '${contact.avatar_url || ''}', '${contact.conversationId || ''}')">
                 <img src="${contact.avatar_url || 'https://via.placeholder.com/45'}" class="user-avatar-md">
                 <div class="user-info">
                     <div class="user-name">${contact.full_name || 'Unknown Student'}</div>
-                    <div class="user-msg">Click to chat</div>
+                    <div class="user-msg">${contact.unread ? 'New message!' : 'Click to chat'}</div>
                 </div>
+                ${contact.unread ? `<div class="status-dot" style="background: #22c55e;"></div>` : ''}
             </div>
         `).join('');
-
-        if (profiles.length > 0) {
-            window.__selectChat(profiles[0].id, profiles[0].full_name, profiles[0].avatar_url || '');
-        }
     }
 
     async function getOrCreateConversation(otherUserId) {
@@ -315,10 +380,19 @@
         }
     }
 
-    window.__selectChat = async function (studentId, studentName, studentAvatar) {
+    window.__selectChat = async function (studentId, studentName, studentAvatar, existingConvId = null) {
         document.querySelectorAll('.chat-user-item').forEach(i => i.classList.remove('active'));
         const item = document.querySelector(`.chat-user-item[data-student-id="${studentId}"]`);
-        if (item) item.classList.add('active');
+        
+        if (item) {
+            item.classList.add('active');
+            item.setAttribute('data-unread', 'false');
+            const dot = item.querySelector('.status-dot');
+            if (dot) dot.remove();
+            
+            const msgEl = item.querySelector('.user-msg');
+            if (msgEl && msgEl.textContent === 'New message!') msgEl.textContent = 'Click to chat';
+        }
 
         document.getElementById('activeChatName').textContent = studentName;
         document.getElementById('activeChatAvatar').src = studentAvatar || 'https://via.placeholder.com/45';
@@ -327,7 +401,12 @@
         container.innerHTML = `<div style="text-align:center;color:#888;padding:20px;">Opening chat...</div>`;
 
         activeStudentId = studentId;
-        activeConvId = await getOrCreateConversation(studentId);
+        
+        if (existingConvId && existingConvId !== 'null' && existingConvId !== '') {
+            activeConvId = existingConvId;
+        } else {
+            activeConvId = await getOrCreateConversation(studentId);
+        }
 
         if (!activeConvId) {
             container.innerHTML = `<div style="color:#dc2626;padding:20px;">Database error: Could not start chat.</div>`;
@@ -384,6 +463,7 @@
             return;
         }
         await loadMessages(activeConvId);
+        await loadChatList();
     };
 
     window.handleEnter = function (e) {
@@ -403,6 +483,7 @@
             }, async (payload) => {
                 if (payload.new.sender_id === me.id) return;
                 await loadMessages(convId);
+                await loadChatList();
             })
             .subscribe();
     }
@@ -411,13 +492,24 @@
         const unread = msgs.filter(m => m.sender_id !== me.id);
         if (unread.length === 0) return;
 
+        const generateId = () => {
+            try { return crypto.randomUUID(); } 
+            catch { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            })}
+        };
+
         const reads = unread.map(m => ({
+            id: generateId(),
             message_id: m.id,
             user_id: me.id,
             read_at: new Date().toISOString()
         }));
 
-        await supabase.from('message_reads').upsert(reads, { onConflict: 'message_id, user_id' }); 
+        await supabase
+            .from('message_reads')
+            .upsert(reads, { onConflict: 'message_id, user_id', ignoreDuplicates: true }); 
     }
 
     window.filterChats = function(filterType) {
@@ -432,9 +524,21 @@
         });
 
         users.forEach(user => {
+            const isUnread = user.getAttribute('data-unread') === 'true';
             const userName = user.querySelector('.user-name').textContent.toLowerCase();
             const matchesSearch = userName.includes(currentSearch);
-            user.style.display = matchesSearch ? 'flex' : 'none';
+
+            let hideByFilter = false;
+            if (filterType === 'unread' && !isUnread) hideByFilter = true;
+            if (filterType === 'read' && isUnread) hideByFilter = true;
+
+            if (hideByFilter || !matchesSearch) {
+                user.classList.add('hidden-user');
+                user.style.display = 'none';
+            } else {
+                user.classList.remove('hidden-user');
+                user.style.display = 'flex';
+            }
         });
     };
 
@@ -444,6 +548,7 @@
             const nameEl = item.querySelector('.user-name');
             if (nameEl) {
                 const matches = nameEl.textContent.toLowerCase().includes(searchValue);
+                item.classList.toggle('hidden-user', !matches);
                 item.style.display = matches ? 'flex' : 'none';
             }
         });

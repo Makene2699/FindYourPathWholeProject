@@ -60,7 +60,7 @@
         </header>
 
         <main class="page-content">
-            <a href="MentorBookings.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to bookings</a>
+            <a href="MentorBooking.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to bookings</a>
 
             <div id="notFound" class="empty-state" style="display:none;">
                 This booking could not be found. Go back to the list and choose another one.
@@ -223,7 +223,7 @@
                     location: $('fLocation').value.trim() || null,
                     notes: $('fNotes').value.trim() || null
                 });
-                window.location.href = 'MentorBookings.html';
+                window.location.href = 'MentorBooking.html';
             } catch (ex) {
                 console.error(ex);
                 err.textContent = 'Could not save the booking. Please try again.';
@@ -236,7 +236,7 @@
             setBusy(true);
             try {
                 await BookingStore.update(id, { status: 'declined', notes: $('fNotes').value.trim() || null });
-                window.location.href = 'MentorBookings.html';
+                window.location.href = 'MentorBooking.html';
             } catch (ex) {
                 console.error(ex);
                 $('formError').textContent = 'Could not decline the booking. Please try again.';

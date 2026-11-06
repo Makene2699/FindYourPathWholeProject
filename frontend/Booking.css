@@ -1,0 +1,318 @@
+/* =========================================
+   PAGE CONTENT & LAYOUT
+   ========================================= */
+.page-content { 
+        padding: 20px 20px 20px 0px;
+    flex: 1; 
+    min-width: 0; 
+    background-color: #f5f6fa;
+}
+
+.page-header { 
+    margin-bottom: 24px; 
+}
+.page-header h1 { 
+    font-size: 1.5rem; 
+    color: #0f2744; 
+    margin-bottom: 8px;
+    margin-top: 5px; 
+}
+.page-header p { 
+    color: #64748b; 
+}
+
+/* =========================================
+   TABS
+   ========================================= */
+/* =========================================
+   SLIDING PILL TOGGLE
+   ========================================= */
+.pill-toggle-container {
+    display: flex;
+    margin-bottom: 24px;
+}
+
+.pill-toggle {
+    position: relative;
+    display: flex;
+    background-color: #0f172a;
+    border-radius: 50px;
+    padding: 5px;
+    width: 100%;
+}
+
+/* The sliding black pill */
+.pill-slider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: calc(50% - 5px);
+    height: calc(100% - 10px);
+    background-color: #2e7d32; /* Dark slate color */
+    border-radius: 50px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+/* Slide to the right when sessions is active */
+.pill-toggle.sessions-active .pill-slider {
+    transform: translateX(100%);
+}
+
+/* The clickable text buttons */
+.pill-option {
+    position: relative;
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 10px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    z-index: 2; /* Sit above the slider */
+    transition: color 0.3s ease;
+    font-family: inherit;
+}
+
+/* White text when active */
+.pill-option.active {
+    color: white;
+}
+
+/* .tab-btn:hover { 
+    color: #0f172a; 
+}
+.tab-btn.active { 
+    color: #2e7d32; 
+    border-bottom-color: #2e7d32; 
+}
+
+.tab-content { 
+    display: none; 
+}
+.tab-content.active { 
+    display: block; 
+} */
+
+/* =========================================
+   MENTOR GRID & CARDS
+   ========================================= */
+.mentor-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 20px; 
+}
+
+.mentor-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: 0.2s;
+}
+.mentor-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.mentor-info { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+.mentor-info img { 
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+.mentor-info h3 { 
+    font-size: 1rem; 
+    color: #0f172a; 
+    margin: 0; 
+}
+.mentor-info p { 
+    font-size: 0.8rem; 
+    color: #64748b; 
+    margin: 0; 
+}
+
+.open-modal-btn {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.open-modal-btn:hover {
+    background: #2e7d32;
+    color: white;
+}
+
+/* =========================================
+   SESSION LIST
+   ========================================= */
+.session-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+.session-item {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+.session-info h3 { 
+    font-size: 1.1rem; 
+    color: #0f172a; 
+    margin: 0 0 5px 0; 
+}
+.session-info p { 
+    font-size: 0.9rem; 
+    color: #64748b; 
+    margin: 0; 
+}
+.session-meta { 
+    display: flex; 
+    gap: 15px; 
+    font-size: 0.85rem; 
+    color: #475569; 
+    margin-top: 10px; 
+}
+.session-meta i { 
+    color: #2e7d32; 
+    margin-right: 5px; 
+}
+
+.join-btn {
+    background: #0f2744;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.join-btn:hover { 
+    background: #1e3a5f; 
+}
+
+/* =========================================
+   MODAL
+   ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    font-size: 1.3rem;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+#bookingForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+#bookingForm label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+#bookingForm select {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+}
+#bookingForm select:focus {
+    border-color: #2e7d32;
+}
+
+#bookingForm input {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.book-btn {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 10px;
+    font-family: inherit;
+}
+.book-btn:hover { 
+    background: #1b5e20; 
+}
+
+/* Force the hidden state for inactive tabs */
+#tab-book, #tab-sessions {
+    display: none;
+}
+
+/* Force the display state for the active tab */
+#tab-book.active, #tab-sessions.active {
+    display: block;
+}
