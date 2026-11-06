@@ -1,44 +1,89 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const postBtn = document.getElementById('postBtn');
-  const postInput = document.getElementById('postInput');
-  const feedContainer = document.getElementById('feedContainer');
-
-  // Function to create and append a new post
-  function createPost() {
-    const text = postInput.value.trim();
-    if (text === '') return;
-
-    const newCard = document.createElement('article');
-    newCard.className = 'feed-card new-post';
-
-    newCard.innerHTML = `
-      <div class="feed-header">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Angle M." class="feed-avatar">
-        <div class="feed-user-info">
-          <h4>Angle M.</h4>
-          <p>Youth | Cape Town</p>
-        </div>
-      </div>
-      <div class="feed-body">
-        ${text}
-      </div>
-    `;
-
-    // Insert the new post right before the post creation input bar
-    const createPostBox = document.querySelector('.create-post-card');
-    feedContainer.insertBefore(newCard, createPostBox);
-
-    // Clear the input field
-    postInput.value = '';
-  }
-
-  // Event listener for button click
-  postBtn.addEventListener('click', createPost);
-
-  // Event listener for pressing "Enter" key
-  postInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      createPost();
-    }
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  loadMentorExperiences();
 });
+
+async function loadMentorExperiences() {
+
+  const container =
+      document.getElementById("experiencePosts");
+
+  try {
+
+    const { data, error } = await sb
+        .from("profiles")
+        .select(`
+                id,
+                full_name,
+                avatar_url,
+                work,
+                location,
+                experience,
+                role,
+                approval_status
+            `)
+        .eq("role", "Mentor")
+        .eq("approval_status", "approved")
+        .not("experience", "is", null);
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      container.innerHTML =
+          "<p>No mentor experiences found.</p>";
+      return;
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(mentor => {
+
+      const card =
+          document.createElement("article");
+
+      card.className = "feed-card";
+
+      card.innerHTML = `
+                <div class="feed-header">
+
+                    <img
+                        src="${
+          mentor.avatar_url ||
+          'https://ui-avatars.com/api/?name=' +
+          encodeURIComponent(mentor.full_name)
+      }"
+                        class="feed-avatar"
+                        alt="${mentor.full_name}"
+                    >
+
+                    <div class="feed-user-info">
+                        <h4>${mentor.full_name}</h4>
+
+                        <p>
+                            ${mentor.work || "Mentor"}
+                            ${mentor.location
+          ? " | " + mentor.location
+          : ""}
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="feed-body">
+                    ${mentor.experience}
+                </div>
+            `;
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+
+    console.error(
+        "Failed to load mentor experiences:",
+        err
+    );
+
+    container.innerHTML =
+        "<p>Unable to load experiences.</p>";
+  }
+}

@@ -694,3 +694,8 @@ body{
 .sidebar-footer:hover {
   background: #eef2ff;
 }
+#experiencePosts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* space between cards */
+}

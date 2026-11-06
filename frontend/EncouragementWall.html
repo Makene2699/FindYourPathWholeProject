@@ -16,9 +16,9 @@
     </div>
 
     <div class="nav-middle">
-        <a href="Dashboard.html" class="active"  data-page="home">Home</a>
+        <a href="Dashboard.html"  data-page="home">Home</a>
         <a href="Mentors.html" data-page="mentor">Find Mentor</a>
-        <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
+        <a href="EncouragementWall.html" class="active" data-page="encouragement">Encouragement</a>
         <a href="InformationTechnology.html" data-page="resources">Resources</a>
     </div>
 
@@ -36,10 +36,12 @@
             </div>
             <div class="divider-vertical"></div>
             <div class="profile-preview" id="profileBtn">
-                <img src="Polygon 1.png" alt="profile">
+                <a href="Settings.html" class="profile-pic-link">
+                    <img id="profileAvatar" src="Polygon 1.png" alt="profile">
+                </a>
                 <div class="info">
-                    <div class="name">Angle M.</div>
-                    <div class="role">Youth</div>
+                    <div class="name" id="profileName">Student</div>
+                    <div class="role" id="profileRole">Student</div>
                 </div>
                 <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
             </div>
@@ -47,6 +49,7 @@
                 <a href="Settings.html"><i class="fas fa-user"></i> My Profile</a>
                 <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
             </div>
+        </div>
         </div>
     </div>
 </div>
@@ -58,7 +61,7 @@
             <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
             <li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
             <li class="active" data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-            <li data-nav="experiences"><i class="fas fa-folder-open"></i> Experiances</li>
+            <li data-nav="experiences"><i class="fas fa-folder-open"></i> Experiences</li>
             <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
             <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
             <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
@@ -132,8 +135,8 @@
             } else if (navItem === 'encouragement') {
                 window.location.href = 'EncouragementWall.html';
                 return;
-            } else if (navItem === 'experiances') {
-                window.location.href = 'ExperianceWall.html';
+            } else if (navItem === 'experiences') {
+                window.location.href = 'ExperienceWall.html';
             } else if (navItem === 'settings') {
                 window.location.href = 'Settings.html';
                 return;

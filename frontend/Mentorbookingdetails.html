@@ -17,10 +17,10 @@
         </div>
 
         <div class="admin-card">
-            <img src="Polygon 1.png" alt="Admin" class="admin-avatar">
+            <img class="admin-avatar" id="sidebarAvatar" alt="">
             <div>
-                <div class="admin-name">Ms. Emily Thompson</div>
-                <div class="admin-role">Administrator</div>
+                <div class="admin-name" id="sidebarName">Mentor</div>
+                <div class="admin-role" id="sidebarRole">Mentor</div>
                 <div class="admin-status"><span class="dot"></span> Online</div>
             </div>
         </div>
@@ -29,10 +29,9 @@
             <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
             <li data-nav="users"><i class="fas fa-users"></i> Users</li>
             <li class="active" data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
-            <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+            <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>
             <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
-            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
-            <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
+            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
         </ul>
 
         <div class="sidebar-footer">
@@ -53,8 +52,11 @@
             </div>
             <div class="top-bar-right">
                 <div class="profile-preview">
-                    <img src="Polygon 1.png" alt="profile">
-                    <div class="info"><div class="name">Administrator</div></div>
+                    <img class="admin-avatar" id="profileAvatar" alt="profile">
+                    <div class="info">
+                        <div class="name" id="profileName">Mentor</div>
+                        <div class="role" id="profileRole">Mentor</div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -136,9 +138,41 @@
 <script src="bookings.js"></script>
 <script>
     initMentorNav();
-
     const $ = x => document.getElementById(x);
     const id = new URLSearchParams(window.location.search).get('id');
+
+    (async function showLoggedInMentor() {
+        const raw = localStorage.getItem('careerUser');
+        if (!raw) { window.location.href = 'Register.html'; return; }
+
+        const user = JSON.parse(raw);
+        const name = user.fullname || 'Mentor';
+        const role = user.role || 'Mentor';
+
+        $('sidebarName').textContent = name;
+        $('sidebarRole').textContent = role;
+        $('profileName').textContent = name;
+        $('profileRole').textContent = role;
+
+        const fallback = initialsAvatar(name);
+        const imgs = [$('sidebarAvatar'), $('profileAvatar')];
+        imgs.forEach(img => { img.src = fallback; img.alt = name; });
+
+        try {
+            const { data } = await sb.auth.getUser();
+            if (!data || !data.user) return;
+            const photo = await mentorPhotoUrl(data.user.id);
+            if (!photo) return;
+            imgs.forEach(img => {
+                img.onerror = () => { img.onerror = null; img.src = fallback; };
+                img.src = photo;
+            });
+        } catch (e) {
+            console.error('Could not load profile picture:', e);
+        }
+    })();
+
+
 
     (async function () {
         let booking = null;

@@ -3,153 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor Profile View - Find Your Path</title>
-    <!-- Link to external CSS file -->
+    <title>Mentor Profile - FindYourPath</title>
     <link rel="stylesheet" href="MentorProfileViewStyleSheet.css">
-    <!-- FontAwesome for the UI icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
+<!-- TOP NAV (same style as Dashboard / Settings) -->
 <div class="top-nav">
-  <div class="logo-area" onclick="window.location.reload()">
-    <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-    <div class="logo-text">Find<span class="green">Your</span>Path</div>
-  </div>
+    <div class="logo-area" onclick="window.location.href='Dashboard.html'">
+        <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+        <div class="logo-text">Find<span class="green">Your</span>Path</div>
+    </div>
 
     <div class="nav-middle">
-        <a href="Dashboard.html" class="active"  data-page="home">Home</a>
+        <a href="Dashboard.html" data-page="home">Home</a>
         <a href="Mentors.html" data-page="mentor">Find Mentor</a>
         <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
         <a href="InformationTechnology.html" data-page="resources">Resources</a>
     </div>
 
-  <div style="display: flex; gap: 16px; align-items: center;">
-    <input type="text" class="search-input" id="searchInput" placeholder="Search...">
-    <div class="right-actions">
-      <div class="icon-group">
-        <div class="icon-btn" id="notificationBtn">
-          <i class="fas fa-bell"></i>
-          <span class="badge" id="notificationBadge">3</span>
+    <div class="nav-right">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
+        <div class="right-actions">
+            <div class="icon-group">
+                <div class="icon-btn" id="notificationBtn">
+                    <i class="far fa-bell"></i>
+                    <span class="badge" id="notificationBadge">0</span>
+                </div>
+                <div class="icon-btn" id="messageBtn">
+                    <i class="far fa-comment-dots"></i>
+                </div>
+            </div>
+            <div class="divider-vertical"></div>
+            <div class="profile-preview" id="profileBtn">
+                <a href="Settings.html" class="profile-pic-link">
+                    <img id="navbarAvatarImage" src="" alt="Profile">
+                </a>
+                <div class="info">
+                    <div class="name" id="navbarUserName">Student</div>
+                    <div class="role" id="navbarUserRole">Student</div>
+                </div>
+                <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="Settings.html"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                </div>
+            </div>
         </div>
-        <div class="icon-btn" id="messageBtn">
-          <i class="fas fa-comment-dots"></i>
-        </div>
-      </div>
-      <div class="divider-vertical"></div>
-      <div class="profile-preview" id="profileBtn">
-        <a href="Settings.html" class="profile-pic-link">
-          <img src="Polygon%201.png" alt="profile">
-        </a>
-        <div class="info">
-          <div class="name">Angle M.</div>
-          <div class="role">Youth</div>
-        </div>
-        <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-      </div>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="#"><i class="fas fa-user"></i> My Profile</a>
-        <a href="#"><i class="fas fa-cog"></i> Settings</a>
-        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-      </div>
     </div>
-  </div>
 </div>
 
 <div class="dashboard-layout">
 
+    <!-- SIDEBAR – More Mentors (loaded from DB) -->
     <aside class="sidebar-card">
         <h2 class="sidebar-title">More Mentors for you</h2>
-        <div class="mentor-list">
-
-            <div class="mentor-item">
-                <img src="JessicaMotaung.png" alt="Jessica" class="mentor-thumb">
-                <div class="mentor-details">
-                    <h3>Jessica Motaung</h3>
-                    <p>Assistant Coach | University of Western Cape</p>
-                </div>
-            </div>
-
-            <div class="mentor-item">
-                <img src="Kylan.png" alt="Klyan" class="mentor-thumb">
-                <div class="mentor-details">
-                    <h3>Klyan Shane</h3>
-                    <p>Software Developer | Durban</p>
-                </div>
-            </div>
-
-            <div class="mentor-item">
-                <img src="Arron.png" alt="Aron" class="mentor-thumb">
-                <div class="mentor-details">
-                    <h3>Aron Smith</h3>
-                    <p>HR Employee | Luno | Cape Town</p>
-                </div>
-            </div>
-
-            <div class="mentor-item">
-                <img src="AsipheDosi.png" alt="Asiphe" class="mentor-thumb">
-                <div class="mentor-details">
-                    <h3>Asiphe Dosi</h3>
-                    <p>Lecture | University of Kwazulu Natal</p>
-                </div>
-            </div>
-
-            <div class="mentor-item">
-                <img src="AngeloAuthor.png" alt="Angelo" class="mentor-thumb">
-                <div class="mentor-details">
-                    <h3>Angelo Author</h3>
-                    <p>Fashion designer | Port Elizabeth</p>
-                </div>
-            </div>
-
+        <div class="mentor-list" id="moreMentorsList">
+            <!-- filled by JS -->
+            <p class="loading-text">Loading mentors...</p>
         </div>
-        <a href="#" class="view-more-link">view more....</a>
+        <a href="Mentors.html" class="view-more-link">View all mentors →</a>
     </aside>
 
-    <main class="profile-card">
-
+    <!-- MAIN PROFILE CARD -->
+    <main class="profile-card" id="mainProfileCard">
         <div class="hero-banner">
             <div class="profile-avatar-container">
-                <img src="Mduduzi.jpg" alt="Mduduzi Zwane" class="main-avatar">
+                <img id="mainAvatar" src="" alt="Mentor" class="main-avatar">
             </div>
         </div>
 
         <div class="profile-body">
             <div class="profile-info-section">
-                <h1 class="profile-name">Mduduzi Zwane</h1>
-                <p class="profile-title">Manager | First National Bank</p>
+                <h1 class="profile-name" id="profileName">Loading...</h1>
+                <p class="profile-title" id="profileTitle">—</p>
 
                 <div class="meta-details">
-                    <p><strong>Email:</strong> zwanemduduzi@gmail.com</p>
-                    <p><strong>Location:</strong> Gqeberha, Eastern Cape</p>
+                    <p><strong>Email:</strong> <span id="profileEmail">—</span></p>
+                    <p><strong>Phone:</strong> <span id="profilePhone">—</span></p>
+                    <p><strong>Location:</strong> <span id="profileLocation">—</span></p>
                 </div>
 
-                <button class="btn-request" id="requestBtn">Request mentor</button>
+                <div class="bio-section" id="bioSection" style="display:none;">
+                    <h3>About</h3>
+                    <p id="profileBio"></p>
+                </div>
+
+
             </div>
 
             <div class="education-work-section">
-                <h2 class="section-title">Education & work</h2>
+                <h2 class="section-title">Education & Work</h2>
 
-                <div class="edu-work-item">
+                <div class="edu-work-item" id="educationItem">
                     <div class="logo-wrapper orange-bg">
                         <i class="fa-solid fa-graduation-cap"></i>
                     </div>
-                    <span class="institution-name">University of Johannesburg</span>
+                    <div>
+                        <span class="institution-name" id="profileEducation">Not specified</span>
+                        <p class="sub-text" id="educationSub"></p>
+                    </div>
                 </div>
 
-                <div class="edu-work-item">
+                <div class="edu-work-item" id="workItem">
                     <div class="logo-wrapper teal-bg">
                         <i class="fa-solid fa-briefcase"></i>
                     </div>
-                    <span class="institution-name">First National Bank</span>
+                    <div>
+                        <span class="institution-name" id="profileWork">Not specified</span>
+                        <p class="sub-text" id="workSub"></p>
+                    </div>
+                </div>
+
+                <div class="edu-work-item" id="experienceItem" style="display:none;">
+                    <div class="logo-wrapper purple-bg">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div>
+                        <span class="institution-name">Experience</span>
+                        <p class="sub-text" id="profileExperience"></p>
+                    </div>
                 </div>
             </div>
         </div>
-
     </main>
-
 </div>
 
-<script src="script.js"></script>
+<!-- Scripts (same stack as Dashboard / Settings) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
+<script src="studentBookingNotifications.js"></script>
+<script src="studentSearch.js"></script>
+
+<script>
+    /* =====================================================
+       MentorProfileView – fully dynamic
+    ===================================================== */
+
+    // ---------- Helpers ----------
+    function getQueryParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+    }
+
+    function safeText(value, fallback = '—') {
+        return (value && String(value).trim()) ? value : fallback;
+    }
+
+    function avatarFallback(name) {
+        return 'https://ui-avatars.com/api/?name=' +
+            encodeURIComponent(name || 'Mentor') +
+            '&background=1e3a5f&color=ffffff&size=200';
+    }
+
+    // ---------- Load current logged-in user into top nav ----------
+    function loadCurrentUser() {
+        const raw = localStorage.getItem('careerUser');
+        if (!raw) {
+            // optional: redirect if not logged in
+            // window.location.href = 'Register.html';
+            return;
+        }
+
+        try {
+            const user = JSON.parse(raw);
+            const nameEl   = document.getElementById('navbarUserName');
+            const roleEl   = document.getElementById('navbarUserRole');
+            const avatarEl = document.getElementById('navbarAvatarImage');
+
+            if (nameEl) nameEl.textContent = user.fullname || user.full_name || 'Student';
+            if (roleEl) roleEl.textContent = user.role || 'Student';
+
+            if (avatarEl) {
+                if (user.avatar || user.avatar_url) {
+                    avatarEl.src = user.avatar || user.avatar_url;
+                } else {
+                    avatarEl.src = avatarFallback(user.fullname || user.full_name);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load current user', e);
+        }
+    }
+
+    // ---------- Load the mentor being viewed ----------
+    async function loadMentorProfile() {
+        const mentorId = getQueryParam('id');
+        if (!mentorId) {
+            document.getElementById('profileName').textContent = 'Mentor not found';
+            document.getElementById('profileTitle').textContent = 'Missing mentor ID in URL';
+            return;
+        }
+
+        try {
+            const { data: mentor, error } = await sb
+                .from('profiles')
+                .select('*')
+                .eq('id', mentorId)
+                .single();
+
+            if (error || !mentor) {
+                console.error(error);
+                document.getElementById('profileName').textContent = 'Mentor not found';
+                return;
+            }
+
+            // Fill main profile
+            document.getElementById('profileName').textContent = safeText(mentor.full_name, 'Unknown Mentor');
+            document.getElementById('profileTitle').textContent =
+                safeText(mentor.career_field || mentor.role, 'Mentor');
+
+            document.getElementById('profileEmail').textContent    = safeText(mentor.email);
+            document.getElementById('profilePhone').textContent    = safeText(mentor.cell_number);
+            document.getElementById('profileLocation').textContent = safeText(mentor.location || mentor.address);
+
+            // Bio
+            if (mentor.bio) {
+                document.getElementById('bioSection').style.display = 'block';
+                document.getElementById('profileBio').textContent = mentor.bio;
+            }
+
+            // Avatar
+            const mainAvatar = document.getElementById('mainAvatar');
+            mainAvatar.src = mentor.avatar_url || avatarFallback(mentor.full_name);
+            mainAvatar.onerror = () => {
+                mainAvatar.src = avatarFallback(mentor.full_name);
+            };
+
+            // Education & Work
+            document.getElementById('profileEducation').textContent = safeText(mentor.education, 'Not specified');
+            document.getElementById('profileWork').textContent      = safeText(mentor.work, 'Not specified');
+
+            if (mentor.experience) {
+                document.getElementById('experienceItem').style.display = 'flex';
+                document.getElementById('profileExperience').textContent = mentor.experience;
+            }
+
+            // Request button – store mentor id for later
+            const requestBtn = document.getElementById('requestBtn');
+            requestBtn.dataset.mentorId = mentor.id;
+            requestBtn.onclick = () => handleRequestMentor(mentor);
+
+            // Update page title
+            document.title = `${mentor.full_name} | FindYourPath`;
+
+        } catch (err) {
+            console.error('Error loading mentor profile:', err);
+            document.getElementById('profileName').textContent = 'Error loading profile';
+        }
+    }
+
+    // ---------- Load other mentors for the sidebar ----------
+    async function loadMoreMentors() {
+        const currentId = getQueryParam('id');
+        const listEl = document.getElementById('moreMentorsList');
+
+        try {
+            let query = sb
+                .from('profiles')
+                .select('id, full_name, role, career_field, location, avatar_url, work, education')
+                .eq('role', 'Mentor')
+                .eq('approval_status', 'approved')
+                .limit(8);
+
+            // Exclude the mentor currently being viewed
+            if (currentId) {
+                query = query.neq('id', currentId);
+            }
+
+            const { data: mentors, error } = await query;
+
+            if (error) throw error;
+
+            if (!mentors || mentors.length === 0) {
+                listEl.innerHTML = '<p class="loading-text">No other mentors found</p>';
+                return;
+            }
+
+            listEl.innerHTML = mentors.map(m => {
+                const title = m.career_field || m.work || m.role || 'Mentor';
+                const location = m.location ? ` | ${m.location}` : '';
+                const avatar = m.avatar_url || avatarFallback(m.full_name);
+
+                return `
+                <a href="MentorProfileView.html?id=${m.id}" class="mentor-item-link">
+                    <div class="mentor-item">
+                        <img src="${avatar}" alt="${m.full_name}" class="mentor-thumb"
+                             onerror="this.src='${avatarFallback(m.full_name)}'">
+                        <div class="mentor-details">
+                            <h3>${safeText(m.full_name)}</h3>
+                            <p>${title}${location}</p>
+                        </div>
+                    </div>
+                </a>
+            `;
+            }).join('');
+
+        } catch (err) {
+            console.error('Failed to load more mentors:', err);
+            listEl.innerHTML = '<p class="loading-text">Could not load mentors</p>';
+        }
+    }
+
+    // ---------- Request mentor (basic – you can expand this) ----------
+    async function handleRequestMentor(mentor) {
+        const raw = localStorage.getItem('careerUser');
+        if (!raw) {
+            alert('Please log in first');
+            window.location.href = 'Register.html';
+            return;
+        }
+
+        const user = JSON.parse(raw);
+        const btn = document.getElementById('requestBtn');
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        try {
+            // Example: insert into mentor_requests table (adjust to your schema)
+            const { error } = await sb
+                .from('mentor_requests')
+                .insert({
+                    student_id: user.id,
+                    mentor_id: mentor.id,
+                    status: 'pending',
+                    created_at: new Date().toISOString()
+                });
+
+            if (error) throw error;
+
+            btn.textContent = 'Request Sent ✓';
+            btn.style.background = '#64748b';
+            alert(`Request sent to ${mentor.full_name}!`);
+        } catch (err) {
+            console.error(err);
+            btn.disabled = false;
+            btn.textContent = 'Request mentor';
+            alert('Could not send request. Please try again.');
+        }
+    }
+
+    // ---------- Dropdown + Logout ----------
+    function initDropdownAndLogout() {
+        const profileBtn = document.getElementById('profileBtn');
+        const dropdown   = document.getElementById('dropdownMenu');
+
+        if (profileBtn && dropdown) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', () => dropdown.classList.remove('show'));
+        }
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                if (!confirm('Are you sure you want to log out?')) return;
+                try {
+                    await sb.auth.signOut();
+                } catch (_) {}
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('careerUser');
+                window.location.href = 'Home.html';
+            });
+        }
+    }
+
+    // ---------- Boot ----------
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCurrentUser();
+        loadMentorProfile();
+        loadMoreMentors();
+        initDropdownAndLogout();
+
+        // These scripts already exist in your project – they will attach to #notificationBtn and #searchInput
+        // if they are present on the page.
+    });
+</script>
 </body>
 </html>

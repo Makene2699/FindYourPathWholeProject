@@ -36,7 +36,9 @@
 			</div>
 			<div class="divider-vertical"></div>
 			<div class="profile-preview" id="profileBtn">
-				<img id="profileAvatar" src="Polygon 1.png" alt="profile">
+				<a href="Settings.html" class="profile-pic-link">
+					<img id="profileAvatar" src="Polygon 1.png" alt="profile">
+				</a>
 				<div class="info">
 					<div class="name" id="profileName">Student</div>
 					<div class="role" id="profileRole">Student</div>
@@ -48,6 +50,7 @@
 				<a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
 			</div>
 		</div>
+		</div>
 	</div>
 </div>
 <div class="main-layout">
@@ -58,7 +61,7 @@
 			<li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
 			<li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
 			<li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-			<li data-nav="experiences"><i class="fas fa-folder-open"></i> Experiances</li>
+			<li data-nav="experiences"><i class="fas fa-folder-open"></i> Experiences</li>
 			<li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
 			<li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
 			<li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
@@ -162,21 +165,15 @@
 
 	<div class="stat-card">
 		<h3>Overall progress</h3>
-		<div class="stat-number"><img src="progress-50.png"></div>
-
-		<div class="stat-footer">
-			<p>Keep going!</p>
-			<img class="stat-icon" src="Trending up.png">
+		<div class="progress-circle-wrapper">
+			<div class="progress-circle" id="overallProgressCircle">
+				<span class="progress-value" id="overallProgressValue">0%</span>
+			</div>
 		</div>
-	</div>
-
-	<div class="stat-card">
-		<h3>Goals Active</h3>
-		<div class="stat-number">3</div>
 
 		<div class="stat-footer">
-			<p>2 in progress</p>
-			<img class="stat-icon" src="TargetLogo.jpg">
+			<p id="overallProgressMessage">Keep going!</p>
+			<img class="stat-icon" src="Trending up.png" alt="">
 		</div>
 	</div>
 
@@ -294,13 +291,26 @@
 <script src="studentBookingNotifications.js"></script>
 <script src="studentSearch.js"></script>
 <script>
-	const profileBtn = document.getElementById('profileBtn');
-	const dropdown = document.getElementById('dropdownMenu');
+	const profileBtn =
+			document.getElementById("profileBtn");
 
-	profileBtn.addEventListener('click', (e) => {
-		e.stopPropagation();
-		dropdown.classList.toggle('show');
-	});
+	const dropdown =
+			document.getElementById("dropdownMenu");
+
+	if (profileBtn && dropdown) {
+
+		profileBtn.onclick = function (e) {
+
+			e.stopPropagation();
+
+			dropdown.classList.toggle("show");
+		};
+
+		document.addEventListener("click", function () {
+
+			dropdown.classList.remove("show");
+		});
+	}
 	document.querySelectorAll('.menu-item[data-nav]').forEach(function(item) {
 		item.addEventListener('click', function() {
 			const destination = item.dataset.nav;
@@ -356,8 +366,8 @@
 			} else if (navItem === 'encouragement') {
 				window.location.href = 'EncouragementWall.html';
 				return;
-			} else if (navItem === 'experiances') {
-				window.location.href = 'ExperianceWall.html';
+			} else if (navItem === 'experiences') {
+				window.location.href = 'ExperienceWall.html';
 			} else if (navItem === 'settings') {
 				window.location.href = 'Settings.html';
 				return;
@@ -398,12 +408,84 @@
 			}
 		}
 	}
+	async function updateOverallProgress() {
+		const progressValueEl = document.getElementById('overallProgressValue');
+		const progressCircle  = document.getElementById('overallProgressCircle');
+		const messageEl       = document.getElementById('overallProgressMessage');
+
+		if (!progressValueEl || !progressCircle) return;
+
+		const raw = localStorage.getItem('careerUser');
+		if (!raw) return;
+		const user = JSON.parse(raw);
+		const userId = user.id;
+
+		try {
+			const now = new Date();
+			const year  = now.getFullYear();
+			const month = now.getMonth(); // 0-11
+
+			const startOfMonth = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+			const endOfMonth   = new Date(year, month + 1, 0).toISOString().split('T')[0]; // last day of month
+
+			const { data: monthBookings, error } = await sb
+					.from('bookings')
+					.select('id, status, session_date')
+					.eq('student_id', userId)
+					.gte('session_date', startOfMonth)
+					.lte('session_date', endOfMonth);
+
+			if (error) throw error;
+
+			const validBookings = (monthBookings || []).filter(b => b.status !== 'declined');
+
+			const totalBooked = validBookings.length;
+			const completed   = validBookings.filter(b => b.status === 'completed').length;
+
+			// Calculate percentage
+			let percentage = 0;
+			if (totalBooked > 0) {
+				percentage = Math.round((completed / totalBooked) * 100);
+			}
+			percentage = Math.min(percentage, 100);
+
+			// Update the % text
+			progressValueEl.textContent = `${percentage}%`;
+
+			// Update the circular progress
+			const degrees = (percentage / 100) * 360;
+			progressCircle.style.background = `conic-gradient(
+         #22c55e ${degrees}deg,
+         #e5e7eb ${degrees}deg
+      )`;
+
+			if (messageEl) {
+				if (totalBooked === 0) {
+					messageEl.textContent = 'No sessions this month yet';
+				} else if (percentage === 0) {
+					messageEl.textContent = 'Sessions booked – keep going!';
+				} else if (percentage < 50) {
+					messageEl.textContent = 'Keep going!';
+				} else if (percentage < 100) {
+					messageEl.textContent = 'Great progress this month!';
+				} else {
+					messageEl.textContent = 'All sessions completed! 🎉';
+				}
+			}
+
+		} catch (err) {
+			console.error('Failed to calculate overall progress:', err);
+			progressValueEl.textContent = '0%';
+			if (messageEl) messageEl.textContent = 'Keep going!';
+		}
+	}
 	loadUserIntoDashboard();
 	initStudentUpcomingSession();
 	initStudentSessionsCompleted();
 	initStudentBookedMentors();
 	initSuggestedMentors();
 	initDashboardEncouragement();
+	updateOverallProgress();
 </script>
 </body>
 </html>

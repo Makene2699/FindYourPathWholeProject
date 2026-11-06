@@ -495,7 +495,7 @@
     <a href="Dashboard.html" data-page="home">Home</a>
     <a href="Mentors.html" data-page="mentor">Find Mentor</a>
     <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-    <a href="#" data-page="resources">Resources</a>
+    <a href="InformationTechnology.html" data-page="resources">Resources</a>
   </div>
 
   <div style="display: flex; gap: 16px; align-items: center;">
@@ -511,18 +511,21 @@
         </div>
       </div>
       <div class="divider-vertical"></div>
-      <div class="profile-preview" id="profileBtn">
-        <img src="Polygon 1.png" alt="profile">
-        <div class="info">
-          <div class="name">Angle M.</div>
-          <div class="role">Youth</div>
+        <div class="profile-preview" id="profileBtn">
+          <a href="Settings.html" class="profile-pic-link">
+            <img id="profileAvatar" src="Polygon 1.png" alt="profile">
+          </a>
+          <div class="info">
+            <div class="name" id="profileName">Student</div>
+            <div class="role" id="profileRole">Student</div>
+          </div>
+          <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
         </div>
-        <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="Settings.html"><i class="fas fa-user"></i> My Profile</a>
+          <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
       </div>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="Settings.html"><i class="fas fa-user"></i> My Profile</a>
-        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-      </div>
+     </div>
     </div>
   </div>
 </div>
@@ -534,7 +537,7 @@
       <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
       <li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
       <li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-      <li data-nav="experiances"><i class="fas fa-folder-open"></i> Experiances</li>
+      <li data-nav="experiences"><i class="fas fa-folder-open"></i> Experiences</li>
       <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
       <li class="active" data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
       <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
@@ -701,7 +704,39 @@
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="studentBookingNotifications.js"></script>
+<script src="studentSearch.js"></script>
 <script>
+  function loadUserIntoPage() {
+    const raw = localStorage.getItem('careerUser');
+    if (!raw) {
+      window.location.href = 'Register.html';
+      return;
+    }
+
+    const user = JSON.parse(raw);
+    const fullName = user.fullname || 'Student';
+
+    const profileName = document.getElementById('profileName');
+    const profileRole = document.getElementById('profileRole');
+    const profileAvatar = document.getElementById('profileAvatar');
+
+    if (profileName) profileName.textContent = fullName;
+    if (profileRole) profileRole.textContent = user.role || 'Student';
+
+    if (profileAvatar) {
+      if (user.avatar) {
+        profileAvatar.src = user.avatar;
+      } else {
+        profileAvatar.src =
+                'https://ui-avatars.com/api/?name=' +
+                encodeURIComponent(fullName) +
+                '&background=e2e8f0&color=64748b';
+      }
+    }
+  }
   const profileBtn = document.getElementById('profileBtn');
   const dropdown = document.getElementById('dropdownMenu');
 
@@ -766,8 +801,8 @@
       } else if (navItem === 'encouragement') {
         window.location.href = 'EncouragementWall.html';
         return;
-      } else if (navItem === 'experiances') {
-        window.location.href = 'ExperianceWall.html';
+      } else if (navItem === 'experiences') {
+        window.location.href = 'ExperienceWall.html';
       } else if (navItem === 'settings') {
         window.location.href = 'Settings.html';
         return;
@@ -775,6 +810,51 @@
         window.location.href = 'HelpAndSupport.html';
       }
     });
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    loadUserIntoPage();
+
+    const careerListItems = document.querySelectorAll('.menu-item2');
+    const careerSearchInput = document.getElementById('search-input');
+
+    const careerPages = {
+      'Top Career Paths': 'InformationTechnology.html',
+      'Information Technology': 'InformationTechnology.html',
+      'Business & Finance': 'CareerExplorerBusinessAndFinance.html',
+      'Healthcare': 'Healthcare.html',
+      'Education': 'Education.html',
+      'Engineering': 'Engineer.html',
+      'Marketing': 'Marketing.html',
+      'Law': 'Law.html',
+      'Creative Arts': 'CreativeArts.html'
+    };
+
+    careerListItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const selectedCareer = item.innerText.trim();
+        careerListItems.forEach(li => li.classList.remove('active2'));
+        item.classList.add('active2');
+
+        const targetPage = careerPages[selectedCareer];
+        if (targetPage) {
+          window.location.href = targetPage;
+        }
+      });
+    });
+
+    if (careerSearchInput) {
+      careerSearchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        careerListItems.forEach(item => {
+          const text = item.innerText.toLowerCase();
+          if (item === careerListItems[0] || text.includes(searchTerm)) {
+            item.style.display = 'flex';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    }
   });
 </script>
 

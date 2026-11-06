@@ -1214,6 +1214,8 @@ async function initDashboardEncouragement() {
         }
     }
 
+
+
     rows.forEach(r => { r.style.display = 'none'; });
     await load();
     window.addEventListener('focus', load);
