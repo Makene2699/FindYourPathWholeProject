@@ -72,11 +72,17 @@
                 <p>Manage your profile picture and personal details.</p>
             </div>
             <div class="top-bar-right">
-                <div class="profile-preview">
+                <div class="profile-preview" id="profileBtn">
                     <img class="admin-avatar" id="profileAvatar" alt="">
                     <div class="info">
                         <div class="name" id="profileName">Mentor</div>
                         <div class="role" id="profileRole">Mentor</div>
+                    </div>
+                    <i class="fas fa-chevron-down arrow-down"></i>
+
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="MentorSettings.html"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
                     </div>
                 </div>
             </div>
@@ -290,7 +296,40 @@
             $('saveBtn').textContent = 'Save Changes';
         }
     });
+    // Profile dropdown
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('dropdownMenu');
 
+    if (profileBtn && dropdown) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('show');
+        });
+    }
+
+    // Logout
+    async function handleLogout() {
+        const confirmed = confirm('Are you sure you want to log out?');
+        if (!confirmed) return;
+
+        try {
+            await sb.auth.signOut();
+        } catch (e) {
+            console.error('Sign out failed:', e);
+        }
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('careerUser');
+        window.location.href = 'Home.html';
+    }
+
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleLogout();
+    });
     init();
 </script>
 </body>
