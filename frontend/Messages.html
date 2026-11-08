@@ -8,10 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- 1. Load the shared layout CSS -->
-    <link rel="stylesheet" href="student-layout.css">
-    
+    <link rel="stylesheet" href="studentLayout.css">
+
     <!-- 2. Load your specific message CSS -->
     <link rel="stylesheet" href="messageStyle.css">
 
@@ -25,7 +25,7 @@
     <student-header active-page="messages"></student-header>
 
     <div class="main-layout">
-        
+
         <!-- 5. Insert the Sidebar -->
         <student-sidebar active="messages"></student-sidebar>
 
@@ -73,7 +73,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabaseClient.js"></script>
     <script src="student-layout.js"></script>
-
+    <script src="studentProfile.js"></script>
+    <script src="studentBookingNotifications.js"></script>
     <!-- MESSAGING LOGIC -->
     <script type="module">
         import { supabase } from './supabaseClientModule.js';
@@ -99,7 +100,7 @@
                 return;
             }
             me = user;
-            
+
             // Load the list of chats
             await loadChatList();
 
@@ -125,7 +126,7 @@
                 connections = data || [];
             }
 
-            const acceptedConnections = connections.filter(c => 
+            const acceptedConnections = connections.filter(c =>
                 c.status === 'accepted' || c.status === 'approved' || c.status === 'active'
             );
 
@@ -146,9 +147,9 @@
                     .from('conversation_participants')
                     .select('conversation_id')
                     .eq('user_id', me.id);
-                
+
                 const myConvIds = (myConvs || []).map(c => c.conversation_id);
-                
+
                 let convId = null;
                 if (myConvIds.length > 0) {
                     const { data: match } = await supabase
@@ -178,7 +179,7 @@
                         .eq('message_id', latestMsg.id)
                         .eq('user_id', me.id)
                         .maybeSingle();
-                    
+
                     if (!readReceipt) unread = true;
                 }
 
@@ -256,25 +257,25 @@
         window.__selectChat = async function (mentorId, mentorName, mentorAvatar, existingConvId = null) {
             document.querySelectorAll('.chat-user-item').forEach(i => i.classList.remove('active'));
             const item = document.querySelector(`.chat-user-item[data-contact-id="${mentorId}"]`);
-            
+
             if (item) {
                 item.classList.add('active');
                 item.setAttribute('data-unread', 'false');
                 const dot = item.querySelector('.status-dot');
                 if (dot) dot.remove();
-                
+
                 const msgEl = item.querySelector('.user-msg');
                 if (msgEl && msgEl.textContent === 'New message!') msgEl.textContent = 'Click to chat';
             }
 
             document.getElementById('activeChatName').textContent = mentorName;
             document.getElementById('activeChatAvatar').src = mentorAvatar || 'https://via.placeholder.com/45';
-            
+
             const container = document.getElementById('messageContainer');
             container.innerHTML = `<div style="text-align:center;color:#888;padding:20px;">Opening chat...</div>`;
 
             activeMentorId = mentorId;
-            
+
             if (existingConvId && existingConvId !== 'null' && existingConvId !== '') {
                 activeConvId = existingConvId;
             } else {
@@ -293,7 +294,7 @@
         // --- 4. LOAD MESSAGES ---
         async function loadMessages(convId) {
             const container = document.getElementById('messageContainer');
-            
+
             const { data: msgs, error } = await supabase
                 .from('messages')
                 .select('id, sender_id, body, created_at')
@@ -316,14 +317,14 @@
             }).join('');
 
             container.scrollTop = container.scrollHeight;
-            
+
             await markMessagesAsRead(convId, msgs);
         }
 
         // --- 5. SEND MESSAGE ---
         window.sendMessage = async function () {
             if (!activeConvId) return;
-            
+
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
@@ -342,7 +343,7 @@
                 return;
             }
             await loadMessages(activeConvId);
-            await loadChatList(); 
+            await loadChatList();
         };
 
         window.handleEnter = function (e) {
@@ -363,7 +364,7 @@
                 }, async (payload) => {
                     if (payload.new.sender_id === me.id) return;
                     await loadMessages(convId);
-                    await loadChatList(); 
+                    await loadChatList();
                 })
                 .subscribe();
         }
@@ -374,7 +375,7 @@
             if (unread.length === 0) return;
 
             const generateId = () => {
-                try { return crypto.randomUUID(); } 
+                try { return crypto.randomUUID(); }
                 catch { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
                     const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                     return v.toString(16);
@@ -390,8 +391,8 @@
 
             const { error } = await supabase
                 .from('message_reads')
-                .upsert(reads, { onConflict: 'message_id, user_id', ignoreDuplicates: true }); 
-                
+                .upsert(reads, { onConflict: 'message_id, user_id', ignoreDuplicates: true });
+
             if (error) console.error("Error saving read receipts:", error);
         }
 

@@ -5,269 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings | FindYourPath</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Shared layout (same files and order as the other student pages) -->
+    <link rel="stylesheet" href="messageStyle.css">
+    <link rel="stylesheet" href="studentLayout.css">
+
+    <!-- Settings page only, loaded last -->
     <link rel="stylesheet" href="SettingsStyleSheet.css">
-    <!-- Match Dashboard font -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="studentLayout.js"></script>
 </head>
 
 <body>
 
-<header class="top-nav">
-    <div class="logo-area" onclick="window.location.reload()">
-        <img src="PROJECT.png" alt="FindYourPath Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-        <div class="logo-text">Find<span class="green">Your</span>Path</div>
-    </div>
+<!-- Shared header and sidebar -->
+<student-header active-page=""></student-header>
 
-    <nav class="nav-middle">
-        <a href="Dashboard.html">Home</a>
-        <a href="Mentors.html">Find Mentor</a>
-        <a href="EncouragementWall.html">Encouragement</a>
-        <a href="InformationTechnology.html">Resources</a>
-    </nav>
-
-    <div class="nav-right">
-        <input type="text" class="search-input" id="searchInput"
-               placeholder="Search mentor by name or role...">
-
-        <div class="right-actions">
-            <div class="icon-group">
-                <div class="icon-btn" id="notificationBtn">
-                    <i class="far fa-bell"></i>
-                    <span class="badge" id="notificationBadge">3</span>
-                </div>
-
-                <div class="icon-btn" id="messageBtn">
-                    <i class="far fa-comment-dots"></i>
-                </div>
-            </div>
-
-            <div class="divider-vertical"></div>
-
-            <div class="profile-preview" id="profileBtn">
-                <a href="Settings.html" class="profile-pic-link">
-                    <img id="navbarAvatarImage" src="" alt="Profile">
-                </a>
-
-                <div class="info">
-                    <div class="name" id="navbarUserName">Student</div>
-                    <div class="role" id="navbarUserRole">Student</div>
-                </div>
-
-                <span class="arrow-down">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-
-                <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="Settings.html">
-                        <i class="fas fa-user"></i> My Profile
-                    </a>
-                    <a href="#" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Log out
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- MAIN LAYOUT -->
 <div class="main-layout">
+    <student-sidebar active="settings"></student-sidebar>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <ul>
-            <li data-nav="dashboard">
-                <i class="fas fa-tachometer-alt"></i> Dashboard
-            </li>
-            <li data-nav="messages">
-                <i class="far fa-envelope"></i> Messages
-            </li>
-            <li data-nav="booking">
-                <i class="far fa-calendar-alt"></i> Booking
-            </li>
-            <li data-nav="mentors">
-                <i class="fas fa-users"></i> Mentors
-            </li>
-            <li data-nav="encouragement">
-                <i class="fas fa-globe"></i> Encouragement Cards
-            </li>
-            <li data-nav="ExperienceWall.html">
-                <i class="fas fa-folder-open"></i> Experiences
-            </li>
-            <li class="active" data-nav="settings">
-                <i class="fas fa-cog"></i> Settings
-            </li>
-            <li data-nav="HelpAndSupport.html">
-                <i class="far fa-question-circle"></i> Help &amp; Support
-            </li>
-            <li data-nav="logout">
-                <i class="fas fa-sign-out-alt"></i> Log out
-            </li>
-        </ul>
+    <main class="page-content">
+        <div class="st">
 
-        <div class="sidebar-footer" id="aboutFooter">
-            <img src="PROJECT.png" alt="FindYourPath Logo" class="footer-logo">
-            <div class="footer-text">
-                <strong>Real guidance.</strong>
-                <strong>Local mentors.</strong>
-                <strong>Brighter futures.</strong>
+            <h1>Settings</h1>
+
+            <div id="settingsStatus" role="status" aria-live="polite">
+                Profile ready
             </div>
-        </div>
-    </aside>
 
-    <!-- SETTINGS CONTENT -->
-    <main class="settings-main">
+            <div class="settings-content">
 
-        <h1>Settings</h1>
+                <!-- PROFILE INFORMATION -->
+                <section class="profile-card">
 
-        <div id="settingsStatus" role="status" aria-live="polite">
-            Profile ready
-        </div>
+                    <h2>Profile Information</h2>
 
-        <div class="settings-content">
+                    <div class="profile-form-layout">
 
-            <!-- PROFILE INFORMATION -->
-            <section class="profile-card">
+                        <!-- PROFILE PICTURE -->
+                        <div class="profile-picture-section">
 
-                <h2>Profile Information</h2>
+                            <div class="profile-avatar" id="settingsAvatar">
+                                <span id="profileInitials">?</span>
+                                <img id="profileImage"
+                                     alt="Profile Picture"
+                                     style="display:none;">
+                            </div>
 
-                <div class="profile-form-layout">
+                            <input type="file"
+                                   id="profilePictureInput"
+                                   accept="image/png,image/jpeg,image/webp"
+                                   hidden>
 
-                    <!-- PROFILE PICTURE -->
-                    <div class="profile-picture-section">
+                            <button type="button" id="changePictureBtn">
+                                <i class="fas fa-camera"></i>
+                                Change Picture
+                            </button>
 
-                        <div class="profile-avatar" id="profileAvatar">
-                            <span id="profileInitials">?</span>
-                            <img id="profileImage"
-                                 alt="Profile Picture"
-                                 style="display:none;">
+                            <p id="pictureStatus" aria-live="polite"></p>
                         </div>
 
-                        <input type="file"
-                               id="profilePictureInput"
-                               accept="image/png,image/jpeg,image/webp"
-                               hidden>
+                        <!-- PROFILE FORM -->
+                        <div class="form-fields">
 
-                        <button type="button" id="changePictureBtn">
-                            <i class="fas fa-camera"></i>
-                            Change Picture
-                        </button>
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" placeholder="Full Name">
+                            </div>
 
-                        <p id="pictureStatus" aria-live="polite"></p>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" placeholder="Email Address">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" placeholder="Phone Number">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" placeholder="Location">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bio">Bio</label>
+                                <textarea id="bio" placeholder="Tell us about yourself..."></textarea>
+                            </div>
+
+                            <button type="button" id="saveBtn">
+                                Save Changes
+                            </button>
+
+                        </div>
                     </div>
+                </section>
 
-                    <!-- PROFILE FORM -->
-                    <div class="form-fields">
+                <!-- QUICK LINKS -->
+                <aside class="quick-links-card">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li class="quick-link">
+                            <span>Change Password</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </li>
+                    </ul>
+                </aside>
 
-                        <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            <input type="text" id="fullName" placeholder="Full Name">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" placeholder="Email Address">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" placeholder="Phone Number">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="location">Location</label>
-                            <input type="text" id="location" placeholder="Location">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="bio">Bio</label>
-                            <textarea id="bio" placeholder="Tell us about yourself..."></textarea>
-                        </div>
-
-                        <button type="button" id="saveBtn">
-                            Save Changes
-                        </button>
-
-                    </div>
-                </div>
-            </section>
-
-            <!-- QUICK LINKS -->
-            <aside class="quick-links-card">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li class="quick-link">
-                        <span>Change Password</span>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </li>
-                </ul>
-            </aside>
-
+            </div>
         </div>
     </main>
 </div>
 
-<!-- JAVASCRIPT -->
+<!-- JAVASCRIPT (order matters) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
 <script src="bookings.js"></script>
 <script src="studentBookingNotifications.js"></script>
 <script src="studentSearch.js"></script>
-<script src="localProfile.js"></script>
-<script src="settings-local.js"></script>
-
-<script>
-    // Simple dropdown toggle (same as Dashboard)
-    const profileBtn = document.getElementById("profileBtn");
-    const dropdown = document.getElementById("dropdownMenu");
-
-    if (profileBtn && dropdown) {
-        profileBtn.onclick = function (e) {
-            e.stopPropagation();
-            dropdown.classList.toggle("show");
-        };
-        document.addEventListener("click", function () {
-            dropdown.classList.remove("show");
-        });
-    }
-
-    // Sidebar navigation (same behaviour as Dashboard)
-    document.querySelectorAll('.sidebar li').forEach(item => {
-        item.addEventListener('click', () => {
-            const navItem = item.dataset.nav;
-
-            document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-            item.classList.add('active');
-
-            if (navItem === 'dashboard') {
-                window.location.href = 'Dashboard.html';
-            } else if (navItem === 'logout') {
-                // use your existing logout logic
-                if (confirm('Are you sure you want to log out?')) {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('careerUser');
-                    window.location.href = 'Home.html';
-                }
-            } else if (navItem === 'mentors') {
-                window.location.href = 'Mentors.html';
-            } else if (navItem === 'messages') {
-                window.location.href = 'Messages.html';
-            } else if (navItem === 'booking') {
-                window.location.href = 'Booking.html';
-            } else if (navItem === 'encouragement') {
-                window.location.href = 'EncouragementWall.html';
-            } else if (navItem === 'ExperienceWall.html' || navItem === 'experiences') {
-                window.location.href = 'ExperienceWall.html';
-            } else if (navItem === 'settings') {
-                window.location.href = 'Settings.html';
-            } else if (navItem === 'HelpAndSupport.html' || navItem === 'help') {
-                window.location.href = 'HelpAndSupport.html';
-            }
-        });
-    });
-</script>
+<script src="Settings.js"></script>
 
 </body>
 </html>

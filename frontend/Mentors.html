@@ -4,58 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FindYourPath — Mentors & Community</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Shared layout (same files and order as Booking) -->
+    <link rel="stylesheet" href="messageStyle.css">
+    <link rel="stylesheet" href="studentLayout.css">
+    <script src="studentLayout.js"></script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
-        body { background-color: #f4f7fc; display: flex; flex-direction: column; min-height: 100vh; }
+        /* Content area next to the sidebar */
+        .page-content { flex: 1; min-width: 0; padding: 28px 32px; }
+
         button { font-family: inherit; }
         :focus-visible { outline: 3px solid rgba(46,125,50,.45); outline-offset: 2px; }
-
-        /* ===== TOP NAV ===== */
-        .top-nav { background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 12px 32px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 16px; }
-        .logo-area { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .logo-img { width: 38px; height: 38px; object-fit: contain; }
-        .logo-text { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.3px; color: #1e3a5f; }
-        .logo-text .green { color: #2e7d32; }
-        .nav-middle { display: flex; gap: 28px; }
-        .nav-middle a { text-decoration: none; font-weight: 600; color: #1e293b; font-size: .95rem; transition: .2s; padding: 6px 0; cursor: pointer; }
-        .nav-middle a.active { background: #1e3a5f; color: #fff; padding: 8px 18px; border-radius: 40px; }
-        .nav-middle a:not(.active):hover { color: #2e7d32; }
-        .nav-tools { display: flex; gap: 16px; align-items: center; }
-        .search-input { padding: 8px 16px; border-radius: 40px; border: 1px solid #cbd5e1; background: #fff; width: 240px; font-size: .85rem; outline: none; transition: .2s; }
-        .search-input:focus { border-color: #2e7d32; box-shadow: 0 0 0 2px rgba(46,125,50,.2); }
-        .right-actions { display: flex; align-items: center; gap: 20px; position: relative; }
-        .icon-group { display: flex; gap: 18px; align-items: center; }
-        .icon-btn { position: relative; font-size: 1.2rem; cursor: pointer; color: #5b6e8c; transition: color .2s; background: none; border: none; }
-        .icon-btn:hover { color: #2e7d32; }
-        .badge { position: absolute; top: -8px; right: -10px; background: #2e7d32; color: #fff; font-size: .65rem; font-weight: bold; padding: 2px 6px; border-radius: 40px; line-height: 1; }
-        .divider-vertical { width: 1px; height: 32px; background: #e2e8f0; }
-        .profile-preview { display: flex; align-items: center; gap: 10px; cursor: pointer; background: none; border: none; text-align: left; }
-        .profile-preview img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #e9f5eb; }
-        .profile-preview .info { line-height: 1.3; }
-        .profile-preview .name { font-weight: 700; font-size: .9rem; color: #0f172a; }
-        .profile-preview .role { font-size: .7rem; color: #5b6e8c; }
-        .arrow-down { font-size: .7rem; color: #5b6e8c; }
-        .dropdown-menu { position: absolute; top: 54px; right: 0; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.1); width: 200px; display: none; z-index: 100; overflow: hidden; }
-        .dropdown-menu.show { display: block; }
-        .dropdown-menu a { display: block; padding: 12px 20px; text-decoration: none; color: #1e293b; transition: .2s; }
-        .dropdown-menu a:hover { background: #f1f5f9; color: #2e7d32; }
-
-        /* ===== LAYOUT ===== */
-        .app-layout { display: flex; flex: 1; }
-        .sidebar { width: 260px; background: #fff; border-right: 1px solid #e9eef3; padding: 28px 16px; display: flex; flex-direction: column; justify-content: space-between; }
-        .sidebar ul { list-style: none; }
-        .sidebar li a { padding: 12px 16px; margin: 4px 0; font-size: .95rem; font-weight: 500; color: #2c3e50; border-radius: 14px; text-decoration: none; transition: all .2s; display: flex; align-items: center; gap: 12px; }
-        .sidebar li a i { width: 20px; font-size: 1rem; color: #5b6e8c; }
-        .sidebar li a.active { background: #e8f5e9; color: #2e7d32; font-weight: 700; }
-        .sidebar li a.active i { color: #2e7d32; }
-        .sidebar li a:hover:not(.active) { background: #f1f5f9; }
-        .sidebar-footer { margin-top: 40px; padding: 20px 12px; text-align: center; background: #f8fafc; border-radius: 20px; cursor: pointer; transition: .2s; }
-        .sidebar-footer:hover { background: #eef2ff; }
-        .footer-logo { width: 80px; height: 80px; object-fit: contain; margin-bottom: 16px; }
-        .footer-text { font-size: .85rem; font-weight: 500; color: #1e3a5f; line-height: 1.6; }
-        .footer-text strong { font-size: .9rem; display: block; margin-bottom: 4px; font-weight: 700; }
-        .main-content { flex: 1; padding: 28px 32px; background: #f8fafc; min-width: 0; }
 
         /* ===== TABS + FILTER ===== */
         .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
@@ -114,102 +79,17 @@
         .toast.error { background: #dc2626; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
-
-        @media (max-width: 950px) {
-            .top-nav { padding: 12px 20px; }
-            .nav-middle { order: 3; width: 100%; justify-content: center; gap: 20px; }
-            .sidebar { width: 220px; }
-            .main-content { padding: 24px 20px; }
-        }
-        @media (max-width: 700px) {
-            .app-layout { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; padding: 16px; }
-            .sidebar ul { display: flex; flex-wrap: wrap; gap: 4px; }
-            .sidebar li a { padding: 8px 12px; font-size: .85rem; }
-            .sidebar-footer { display: none; }
-            .top-nav { padding: 12px 15px; }
-            .nav-tools { width: 100%; justify-content: space-between; }
-            .search-input { width: 100%; min-width: 0; }
-            .profile-preview .info { display: none; }
-        }
     </style>
 </head>
 <body>
 
-<!-- TOP NAVIGATION -->
-<header class="top-nav">
-    <div class="logo-area" id="logoArea">
-        <img src="PROJECT.png" alt="FindYourPath logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-        <div class="logo-text">Find<span class="green">Your</span>Path</div>
-    </div>
+<!-- Shared header and sidebar -->
+<student-header active-page="mentor"></student-header>
 
-    <nav class="nav-middle" aria-label="Main">
-        <a href="Dashboard.html">Home</a>
-        <a href="Mentors.html" class="active" aria-current="page">Find Mentor</a>
-        <a href="EncouragementWall.html">Encouragement</a>
-        <a href="InformationTechnology.html">Resources</a>
-    </nav>
+<div class="main-layout">
+    <student-sidebar active="mentors"></student-sidebar>
 
-    <div class="nav-tools">
-        <input type="search" class="search-input" id="searchInput" placeholder="Search by name, role or what they studied..." aria-label="Search mentors">
-
-        <div class="right-actions">
-            <div class="icon-group">
-                <button class="icon-btn" id="notificationBtn" aria-label="Notifications" type="button">
-                    <i class="far fa-bell"></i>
-                    <span class="badge" id="notificationBadge">3</span>
-                </button>
-                <button class="icon-btn" id="messageBtn" aria-label="Messages" type="button">
-                    <i class="far fa-comment-dots"></i>
-                </button>
-            </div>
-
-            <div class="divider-vertical"></div>
-
-            <button class="profile-preview" id="profileBtn" type="button" aria-haspopup="true">
-                <img id="profileImg" src="https://ui-avatars.com/api/?name=Student&background=e2e8f0&color=64748b" alt="Your profile">
-                <div class="info">
-                    <div class="name" id="profileName">Student</div>
-                    <div class="role" id="profileRole">Student</div>
-                </div>
-                <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-            </button>
-
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="Settings.html"><i class="fas fa-user"></i> My Profile</a>
-                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- MAIN LAYOUT -->
-<div class="app-layout">
-
-    <aside class="sidebar">
-        <ul>
-            <li><a href="Dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="Messages.html"><i class="far fa-envelope"></i> Messages</a></li>
-            <li><a href="Booking.html"><i class="far fa-calendar-alt"></i> Booking</a></li>
-            <li><a href="Mentors.html" class="active"><i class="fas fa-users"></i> Mentors</a></li>
-            <li><a href="EncouragementWall.html"><i class="fas fa-globe"></i> Encouragement Cards</a></li>
-            <li><a href="ExperianceWall.html"><i class="fas fa-folder-open"></i> Experiences</a></li>
-            <li><a href="Settings.html"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="HelpAndSupport.html"><i class="far fa-question-circle"></i> Help &amp; Support</a></li>
-            <li><a href="#" id="sidebarLogout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
-        </ul>
-
-        <div class="sidebar-footer" id="aboutFooter">
-            <img src="PROJECT.png" alt="" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
-            <div class="footer-text">
-                <strong>Real guidance.</strong>
-                <strong>Local mentors.</strong>
-                <strong>Brighter futures.</strong>
-            </div>
-        </div>
-    </aside>
-
-    <main class="main-content">
+    <main class="page-content">
         <div class="toolbar">
             <div class="tabs-header" role="tablist">
                 <button class="tab-btn active" id="allTab" type="button" role="tab" aria-selected="true">All</button>
@@ -240,5 +120,6 @@
 <script src="Mentors.js"></script>
 <script src="studentBookingNotifications.js"></script>
 <script src="studentSearch.js"></script>
+<script src="studentProfile.js"></script>
 </body>
 </html>

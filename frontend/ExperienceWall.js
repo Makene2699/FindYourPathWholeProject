@@ -1,17 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
-  loadMentorExperiences();
+    loadMentorExperiences();
 });
+
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
 
 async function loadMentorExperiences() {
 
-  const container =
-      document.getElementById("experiencePosts");
+    const container =
+        document.getElementById("experiencePosts");
 
-  try {
+    try {
 
-    const { data, error } = await sb
-        .from("profiles")
-        .select(`
+        const { data, error } = await sb
+            .from("profiles")
+            .select(`
                 id,
                 full_name,
                 avatar_url,
@@ -21,69 +27,71 @@ async function loadMentorExperiences() {
                 role,
                 approval_status
             `)
-        .eq("role", "Mentor")
-        .eq("approval_status", "approved")
-        .not("experience", "is", null);
+            .eq("role", "Mentor")
+            .eq("approval_status", "approved")
+            .not("experience", "is", null);
 
-    if (error) throw error;
+        if (error) throw error;
 
-    if (!data || data.length === 0) {
-      container.innerHTML =
-          "<p>No mentor experiences found.</p>";
-      return;
-    }
+        if (!data || data.length === 0) {
+            container.innerHTML =
+                "<p>No mentor experiences found.</p>";
+            return;
+        }
 
-    container.innerHTML = "";
+        container.innerHTML = "";
 
-    data.forEach(mentor => {
+        data.forEach(mentor => {
 
-      const card =
-          document.createElement("article");
+            const name = mentor.full_name || "Mentor";
+            const fallbackAvatar =
+                "https://ui-avatars.com/api/?name=" + encodeURIComponent(name);
+            const avatar = mentor.avatar_url || fallbackAvatar;
 
-      card.className = "feed-card";
+            const card =
+                document.createElement("article");
 
-      card.innerHTML = `
+            card.className = "feed-card";
+
+            card.innerHTML = `
                 <div class="feed-header">
 
                     <img
-                        src="${
-          mentor.avatar_url ||
-          'https://ui-avatars.com/api/?name=' +
-          encodeURIComponent(mentor.full_name)
-      }"
+                        src="${escapeHtml(avatar)}"
                         class="feed-avatar"
-                        alt="${mentor.full_name}"
+                        alt="${escapeHtml(name)}"
+                        onerror="this.onerror=null;this.src='${escapeHtml(fallbackAvatar)}'"
                     >
 
                     <div class="feed-user-info">
-                        <h4>${mentor.full_name}</h4>
+                        <h4>${escapeHtml(name)}</h4>
 
                         <p>
-                            ${mentor.work || "Mentor"}
+                            ${escapeHtml(mentor.work || "Mentor")}
                             ${mentor.location
-          ? " | " + mentor.location
-          : ""}
+                ? " | " + escapeHtml(mentor.location)
+                : ""}
                         </p>
                     </div>
 
                 </div>
 
                 <div class="feed-body">
-                    ${mentor.experience}
+                    ${escapeHtml(mentor.experience)}
                 </div>
             `;
 
-      container.appendChild(card);
-    });
+            container.appendChild(card);
+        });
 
-  } catch (err) {
+    } catch (err) {
 
-    console.error(
-        "Failed to load mentor experiences:",
-        err
-    );
+        console.error(
+            "Failed to load mentor experiences:",
+            err
+        );
 
-    container.innerHTML =
-        "<p>Unable to load experiences.</p>";
-  }
+        container.innerHTML =
+            "<p>Unable to load experiences.</p>";
+    }
 }
