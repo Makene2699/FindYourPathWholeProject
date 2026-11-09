@@ -136,7 +136,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
 <script src="bookings.js"></script>
+<script src="mentorSearch.js"></script>
+
 <script>
+    initMentorSearch();
     initMentorNav();
     const $ = x => document.getElementById(x);
     const id = new URLSearchParams(window.location.search).get('id');
