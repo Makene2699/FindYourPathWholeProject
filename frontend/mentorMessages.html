@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindYourPath - Mentor Messages</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="mentorMessages.css">
+</head>
+
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo-area" onclick="window.location.reload()">
+            <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+            <div class="logo-text">Find<span class="green">Your</span>Path</div>
+        </div>
+
+        <div class="admin-card">
+            <img class="admin-avatar" id="sidebarAvatar">
+            <div>
+                <div class="admin-name" id="sidebarName">Mentor</div>
+                <div class="admin-role" id="sidebarRole">Mentor</div>
+                <div class="admin-status"><span class="dot"></span> Online</div>
+            </div>
+        </div>
+
+        <ul>
+            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li data-nav="users"><i class="fas fa-users"></i> Users</li>
+            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
+            <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>
+            <li class="active" data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
+            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="promo-card">
+                <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
+                <div class="promo-text">
+                    Real guidance.<br>Local mentors.<br>Brighter futures.
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+        <!-- MENTOR HEADER (Exact same as Dashboard) -->
+        <header class="top-bar">
+            <div class="welcome-block">
+                <h1 id="welcomeTitle">Welcome back!</h1>
+                <p>Here's what happening across FindYourPath today.</p>
+            </div>
+
+            <div class="top-bar-right">
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" placeholder="Search users, mentors, bookings">
+                </div>
+
+                <button class="icon-btn" id="notificationBtn" type="button">
+                    <i class="far fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+
+                <div class="profile-preview" id="profileBtn">
+                    <img class="admin-avatar" id="profileAvatar">
+                    <div class="info">
+                        <div class="name" id="profileName">Mentor</div>
+                        <div class="role" id="profileRole">Mentor</div>
+                    </div>
+                    <i class="fas fa-chevron-down arrow-down"></i>
+
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="MentorSettings.html"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="chat-layout-wrapper">
+                <section class="chat-list-panel">
+                    <div class="chat-header">Chat</div>
+                    <div class="chat-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="chatSearchInput" placeholder="Search...">
+                    </div>
+                    <div class="chat-filters" id="filterContainer">
+                        <button class="filter-btn active" onclick="filterChats('all')">All</button>
+                        <button class="filter-btn" onclick="filterChats('unread')">Unread</button>
+                        <button class="filter-btn" onclick="filterChats('read')">Read</button>
+                    </div>
+                    <div class="chat-users" id="chatListContainer">
+                        <div style="padding: 20px; color: white; text-align: center;">Loading...</div>
+                    </div>
+                </section>
+
+                <section class="chat-main-panel">
+                    <div class="chat-main-header">
+                        <img id="activeChatAvatar" src="https://via.placeholder.com/45" alt="Avatar">
+                        <div class="chat-main-name" id="activeChatName">Select a student</div>
+                    </div>
+                    <div class="chat-messages" id="messageContainer"></div>
+                    <div class="chat-input-area">
+                        <i class="far fa-smile"></i>
+                        <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleEnter(event)">
+                        <i class="fas fa-paperclip"></i>
+                        <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- LOAD SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
+
+<script type="module">
+    import { supabase } from './supabaseClientModule.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initMentorNav === 'function') initMentorNav();
+        if (typeof initMentorNotifications === 'function') initMentorNotifications();
+
+        setTimeout(() => {
+            const notifPanel = document.querySelector('.notif-panel');
+            if (notifPanel) {
+                document.body.appendChild(notifPanel);
+                notifPanel.style.position = 'fixed';
+                notifPanel.style.top = '70px';
+                notifPanel.style.right = '20px';
+                notifPanel.style.zIndex = '99999';
+            }
+        }, 500);
+    });
+
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('dropdownMenu');
+    if (profileBtn && dropdown) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', () => dropdown.classList.remove('show'));
+    }
+
+    function loadUserIntoDashboard() {
+        const raw = localStorage.getItem('careerUser');
+        if (!raw) return;
+
+        const user = JSON.parse(raw);
+        const fullName = user.fullname || 'Mentor';
+        const firstName = fullName.split(' ')[0];
+
+        if (document.getElementById('profileName')) document.getElementById('profileName').textContent = fullName;
+        if (document.getElementById('profileRole')) document.getElementById('profileRole').textContent = user.role || 'Mentor';
+        if (document.getElementById('welcomeTitle')) document.getElementById('welcomeTitle').textContent = `Welcome back, ${firstName}!`;
+        if (document.getElementById('sidebarName')) document.getElementById('sidebarName').textContent = fullName;
+        if (document.getElementById('sidebarRole')) document.getElementById('sidebarRole').textContent = user.role || 'Mentor';
+    }
+
+    async function loadMentorPhoto() {
+        const imgs = [
+            document.getElementById('sidebarAvatar'),
+            document.getElementById('profileAvatar')
+        ].filter(Boolean);
+        if (!imgs.length) return;
+
+        try {
+            const { data } = await supabase.auth.getUser();
+            if (!data || !data.user) return;
+
+            const raw = localStorage.getItem('careerUser');
+            const name = (raw && JSON.parse(raw).fullname) || 'Mentor';
+            
+            const fallback = typeof initialsAvatar === 'function' ? initialsAvatar(name) : 'https://via.placeholder.com/40';
+            const photo = typeof mentorPhotoUrl === 'function' ? await mentorPhotoUrl(data.user.id) : fallback;
+
+            imgs.forEach(img => {
+                img.onerror = () => { img.onerror = null; img.src = fallback; };
+                img.src = photo || fallback;
+                img.alt = name;
+            });
+        } catch (e) {
+            console.error('Could not load profile picture:', e);
+        }
+    }
+
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to log out?')) {
+            localStorage.removeItem('careerUser');
+            window.location.href = 'Home.html';
+        }
+    });
+
+    let me = null;
+    let activeConvId = null;
+    let activeStudentId = null;
+    let activeChannel = null;
+
+    async function initChat() {
+        if (activeChannel) {
+            supabase.removeChannel(activeChannel);
+            activeChannel = null;
+        }
+
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            alert('Please log in to access messages.');
+            window.location.href = 'Login.html';
+            return;
+        }
+        me = user;
+        
+        await loadChatList();
+
+        document.getElementById('activeChatName').textContent = "Select a student";
+        document.getElementById('activeChatAvatar').src = "https://via.placeholder.com/45";
+        document.getElementById('messageContainer').innerHTML = "";
+        activeConvId = null;
+    }
+
+    async function loadChatList() {
+        const container = document.getElementById('chatListContainer');
+        
+        const { data: connections, error } = await supabase
+            .from('connections')
+            .select('student_id')
+            .eq('mentor_id', me.id)
+            .eq('status', 'approved');
+
+        if (error) {
+            console.error(error);
+            container.innerHTML = `<div style="padding:20px; color:white;">Error loading chats.</div>`;
+            return;
+        }
+
+        if (!connections || connections.length === 0) {
+            container.innerHTML = `<div style="padding:20px; color:white; text-align:center;">No approved students yet.</div>`;
+            return;
+        }
+
+        const studentIds = connections.map(c => c.student_id);
+        const { data: profiles, error: pErr } = await supabase
+            .from('profiles')
+            .select('id, full_name, avatar_url')
+            .in('id', studentIds);
+
+        if (pErr) return;
+
+        // Enrich profiles with latest message and unread status
+        const enrichedProfiles = await Promise.all(profiles.map(async (contact) => {
+            const { data: myConvs } = await supabase
+                .from('conversation_participants')
+                .select('conversation_id')
+                .eq('user_id', me.id);
+            
+            const myConvIds = (myConvs || []).map(c => c.conversation_id);
+            
+            let convId = null;
+            if (myConvIds.length > 0) {
+                const { data: match } = await supabase
+                    .from('conversation_participants')
+                    .select('conversation_id')
+                    .eq('user_id', contact.id)
+                    .in('conversation_id', myConvIds)
+                    .maybeSingle();
+                if (match) convId = match.conversation_id;
+            }
+
+            if (!convId) {
+                return { ...contact, latestTime: 0, unread: false };
+            }
+
+            const { data: latestMsg } = await supabase
+                .from('messages')
+                .select('id, created_at, sender_id')
+                .eq('conversation_id', convId)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+
+            let unread = false;
+            if (latestMsg && latestMsg.sender_id !== me.id) {
+                const { data: readReceipt } = await supabase
+                    .from('message_reads')
+                    .select('id')
+                    .eq('message_id', latestMsg.id)
+                    .eq('user_id', me.id)
+                    .maybeSingle();
+                
+                if (!readReceipt) unread = true;
+            }
+
+            return {
+                ...contact,
+                conversationId: convId,
+                latestTime: latestMsg ? new Date(latestMsg.created_at).getTime() : 0,
+                unread: unread
+            };
+        }));
+
+        // Sort by latest message
+        enrichedProfiles.sort((a, b) => b.latestTime - a.latestTime);
+
+        // Render list
+        container.innerHTML = enrichedProfiles.map((contact) => `
+            <div class="chat-user-item"
+                 data-conv-id="${contact.conversationId || ''}"
+                 data-student-id="${contact.id}"
+                 data-unread="${contact.unread}"
+                 onclick="window.__selectChat('${contact.id}', '${contact.full_name.replace(/'/g, "\\'")}', '${contact.avatar_url || ''}', '${contact.conversationId || ''}')">
+                <img src="${contact.avatar_url || 'https://via.placeholder.com/45'}" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">${contact.full_name || 'Unknown Student'}</div>
+                    <div class="user-msg">${contact.unread ? 'New message!' : 'Click to chat'}</div>
+                </div>
+                ${contact.unread ? `<div class="status-dot" style="background: #22c55e;"></div>` : ''}
+            </div>
+        `).join('');
+    }
+
+    async function getOrCreateConversation(otherUserId) {
+        try {
+            const { data: myConvs } = await supabase
+                .from('conversation_participants')
+                .select('conversation_id')
+                .eq('user_id', me.id);
+
+            const myConvIds = (myConvs || []).map(c => c.conversation_id);
+
+            if (myConvIds.length > 0) {
+                const { data: match } = await supabase
+                    .from('conversation_participants')
+                    .select('conversation_id')
+                    .eq('user_id', otherUserId)
+                    .in('conversation_id', myConvIds)
+                    .maybeSingle();
+
+                if (match) return match.conversation_id;
+            }
+
+            const { data: newConv, error: cErr } = await supabase
+                .from('conversations')
+                .insert({})
+                .select('id')
+                .single();
+
+            if (cErr) throw cErr;
+
+            const { error: pErr } = await supabase
+                .from('conversation_participants')
+                .insert([
+                    { conversation_id: newConv.id, user_id: me.id, role: 'mentor' },
+                    { conversation_id: newConv.id, user_id: otherUserId, role: 'student' }
+                ]);
+
+            if (pErr) throw pErr;
+            return newConv.id;
+
+        } catch (err) {
+            console.error("Chat creation failed:", err);
+            return null;
+        }
+    }
+
+    window.__selectChat = async function (studentId, studentName, studentAvatar, existingConvId = null) {
+        document.querySelectorAll('.chat-user-item').forEach(i => i.classList.remove('active'));
+        const item = document.querySelector(`.chat-user-item[data-student-id="${studentId}"]`);
+        
+        if (item) {
+            item.classList.add('active');
+            item.setAttribute('data-unread', 'false');
+            const dot = item.querySelector('.status-dot');
+            if (dot) dot.remove();
+            
+            const msgEl = item.querySelector('.user-msg');
+            if (msgEl && msgEl.textContent === 'New message!') msgEl.textContent = 'Click to chat';
+        }
+
+        document.getElementById('activeChatName').textContent = studentName;
+        document.getElementById('activeChatAvatar').src = studentAvatar || 'https://via.placeholder.com/45';
+        
+        const container = document.getElementById('messageContainer');
+        container.innerHTML = `<div style="text-align:center;color:#888;padding:20px;">Opening chat...</div>`;
+
+        activeStudentId = studentId;
+        
+        if (existingConvId && existingConvId !== 'null' && existingConvId !== '') {
+            activeConvId = existingConvId;
+        } else {
+            activeConvId = await getOrCreateConversation(studentId);
+        }
+
+        if (!activeConvId) {
+            container.innerHTML = `<div style="color:#dc2626;padding:20px;">Database error: Could not start chat.</div>`;
+            return;
+        }
+
+        await loadMessages(activeConvId);
+        subscribeToMessages(activeConvId);
+    };
+
+    async function loadMessages(convId) {
+        const container = document.getElementById('messageContainer');
+        
+        const { data: msgs, error } = await supabase
+            .from('messages')
+            .select('id, sender_id, body, created_at')
+            .eq('conversation_id', convId)
+            .order('created_at', { ascending: true });
+
+        if (error) return;
+
+        if (!msgs || msgs.length === 0) {
+            container.innerHTML = `<div class="message msg-received">No messages yet. Say hello!</div>`;
+            return;
+        }
+
+        container.innerHTML = msgs.map(m => {
+            const mine = m.sender_id === me.id;
+            return `<div class="message ${mine ? 'msg-sent' : 'msg-received'}">${escapeHtml(m.body)}</div>`;
+        }).join('');
+
+        container.scrollTop = container.scrollHeight;
+        await markMessagesAsRead(convId, msgs);
+    }
+
+    window.sendMessage = async function () {
+        if (!activeConvId) return;
+        
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+
+        const { error } = await supabase
+            .from('messages')
+            .insert({
+                conversation_id: activeConvId,
+                sender_id: me.id,
+                body: text
+            });
+
+        if (error) {
+            alert('Failed to send message.');
+            return;
+        }
+        await loadMessages(activeConvId);
+        await loadChatList();
+    };
+
+    window.handleEnter = function (e) {
+        if (e.key === 'Enter') window.sendMessage();
+    };
+
+    function subscribeToMessages(convId) {
+        if (activeChannel) supabase.removeChannel(activeChannel);
+
+        activeChannel = supabase
+            .channel('chat_' + convId)
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'messages',
+                filter: `conversation_id=eq.${convId}`
+            }, async (payload) => {
+                if (payload.new.sender_id === me.id) return;
+                await loadMessages(convId);
+                await loadChatList();
+            })
+            .subscribe();
+    }
+
+    async function markMessagesAsRead(convId, msgs) {
+        const unread = msgs.filter(m => m.sender_id !== me.id);
+        if (unread.length === 0) return;
+
+        const generateId = () => {
+            try { return crypto.randomUUID(); } 
+            catch { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            })}
+        };
+
+        const reads = unread.map(m => ({
+            id: generateId(),
+            message_id: m.id,
+            user_id: me.id,
+            read_at: new Date().toISOString()
+        }));
+
+        await supabase
+            .from('message_reads')
+            .upsert(reads, { onConflict: 'message_id, user_id', ignoreDuplicates: true }); 
+    }
+
+    window.filterChats = function(filterType) {
+        const users = document.querySelectorAll('.chat-user-item');
+        const buttons = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('chatSearchInput');
+        const currentSearch = searchInput.value.toLowerCase().trim();
+
+        buttons.forEach(btn => btn.classList.remove('active'));
+        buttons.forEach(btn => {
+            if (btn.getAttribute('onclick').includes(`'${filterType}'`)) btn.classList.add('active');
+        });
+
+        users.forEach(user => {
+            const isUnread = user.getAttribute('data-unread') === 'true';
+            const userName = user.querySelector('.user-name').textContent.toLowerCase();
+            const matchesSearch = userName.includes(currentSearch);
+
+            let hideByFilter = false;
+            if (filterType === 'unread' && !isUnread) hideByFilter = true;
+            if (filterType === 'read' && isUnread) hideByFilter = true;
+
+            if (hideByFilter || !matchesSearch) {
+                user.classList.add('hidden-user');
+                user.style.display = 'none';
+            } else {
+                user.classList.remove('hidden-user');
+                user.style.display = 'flex';
+            }
+        });
+    };
+
+    document.getElementById('chatSearchInput').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase().trim();
+        document.querySelectorAll('.chat-user-item').forEach(item => {
+            const nameEl = item.querySelector('.user-name');
+            if (nameEl) {
+                const matches = nameEl.textContent.toLowerCase().includes(searchValue);
+                item.classList.toggle('hidden-user', !matches);
+                item.style.display = matches ? 'flex' : 'none';
+            }
+        });
+    });
+
+    function escapeHtml(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    loadUserIntoDashboard();
+    loadMentorPhoto();
+    initChat();
+</script>
+</body>
+</html>

@@ -20,17 +20,20 @@ body {
     width: 260px;
     background-color: #0D2B45;
     border-right: 1px solid #e9eef3;
-    padding: 28px 16px;
+    padding: 20px 16px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;   /* was space-between */
+    gap: 16px;
+    min-height: 100vh;
 }
 
+/* Logo */
 .logo-area {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 4px;            /* reduced */
     cursor: pointer;
     background: #ffffff;
     border-radius: 12px;
@@ -61,7 +64,7 @@ body {
     background: rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 8px;            /* reduced */
 }
 
 .admin-avatar {
@@ -101,11 +104,14 @@ body {
 
 .sidebar ul {
     list-style: none;
+    flex: 1;                       /* takes remaining space */
+    margin: 0;
+    padding: 0;
 }
 
 .sidebar li {
     padding: 12px 16px;
-    margin: 4px 0;
+    margin: 2px 0;                 /* tighter */
     font-size: 0.95rem;
     font-weight: 500;
     color: white;
@@ -139,7 +145,8 @@ body {
 }
 
 .sidebar-footer {
-    margin-top: 40px;
+    margin-top: auto;
+    padding-top: 12px;
 }
 
 .promo-card {

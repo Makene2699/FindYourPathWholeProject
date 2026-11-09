@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,460 +8,446 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 1. Load the shared layout CSS -->
+    <link rel="stylesheet" href="studentLayout.css">
+
+    <!-- 2. Load your specific message CSS -->
     <link rel="stylesheet" href="messageStyle.css">
+
+    <!-- 3. Load the layout script in the head -->
+    <script src="studentLayout.js"></script>
 </head>
 
 <body>
-<div class="top-nav">
-    <div class="logo-area" onclick="window.location.reload()">
-        <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-        <div class="logo-text">Find<span class="green">Your</span>Path</div>
+
+    <!-- 4. Insert the Top Navigation Header -->
+    <student-header active-page="messages"></student-header>
+
+    <div class="main-layout">
+
+        <!-- 5. Insert the Sidebar -->
+        <student-sidebar active="messages"></student-sidebar>
+
+        <!-- Middle Chat List -->
+        <section class="chat-list-panel">
+            <div class="chat-header">Chat</div>
+
+            <div class="chat-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="chatSearchInput" placeholder="Search...">
+            </div>
+
+            <div class="chat-filters" id="filterContainer">
+                <button class="filter-btn active" onclick="filterChats('all')">All</button>
+                <button class="filter-btn" onclick="filterChats('unread')">Unread</button>
+                <button class="filter-btn" onclick="filterChats('read')">Read</button>
+            </div>
+
+            <div class="chat-users" id="chatListContainer">
+                <div style="padding: 20px; color: white; text-align: center;">Loading...</div>
+            </div>
+        </section>
+
+        <!-- Right Chat Window -->
+        <section class="chat-main-panel">
+            <div class="chat-main-header">
+                <img id="activeChatAvatar" src="https://via.placeholder.com/45" alt="Avatar">
+                <div class="chat-main-name" id="activeChatName">Select a mentor</div>
+            </div>
+
+            <div class="chat-messages" id="messageContainer">
+                <!-- Messages injected by JS -->
+            </div>
+
+            <div class="chat-input-area">
+                <i class="far fa-smile"></i>
+                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleEnter(event)">
+                <i class="fas fa-paperclip"></i>
+                <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </section>
     </div>
 
-    <div class="nav-middle">
-        <a href="Dashboard.html" class="active"  data-page="home">Home</a>
-        <a href="Mentors.html" data-page="mentor">Find Mentor</a>
-        <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-        <a href="InformationTechnology.html" data-page="resources">Resources</a>
-    </div>
+    <!-- Load External Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
+    <script src="student-layout.js"></script>
+    <script src="studentProfile.js"></script>
+    <script src="studentBookingNotifications.js"></script>
+    <!-- MESSAGING LOGIC -->
+    <script type="module">
+        import { supabase } from './supabaseClientModule.js';
 
-    <div style="display: flex; gap: 16px; align-items: center;">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
-        <div class="right-actions">
-            <div class="icon-group">
-                <div class="icon-btn" id="notificationBtn">
-                    <i class="far fa-bell"></i>
-                    <span class="badge" id="notificationBadge">3</span>
-                </div>
-                <div class="icon-btn" id="messageBtn">
-                    <i class="far fa-comment-dots"></i>
-                </div>
-            </div>
-            <div class="divider-vertical"></div>
-            <div class="profile-preview" id="profileBtn">
-                <img src="Polygon 1.png" alt="profile" onerror="this.src='https://randomuser.me/api/portraits/women/68.jpg'">
-                <div class="info">
-                    <div class="name">Angle M.</div>
-                    <div class="role">Youth</div>
-                </div>
-                <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="Settings.html"><i class="fas fa-user"></i> My Profile</a>
-                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="main-layout">
-    <div class="sidebar">
-        <ul>
-            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-            <li class="active" data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
-            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
-            <li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
-            <li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
-            <li data-nav="experiances"><i class="fas fa-folder-open"></i> Experiances</li>
-            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
-            <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
-            <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
-        </ul>
+        // --- STATE ---
+        let me = null;
+        let activeConvId = null;
+        let activeMentorId = null;
+        let activeChannel = null;
 
-        <div class="sidebar-footer" id="aboutFooter">
-            <div class="promo-card">
-                <div><img src="PROJECT 3 LOGO.png" alt="Profile" class="promo-img" onerror="this.src='https://via.placeholder.com/120x120?text=FP'"></div>
-                <div class="promo-text">
-                    Real guidance.<br>Local mentors.<br>Brighter futures.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Middle Chat List -->
-    <section class="chat-list-panel">
-        <div class="chat-header">Chat</div>
-
-        <div class="chat-search">
-            <i class="fas fa-search"></i>
-            <input type="text" id="chatSearchInput" placeholder="Search...">
-        </div>
-
-        <div class="chat-filters" id="filterContainer">
-            <button class="filter-btn active" onclick="filterChats('all')">All</button>
-            <button class="filter-btn" onclick="filterChats('unread')">Unread</button>
-            <button class="filter-btn" onclick="filterChats('read')">Read</button>
-        </div>
-
-        <div class="chat-users" id="chatListContainer">
-            <!-- Populated dynamically by Supabase -->
-            <div style="padding: 20px; color: white; text-align: center;">Loading...</div>
-        </div>
-    </section>
-
-    <!-- Right Chat Window -->
-    <section class="chat-main-panel">
-        <div class="chat-main-header">
-            <img id="activeChatAvatar" src="https://via.placeholder.com/45" alt="Avatar">
-            <div class="chat-main-name" id="activeChatName">Select a mentor</div>
-        </div>
-
-        <div class="chat-messages" id="messageContainer">
-            <!-- Messages injected by JS -->
-        </div>
-
-        <div class="chat-input-area">
-            <i class="far fa-smile"></i>
-            <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleEnter(event)">
-            <i class="fas fa-paperclip"></i>
-            <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </section>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabaseClient.js"></script>
-<script src="Experience.js"></script>
-<script src="bookings.js"></script>
-<script src="studentBookingNotifications.js"></script>
-<script src="studentSearch.js"></script>
-<!-- SUPABASE MESSAGING LOGIC -->
-<script type="module">
-    // import { supabase } from './supabaseClient.js';
-    import { supabase } from './supabaseClientModule.js';
-
-    // --- STATE ---
-    let me = null;
-    let activeConvId = null;
-    let activeMentorId = null;
-    let activeChannel = null;
-
-    // --- PROFILE DROPDOWN & NAV ---
-    const profileBtn = document.getElementById('profileBtn');
-    const dropdown = document.getElementById('dropdownMenu');
-    profileBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); });
-    document.addEventListener('click', () => dropdown.classList.remove('show'));
-
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
-        e.preventDefault();
-        if (confirm('Are you sure you want to log out?')) window.location.href = 'Home.html';
-    });
-
-    document.querySelectorAll('.sidebar li').forEach(item => {
-        item.addEventListener('click', () => {
-            const navItem = item.dataset.nav;
-            const pages = {
-                dashboard: 'Dashboard.html', mentors: 'Mentors.html', messages: 'Messages.html',
-                booking: 'Booking.html', encouragement: 'EncouragementWall.html',
-                experiances: 'ExperianceWall.html', settings: 'Settings.html', help: 'HelpAndSupport.html'
-            };
-            if (navItem === 'logout') {
-                if (confirm('Are you sure you want to log out?')) window.location.href = 'Home.html';
-            } else if (pages[navItem]) {
-                window.location.href = pages[navItem];
+        // --- INIT ---
+        async function init() {
+            // Clean up any existing channel when the page loads
+            if (activeChannel) {
+                supabase.removeChannel(activeChannel);
+                activeChannel = null;
             }
-        });
-    });
 
-    // --- INIT ---
-    async function init() {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-            alert('Please log in to access messages.');
-            window.location.href = 'Login.html';
-            return;
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                alert('Please log in to access messages.');
+                window.location.href = 'Login.html';
+                return;
+            }
+            me = user;
+
+            // Load the list of chats
+            await loadChatList();
+
+            // Reset the right panel
+            document.getElementById('activeChatName').textContent = "Select a mentor";
+            document.getElementById('activeChatAvatar').src = "https://via.placeholder.com/45";
+            document.getElementById('messageContainer').innerHTML = "";
+            activeConvId = null;
         }
-        me = user;
-        await loadChatList();
-    }
 
-    // --- 1. LOAD MENTORS & BUILD CHAT LIST ---
+        // --- 1. LOAD CHAT LIST ---
         async function loadChatList() {
-        const container = document.getElementById('chatListContainer');
-        const myProfile = JSON.parse(localStorage.getItem('careerUser') || '{}');
-        const myRole = myProfile.role || 'youth';
+            const container = document.getElementById('chatListContainer');
+            const myProfile = JSON.parse(localStorage.getItem('careerUser') || '{}');
+            const myRole = myProfile.role || 'youth';
 
-        console.log("Loading chats. My Role:", myRole, "My ID:", me.id);
+            let connections = [];
+            if (myRole.toLowerCase() === 'mentor') {
+                const { data } = await supabase.from('connections').select('student_id, status').eq('mentor_id', me.id);
+                connections = data || [];
+            } else {
+                const { data } = await supabase.from('connections').select('mentor_id, status').eq('student_id', me.id);
+                connections = data || [];
+            }
 
-        let connections = [];
-        if (myRole.toLowerCase() === 'mentor') {
-            // Fetch connections where I am the mentor
-            const { data, error } = await supabase.from('connections').select('student_id, status').eq('mentor_id', me.id);
-            if (error) console.error("Error fetching connections:", error);
-            connections = data || [];
-        } else {
-            // Fetch connections where I am the student
-            const { data, error } = await supabase.from('connections').select('mentor_id, status').eq('student_id', me.id);
-            if (error) console.error("Error fetching connections:", error);
-            connections = data || [];
-        }
+            const acceptedConnections = connections.filter(c =>
+                c.status === 'accepted' || c.status === 'approved' || c.status === 'active'
+            );
 
-        console.log("Raw Connections from DB:", connections);
+            if (acceptedConnections.length === 0) {
+                container.innerHTML = `<div style="padding:20px; color:white; text-align:center;">No accepted connections. Ask your mentor to approve your request.</div>`;
+                return;
+            }
 
-        // Filter for accepted/approved connections only
-        const acceptedConnections = connections.filter(c => 
-            c.status === 'accepted' || c.status === 'approved' || c.status === 'active'
-        );
+            const contactIds = acceptedConnections.map(c => myRole.toLowerCase() === 'mentor' ? c.student_id : c.mentor_id);
 
-        console.log("Accepted Connections:", acceptedConnections);
+            const { data: profiles } = await supabase
+                .from('profiles')
+                .select('id, full_name, avatar_url')
+                .in('id', contactIds);
 
-        if (acceptedConnections.length === 0) {
-            container.innerHTML = `<div style="padding:20px; color:white; text-align:center;">No accepted connections. Ask your mentor to approve your request.</div>`;
-            return;
-        }
-
-        // Get the IDs of the people we need to talk to
-        const contactIds = acceptedConnections.map(c => myRole.toLowerCase() === 'mentor' ? c.student_id : c.mentor_id);
-        console.log("Looking up profiles for IDs:", contactIds);
-
-        // Fetch their profiles
-        const { data: profiles, error: pErr } = await supabase
-            .from('profiles')
-            .select('id, full_name, avatar_url')
-            .in('id', contactIds);
-
-        if (pErr) console.error("Error fetching profiles:", pErr);
-
-        // Render them
-        container.innerHTML = profiles.map((contact, index) => `
-            <div class="chat-user-item ${index === 0 ? 'active' : ''}"
-                 data-mentor-id="${contact.id}"
-                 onclick="window.__selectChat('${contact.id}', '${contact.full_name.replace(/'/g, "\\'")}', '${contact.avatar_url || ''}')">
-                <img src="${contact.avatar_url || 'https://via.placeholder.com/45'}" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">${contact.full_name || 'Unknown User'}</div>
-                    <div class="user-msg">Click to chat</div>
-                </div>
-            </div>
-        `).join('');
-
-        if (profiles && profiles.length > 0) {
-            window.__selectChat(profiles[0].id, profiles[0].full_name, profiles[0].avatar_url || '');
-        }
-    }   
-
-        // --- 2. GET OR CREATE CONVERSATION ---
-    async function getOrCreateConversation(otherUserId) {
-        try {
-            // 1. Check if we already have a chat
-            const { data: myConvs } = await supabase
-                .from('conversation_participants')
-                .select('conversation_id')
-                .eq('user_id', me.id);
-
-            const myConvIds = (myConvs || []).map(c => c.conversation_id);
-
-            if (myConvIds.length > 0) {
-                const { data: match } = await supabase
+            const enrichedProfiles = await Promise.all(profiles.map(async (contact) => {
+                const { data: myConvs } = await supabase
                     .from('conversation_participants')
                     .select('conversation_id')
-                    .eq('user_id', otherUserId)
-                    .in('conversation_id', myConvIds)
+                    .eq('user_id', me.id);
+
+                const myConvIds = (myConvs || []).map(c => c.conversation_id);
+
+                let convId = null;
+                if (myConvIds.length > 0) {
+                    const { data: match } = await supabase
+                        .from('conversation_participants')
+                        .select('conversation_id')
+                        .eq('user_id', contact.id)
+                        .in('conversation_id', myConvIds)
+                        .maybeSingle();
+                    if (match) convId = match.conversation_id;
+                }
+
+                if (!convId) return { ...contact, latestTime: 0, unread: false };
+
+                const { data: latestMsg } = await supabase
+                    .from('messages')
+                    .select('id, created_at, sender_id')
+                    .eq('conversation_id', convId)
+                    .order('created_at', { ascending: false })
+                    .limit(1)
                     .maybeSingle();
 
-                if (match) return match.conversation_id;
+                let unread = false;
+                if (latestMsg && latestMsg.sender_id !== me.id) {
+                    const { data: readReceipt } = await supabase
+                        .from('message_reads')
+                        .select('id')
+                        .eq('message_id', latestMsg.id)
+                        .eq('user_id', me.id)
+                        .maybeSingle();
+
+                    if (!readReceipt) unread = true;
+                }
+
+                return {
+                    ...contact,
+                    conversationId: convId,
+                    latestTime: latestMsg ? new Date(latestMsg.created_at).getTime() : 0,
+                    unread: unread
+                };
+            }));
+
+            enrichedProfiles.sort((a, b) => b.latestTime - a.latestTime);
+
+            container.innerHTML = enrichedProfiles.map((contact) => `
+                <div class="chat-user-item"
+                     data-conv-id="${contact.conversationId || ''}"
+                     data-contact-id="${contact.id}"
+                     data-unread="${contact.unread}"
+                     onclick="window.__selectChat('${contact.id}', '${contact.full_name.replace(/'/g, "\\'")}', '${contact.avatar_url || ''}', '${contact.conversationId || ''}')">
+                    <img src="${contact.avatar_url || 'https://via.placeholder.com/45'}" class="user-avatar-md">
+                    <div class="user-info">
+                        <div class="user-name">${contact.full_name || 'Unknown User'}</div>
+                        <div class="user-msg">${contact.unread ? 'New message!' : 'Click to chat'}</div>
+                    </div>
+                    ${contact.unread ? `<div class="status-dot" style="background: #22c55e;"></div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // --- 2. GET OR CREATE CONVERSATION ---
+        async function getOrCreateConversation(otherUserId) {
+            try {
+                const { data: myConvs } = await supabase
+                    .from('conversation_participants')
+                    .select('conversation_id')
+                    .eq('user_id', me.id);
+
+                const myConvIds = (myConvs || []).map(c => c.conversation_id);
+
+                if (myConvIds.length > 0) {
+                    const { data: match } = await supabase
+                        .from('conversation_participants')
+                        .select('conversation_id')
+                        .eq('user_id', otherUserId)
+                        .in('conversation_id', myConvIds)
+                        .maybeSingle();
+
+                    if (match) return match.conversation_id;
+                }
+
+                const { data: newConv, error: cErr } = await supabase
+                    .from('conversations')
+                    .insert({})
+                    .select('id')
+                    .single();
+
+                if (cErr) throw cErr;
+
+                await supabase
+                    .from('conversation_participants')
+                    .insert([
+                        { conversation_id: newConv.id, user_id: me.id, role: 'user' },
+                        { conversation_id: newConv.id, user_id: otherUserId, role: 'user' }
+                    ]);
+
+                return newConv.id;
+
+            } catch (err) {
+                console.error("Chat creation failed:", err);
+                return null;
+            }
+        }
+
+        // --- 3. SELECT CHAT ---
+        window.__selectChat = async function (mentorId, mentorName, mentorAvatar, existingConvId = null) {
+            document.querySelectorAll('.chat-user-item').forEach(i => i.classList.remove('active'));
+            const item = document.querySelector(`.chat-user-item[data-contact-id="${mentorId}"]`);
+
+            if (item) {
+                item.classList.add('active');
+                item.setAttribute('data-unread', 'false');
+                const dot = item.querySelector('.status-dot');
+                if (dot) dot.remove();
+
+                const msgEl = item.querySelector('.user-msg');
+                if (msgEl && msgEl.textContent === 'New message!') msgEl.textContent = 'Click to chat';
             }
 
-            // 2. Create a new chat
-            const { data: newConv, error: cErr } = await supabase
-                .from('conversations')
-                .insert({})
-                .select('id')
-                .single();
+            document.getElementById('activeChatName').textContent = mentorName;
+            document.getElementById('activeChatAvatar').src = mentorAvatar || 'https://via.placeholder.com/45';
 
-            if (cErr) throw cErr;
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div style="text-align:center;color:#888;padding:20px;">Opening chat...</div>`;
 
-            // 3. Add both users
-            const { error: pErr } = await supabase
-                .from('conversation_participants')
-                .insert([
-                    { conversation_id: newConv.id, user_id: me.id, role: 'user' },
-                    { conversation_id: newConv.id, user_id: otherUserId, role: 'user' }
-                ]);
+            activeMentorId = mentorId;
 
-            if (pErr) throw pErr;
+            if (existingConvId && existingConvId !== 'null' && existingConvId !== '') {
+                activeConvId = existingConvId;
+            } else {
+                activeConvId = await getOrCreateConversation(mentorId);
+            }
 
-            return newConv.id;
+            if (!activeConvId) {
+                container.innerHTML = `<div style="color:#dc2626;padding:20px;">Database error: Could not start chat. Check console.</div>`;
+                return;
+            }
 
-        } catch (err) {
-            console.error("Chat creation failed:", err);
-            return null;
-        }
-    }
-
-    // --- 3. SELECT CHAT ---
-    window.__selectChat = async function (mentorId, mentorName, mentorAvatar) {
-        // Update UI immediately
-        document.querySelectorAll('.chat-user-item').forEach(i => i.classList.remove('active'));
-        const item = document.querySelector(`.chat-user-item[data-mentor-id="${mentorId}"]`);
-        if (item) item.classList.add('active');
-
-        document.getElementById('activeChatName').textContent = mentorName;
-        document.getElementById('activeChatAvatar').src = mentorAvatar || 'https://via.placeholder.com/45';
-        
-        const container = document.getElementById('messageContainer');
-        container.innerHTML = `<div style="text-align:center;color:#888;padding:20px;">Opening chat...</div>`;
-
-        activeMentorId = mentorId;
-        
-        // Get chat ID
-        activeConvId = await getOrCreateConversation(mentorId);
-
-        if (!activeConvId) {
-            container.innerHTML = `<div style="color:#dc2626;padding:20px;">Database error: Could not start chat. Check console.</div>`;
-            return;
-        }
-
-        // Load messages
-        await loadMessages(activeConvId);
-        subscribeToMessages(activeConvId);
-    };
+            await loadMessages(activeConvId);
+            subscribeToMessages(activeConvId);
+        };
 
         // --- 4. LOAD MESSAGES ---
-    async function loadMessages(convId) {
-        const container = document.getElementById('messageContainer');
-        
-        const { data: msgs, error } = await supabase
-            .from('messages')
-            .select('id, sender_id, body, created_at')
-            .eq('conversation_id', convId)
-            .order('created_at', { ascending: true });
+        async function loadMessages(convId) {
+            const container = document.getElementById('messageContainer');
 
-        if (error) {
-            console.error("Error loading messages:", error);
-            container.innerHTML = `<div style="color:red; padding:20px;">Error loading messages.</div>`;
-            return;
+            const { data: msgs, error } = await supabase
+                .from('messages')
+                .select('id, sender_id, body, created_at')
+                .eq('conversation_id', convId)
+                .order('created_at', { ascending: true });
+
+            if (error) {
+                console.error("Error loading messages:", error);
+                return;
+            }
+
+            if (!msgs || msgs.length === 0) {
+                container.innerHTML = `<div class="message msg-received">No messages yet. Say hello!</div>`;
+                return;
+            }
+
+            container.innerHTML = msgs.map(m => {
+                const mine = m.sender_id === me.id;
+                return `<div class="message ${mine ? 'msg-sent' : 'msg-received'}">${escapeHtml(m.body)}</div>`;
+            }).join('');
+
+            container.scrollTop = container.scrollHeight;
+
+            await markMessagesAsRead(convId, msgs);
         }
 
-        if (!msgs || msgs.length === 0) {
-            container.innerHTML = `<div class="message msg-received">No messages yet. Say hello!</div>`;
-            return;
+        // --- 5. SEND MESSAGE ---
+        window.sendMessage = async function () {
+            if (!activeConvId) return;
+
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+
+            const { error } = await supabase
+                .from('messages')
+                .insert({
+                    conversation_id: activeConvId,
+                    sender_id: me.id,
+                    body: text
+                });
+
+            if (error) {
+                alert('Failed to send message.');
+                return;
+            }
+            await loadMessages(activeConvId);
+            await loadChatList();
+        };
+
+        window.handleEnter = function (e) {
+            if (e.key === 'Enter') window.sendMessage();
+        };
+
+        // --- 6. REALTIME ---
+        function subscribeToMessages(convId) {
+            if (activeChannel) supabase.removeChannel(activeChannel);
+
+            activeChannel = supabase
+                .channel('chat_' + convId)
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'messages',
+                    filter: `conversation_id=eq.${convId}`
+                }, async (payload) => {
+                    if (payload.new.sender_id === me.id) return;
+                    await loadMessages(convId);
+                    await loadChatList();
+                })
+                .subscribe();
         }
 
-        container.innerHTML = msgs.map(m => {
-            const mine = m.sender_id === me.id;
-            return `<div class="message ${mine ? 'msg-sent' : 'msg-received'}">${escapeHtml(m.body)}</div>`;
-        }).join('');
+        // --- 7. MARK AS READ ---
+        async function markMessagesAsRead(convId, msgs) {
+            const unread = msgs.filter(m => m.sender_id !== me.id);
+            if (unread.length === 0) return;
 
-        container.scrollTop = container.scrollHeight;
-        
-        // Mark them as read
-        await markMessagesAsRead(convId, msgs);
-    }
+            const generateId = () => {
+                try { return crypto.randomUUID(); }
+                catch { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                })}
+            };
 
-    // --- 5. SEND MESSAGE ---
-    window.sendMessage = async function () {
-        if (!activeConvId) return;
-        
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
-        input.value = '';
+            const reads = unread.map(m => ({
+                id: generateId(),
+                message_id: m.id,
+                user_id: me.id,
+                read_at: new Date().toISOString()
+            }));
 
-        const { error } = await supabase
-            .from('messages')
-            .insert({
-                conversation_id: activeConvId,
-                sender_id: me.id,
-                body: text
+            const { error } = await supabase
+                .from('message_reads')
+                .upsert(reads, { onConflict: 'message_id, user_id', ignoreDuplicates: true });
+
+            if (error) console.error("Error saving read receipts:", error);
+        }
+
+        // --- 8. FILTERS & SEARCH ---
+        window.filterChats = function(filterType) {
+            const users = document.querySelectorAll('.chat-user-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+            const searchInput = document.getElementById('chatSearchInput');
+            const currentSearch = searchInput.value.toLowerCase().trim();
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(`'${filterType}'`)) btn.classList.add('active');
             });
 
-        if (error) {
-            console.error(error);
-            alert('Failed to send message.');
-            return;
+            users.forEach(user => {
+                const isUnread = user.getAttribute('data-unread') === 'true';
+                const userName = user.querySelector('.user-name').textContent.toLowerCase();
+                const matchesSearch = userName.includes(currentSearch);
+
+                let hideByFilter = false;
+                if (filterType === 'unread' && !isUnread) hideByFilter = true;
+                if (filterType === 'read' && isUnread) hideByFilter = true;
+
+                if (hideByFilter || !matchesSearch) {
+                    user.classList.add('hidden-user');
+                    user.style.display = 'none';
+                } else {
+                    user.classList.remove('hidden-user');
+                    user.style.display = 'flex';
+                }
+            });
+        };
+
+        document.getElementById('chatSearchInput').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase().trim();
+            document.querySelectorAll('.chat-user-item').forEach(item => {
+                const nameEl = item.querySelector('.user-name');
+                if (nameEl) {
+                    const matches = nameEl.textContent.toLowerCase().includes(searchValue);
+                    item.classList.toggle('hidden-user', !matches);
+                    item.style.display = matches ? 'flex' : 'none';
+                }
+            });
+        });
+
+        // --- HELPERS ---
+        function escapeHtml(s) {
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
         }
-        await loadMessages(activeConvId);
-    };
 
-    window.handleEnter = function (e) {
-        if (e.key === 'Enter') window.sendMessage();
-    };
-
-    // --- 6. REALTIME SUBSCRIPTION ---
-    function subscribeToMessages(convId) {
-        if (activeChannel) supabase.removeChannel(activeChannel);
-
-        activeChannel = supabase
-            .channel('chat_' + convId)
-            .on('postgres_changes', {
-                event: 'INSERT',
-                schema: 'public',
-                table: 'messages',
-                filter: `conversation_id=eq.${convId}`
-            }, async (payload) => {
-                if (payload.new.sender_id === me.id) return;
-                await loadMessages(convId);
-            })
-            .subscribe();
-    }
-
-    // --- 7. MESSAGE READS ---
-    async function markMessagesAsRead(convId, msgs) {
-        const unread = msgs.filter(m => m.sender_id !== me.id);
-        if (unread.length === 0) return;
-
-        const reads = unread.map(m => ({
-            message_id: m.id,
-            user_id: me.id,
-            read_at: new Date().toISOString()
-        }));
-
-        await supabase
-            .from('message_reads')
-            .upsert(reads, { onConflict: 'message_id, user_id' }); 
-    }
-
-    // --- 8. FILTERS & SEARCH (DOM BASED) ---
-    window.filterChats = function(filterType) {
-        const users = document.querySelectorAll('.chat-user-item');
-        const buttons = document.querySelectorAll('.filter-btn');
-        const searchInput = document.getElementById('chatSearchInput');
-        const currentSearch = searchInput.value.toLowerCase().trim();
-
-        buttons.forEach(btn => btn.classList.remove('active'));
-        buttons.forEach(btn => {
-            if (btn.getAttribute('onclick').includes(`'${filterType}'`)) btn.classList.add('active');
-        });
-
-        users.forEach(user => {
-            const isUnread = user.getAttribute('data-unread') === 'true';
-            const userName = user.querySelector('.user-name').textContent.toLowerCase();
-            const matchesSearch = userName.includes(currentSearch);
-
-            let hideByFilter = false;
-            if (filterType === 'unread' && !isUnread) hideByFilter = true;
-            if (filterType === 'read' && isUnread) hideByFilter = true;
-
-            if (hideByFilter || !matchesSearch) {
-                user.classList.add('hidden-user');
-                user.style.display = 'none';
-            } else {
-                user.classList.remove('hidden-user');
-                user.style.display = 'flex';
-            }
-        });
-    };
-
-    document.getElementById('chatSearchInput').addEventListener('input', function() {
-        const searchValue = this.value.toLowerCase().trim();
-        document.querySelectorAll('.chat-user-item').forEach(item => {
-            const nameEl = item.querySelector('.user-name');
-            if (nameEl) {
-                const matches = nameEl.textContent.toLowerCase().includes(searchValue);
-                item.classList.toggle('hidden-user', !matches);
-                item.style.display = matches ? 'flex' : 'none';
-            }
-        });
-    });
-
-    // --- HELPERS ---
-    function escapeHtml(s) {
-        const d = document.createElement('div');
-        d.textContent = s;
-        return d.innerHTML;
-    }
-
-    // --- BOOT ---
-    init();
-</script>
+        // --- BOOT ---
+        init();
+    </script>
 </body>
 </html>

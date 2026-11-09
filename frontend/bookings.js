@@ -130,9 +130,10 @@ const BookingStore = {
 function initMentorNav() {
     const routes = {
         dashboard: 'MentorDashboard.html',
-        booking: 'MentorBookings.html',
+        users: 'usersList.html',
+        booking: 'MentorBooking.html',
         calendar: 'MentorCalendar.html',
-        messages: 'Messages.html',
+        messages: 'mentorMessages.html',
         settings: 'MentorSettings.html',
     };
     document.querySelectorAll('.sidebar li[data-nav]').forEach(li => {
@@ -1212,6 +1213,8 @@ async function initDashboardEncouragement() {
             showNote('Could not load the encouragement wall.');
         }
     }
+
+
 
     rows.forEach(r => { r.style.display = 'none'; });
     await load();

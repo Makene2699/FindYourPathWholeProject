@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MentorBooking</title>
+    <meta name="descrption" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="MentorDashboardStyleSheet.css"> -->
+    <link rel="stylesheet" href="mentorBooking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <body>
+    <script>
+        // Simple script to make the dropdown and notification work without crashing
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileBtn = document.getElementById('profileBtn');
+            const dropdown = document.getElementById('dropdownMenu');
+            if (profileBtn && dropdown) {
+                profileBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('show');
+                });
+                document.addEventListener('click', () => dropdown.classList.remove('show'));
+            }
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to log out?')) {
+                        localStorage.removeItem('careerUser');
+                        window.location.href = 'Home.html';
+                    }
+                });
+            }
+
+            // Load User Name in Top Bar
+            const raw = localStorage.getItem('careerUser');
+            if (raw) {
+                const user = JSON.parse(raw);
+                if(document.getElementById('profileName')) document.getElementById('profileName').textContent = user.fullname;
+                if(document.getElementById('profileRole')) document.getElementById('profileRole').textContent = user.role;
+            }
+        });
+    </script>
+
+    <div class="app-layout">
+        <!-- ... rest of your HTML ... -->
+         
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="logo-area" onclick="window.location.reload()">
+                <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img"
+                    onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+                <div class="logo-text">Find<span class="green">Your</span>Path</div>
+            </div>
+
+            <div class="admin-card">
+                <img class="admin-avatar" id="sidebarAvatar">
+                <div>
+                    <div class="admin-name" id="sidebarName">Mentor</div>
+                    <div class="admin-role" id="sidebarRole">Mentor</div>
+                    <div class="admin-status"><span class="dot"></span> Online</div>
+                </div>
+            </div>
+
+            <ul>
+                <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+                <li data-nav="users"><i class="fas fa-users"></i> Followers</li>
+                <li class="active" data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
+                <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>
+                <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
+                <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="promo-card">
+                    <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
+                    <div class="promo-text">
+                        Real guidance.<br>Local mentors.<br>Brighter futures.
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-area">
+            <header class="top-bar">
+                <div class="welcome-block">
+                    <h1 id="welcomeTitle">Welcome back!</h1>
+                    <p>Here's what happening across FindYourPath today.</p>
+                </div>
+
+                <div class="top-bar-right">
+                    <div class="search-wrap">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Search users, mentors, bookings">
+                    </div>
+
+                    <button class="icon-btn" id="notificationBtn" type="button">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+
+                    <div class="profile-preview" id="profileBtn">
+                        <img class="admin-avatar" id="profileAvatar">
+                        <div class="info">
+                            <div class="name" id="profileName">Student</div>
+                            <div class="role" id="profileRole">Student</div>
+                        </div>
+                        <i class="fas fa-chevron-down arrow-down"></i>
+
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="MentorSettings.html"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="schedule-container">
+                <!-- <div class="heading">
+                    <h1 id="">Overview</h1>
+                </div> -->
+
+                <!-- LEFT COLUMN: SETUP -->
+                <div class="panel setup-panel">
+                    <div class="panel-header">
+                        <h3 class="eyebrow">SCHEDULE SETUP</h3>
+                        <h1>Set the Time Window</h1>
+                        <p>Use custom time controls instead of fragile native time fields. Results update as you change
+                            the schedule.</p>
+                    </div>
+
+                    <div class="time-window-row">
+                        <!-- Start Time -->
+                        <div class="time-box">
+                            <span class="box-label">START TIME</span>
+                            <div class="time-controls">
+                                <div class="time-col">
+                                    <span class="col-label">HOUR</span>
+                                    <button class="arrow-btn" onclick="adjustTime('start', 'hour', 1)">+</button>
+                                    <span class="time-val" id="start-hour">09</span>
+                                    <button class="arrow-btn" onclick="adjustTime('start', 'hour', -1)">-</button>
+                                </div>
+
+                                <div class="time-col">
+                                    <span class="col-label">MINUTE</span>
+                                    <button class="arrow-btn" onclick="adjustTime('start', 'minute', 15)">+</button>
+                                    <span class="time-val" id="start-minute">00</span>
+                                    <button class="arrow-btn" onclick="adjustTime('start', 'minute', -15)">-</button>
+                                </div>
+                                <div class="time-col">
+                                    <span class="col-label">PERIOD</span>
+                                    <button class="arrow-btn" onclick="togglePeriod('start')">+</button>
+                                    <span class="time-val" id="start-period">AM</span>
+                                    <button class="arrow-btn" onclick="togglePeriod('start')">-</button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- End Time -->
+                        <div class="time-box">
+                            <span class="box-label">END TIME</span>
+                            <div class="time-controls">
+                                <div class="time-col">
+                                    <span class="col-label">HOUR</span>
+                                    <button class="arrow-btn" onclick="adjustTime('end', 'hour', 1)">+</button>
+                                    <span class="time-val" id="end-hour">05</span>
+                                    <button class="arrow-btn" onclick="adjustTime('end', 'hour', -1)">-</button>
+                                </div>
+                                <div class="time-col">
+
+                                    <span class="col-label">MINUTE</span>
+                                    <button class="arrow-btn" onclick="adjustTime('end', 'minute', 15)">+</button>
+                                    <span class="time-val" id="end-minute">00</span>
+                                    <button class="arrow-btn" onclick="adjustTime('end', 'minute', -15)">-</button>
+                                </div>
+                                <div class="time-col">
+                                    <span class="col-label">PERIOD</span>
+                                    <button class="arrow-btn" onclick="togglePeriod('end')">+</button>
+                                    <span class="time-val" id="end-period">PM</span>
+                                    <button class="arrow-btn" onclick="togglePeriod('end')">-</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <label>DATE FOR SLOTS</label>
+                            <input type="date" id="slot-date">
+                        </div>
+                        <div class="setting-group">
+                            <label>SLOT TITLE</label>
+                            <input type="text" id="slot-title">
+                        </div>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <label>SLOT DURATION</label>
+                            <select id="slot-duration" onchange="calculateSlots()">
+                                <option value="15">15 minutes</option>
+                                <option value="30">30 minutes</option>
+                                <option value="45">45 minutes</option>
+                                <option value="60">60 minutes</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label>CAPACITY PER SLOT</label>
+                            <input type="number" id="capacity" value="1" min="1" max="10">
+                        </div>
+                    </div>
+
+                    <button class="save-btn" onclick="saveSchedule()">Save Availability</button>
+                </div>
+
+                <!-- RIGHT COLUMN: OUTPUT -->
+                <div class="panel output-panel">
+                    <div class="panel-header">
+                        <h3 class="eyebrow">SLOTS OVERVIEW</h3>
+                        <h1>Slots, Timeline, and Export</h1>
+                        <p>Keep the schedule summary and the slot list beside the controls on desktop, and directly
+                            below on mobile.</p>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="stats-row">
+                        <div class="stat-box" onclick="setFilter('all')"
+                            style="cursor: pointer; border-color: #4caf50; transition: 0.2s;">
+                            <span class="stat-label">ALL SLOTS</span>
+                            <span class="stat-value" id="total-slots">0</span>
+                        </div>
+                        <div class="stat-box" onclick="setFilter('public')" style="cursor: pointer; transition: 0.2s;">
+                            <span class="stat-label">PUBLIC</span>
+                            <span class="stat-value">0</span>
+                        </div>
+                        <div class="stat-box" onclick="setFilter('private')" style="cursor: pointer; transition: 0.2s;">
+                            <span class="stat-label">PRIVATE</span>
+                            <span class="stat-value">0</span>
+                        </div>
+                    </div>
+
+                    <div class="slots-grid" id="slots-grid">
+                        <div style="padding:20px; color:#64748b;">Loading slots...</div>
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+
+    <div id="confirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: #1e293b; padding: 30px; border-radius: 16px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <i class="fas fa-calendar-check" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>
+            <h2 style="color: white; font-size: 1.5rem; margin-bottom: 10px;">Confirm Schedule</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;">
+                You are about to generate <strong id="confirm-count" style="color: white;">0</strong> slots for <strong id="confirm-date" style="color: white;">Today</strong>.<br><br>
+                Are you sure you want to publish this availability?
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="closeConfirmModal()" style="background: transparent; border: 1px solid #64748b; color: #cbd5e1; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">Cancel</button>
+                <button onclick="executeSaveSchedule()" id="confirm-save-btn" style="background: #4caf50; border: none; color: #0f172a; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; flex: 1;">Yes, Publish</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
+    <script src="bookings.js"></script>
+     <script type="module" src="schedule.js"></script>
+</body>
+
+</html>

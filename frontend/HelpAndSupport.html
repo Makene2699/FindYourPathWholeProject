@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FindYourPath – Help & Support</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindYourPath – Help & Support</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Shared layout (same order as ExperienceWall / Booking / Mentors) -->
-    <link rel="stylesheet" href="messageStyle.css">
-    <link rel="stylesheet" href="studentLayout.css">
+  <!-- Shared layout (same order as ExperienceWall / Booking / Mentors) -->
+  <link rel="stylesheet" href="messageStyle.css">
+  <link rel="stylesheet" href="studentLayout.css">
 
-    <!-- Page-specific styles -->
-    <link rel="stylesheet" href="HelpAndSupport.css">
+  <!-- Page-specific styles -->
+  <link rel="stylesheet" href="HelpAndSupport.css">
 
-    <script src="studentLayout.js"></script>
+  <script src="studentLayout.js"></script>
 </head>
 <body>
 
@@ -25,136 +25,130 @@
 <student-header active-page=""></student-header>
 
 <div class="main-layout">
-    <student-sidebar active="help"></student-sidebar>
+  <student-sidebar active="help"></student-sidebar>
 
-    <main class="page-content">
-        <div class="help-page">
-            <h1 class="page-title">Help &amp; Support</h1>
-            <p class="page-subtitle">How can we help you today?</p>
+  <main class="page-content">
+    <div class="help-page">
+      <h1 class="page-title">Help &amp; Support</h1>
+      <p class="page-subtitle">How can we help you today?</p>
 
-            <div class="search-help">
-                <i class="fas fa-search"></i>
-                <input type="text" id="helpSearch" placeholder="Search for help..." autocomplete="off" aria-label="Search for help">
-                <button type="button" id="helpSearchClear" class="search-clear" aria-label="Clear search" hidden><i class="fas fa-times"></i></button>
+      <div class="search-help">
+        <i class="fas fa-search"></i>
+        <span>Search for help...</span>
+      </div>
+
+      <div class="help-grid">
+        <!-- FAQ -->
+        <div class="faq-card">
+          <h3>Frequently Asked Questions</h3>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <div class="faq-question-left">
+                <div class="faq-icon"><i class="fas fa-user"></i></div>
+                <span>How do I find a mentor?</span>
+              </div>
+              <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
             </div>
-
-            <div class="help-grid">
-                <!-- FAQ -->
-                <div class="faq-card">
-                    <h3>Frequently Asked Questions</h3>
-                    <div id="faqNoResults" class="faq-no-results" hidden>
-                        <i class="fas fa-search"></i>
-                        <p>No results found for "<span id="faqNoResultsTerm"></span>".</p>
-                        <small>Try a different keyword or contact support.</small>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <div class="faq-question-left">
-                                <div class="faq-icon"><i class="fas fa-user"></i></div>
-                                <span>How do I find a mentor?</span>
-                            </div>
-                            <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                        <div class="faq-answer">
-                            Go to the <strong>Find Mentor</strong> tab and browse by skill, industry, or location. You can filter mentors and send a connection request directly from their profile.
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <div class="faq-question-left">
-                                <div class="faq-icon"><i class="fas fa-calendar-alt"></i></div>
-                                <span>How do I book a session?</span>
-                            </div>
-                            <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                        <div class="faq-answer">
-                            Visit your mentor's profile and click <strong>Book a Session</strong>. Choose a time slot that works for both of you and confirm the booking.
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <div class="faq-question-left">
-                                <div class="faq-icon"><i class="fas fa-bullseye"></i></div>
-                                <span>How do I track my goals?</span>
-                            </div>
-                            <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                        <div class="faq-answer">
-                            Head to your <strong>Dashboard</strong> where you'll find a goals tracker. You can add new goals, mark milestones, and view your progress over time.
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <div class="faq-question-left">
-                                <div class="faq-icon"><i class="fas fa-users"></i></div>
-                                <span>How do I join the community?</span>
-                            </div>
-                            <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                        <div class="faq-answer">
-                            Click on <strong>Encouragement</strong> or <strong>Experiences</strong> in the navigation. From there you can join discussions and connect with peers.
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <div class="faq-question-left">
-                                <div class="faq-icon"><i class="fas fa-user-edit"></i></div>
-                                <span>How do I update my profile?</span>
-                            </div>
-                            <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                        <div class="faq-answer">
-                            Click your avatar in the top right and select <strong>My Profile</strong>, or go to <strong>Settings</strong> to update your photo, bio, skills and preferences.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right column -->
-                <div class="right-col">
-                    <!-- Still need help -->
-                    <div class="help-card">
-                        <div class="help-card-title">Still need help?</div>
-                        <div class="help-card-text">Our support team is here to assist you with anything you need.</div>
-                        <button class="btn-green" id="contactExpertBtn" type="button">
-                            Contact Support
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-
-                    <!-- Report an issue -->
-                    <div class="report-card" id="reportCard">
-                        <h3>Report an Issue</h3>
-                        <p>Let us know which problem arose and we’ll get it fixed.</p>
-
-                        <label class="form-label" for="issueType">Issue type</label>
-                        <select class="form-select" id="issueType">
-                            <option value="" disabled selected>Select issue type</option>
-                            <option>Account Problem</option>
-                            <option>Payment Issue</option>
-                            <option>Technical Bug</option>
-                            <option>Mentor Issue</option>
-                            <option>Other</option>
-                        </select>
-
-                        <label class="form-label" for="issueMessage">Description</label>
-                        <textarea class="form-textarea" id="issueMessage" placeholder="Describe your issue in detail..." rows="4"></textarea>
-
-                        <button class="btn-green-sm" id="supBtn" type="button">
-                            Contact Support
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-
-                        <p id="supStatus" class="sup-status"></p>
-                    </div>
-                </div>
+            <div class="faq-answer">
+              Go to the <strong>Find Mentor</strong> tab and browse by skill, industry, or location. You can filter mentors and send a connection request directly from their profile.
             </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <div class="faq-question-left">
+                <div class="faq-icon"><i class="fas fa-calendar-alt"></i></div>
+                <span>How do I book a session?</span>
+              </div>
+              <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="faq-answer">
+              Visit your mentor's profile and click <strong>Book a Session</strong>. Choose a time slot that works for both of you and confirm the booking.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <div class="faq-question-left">
+                <div class="faq-icon"><i class="fas fa-bullseye"></i></div>
+                <span>How do I track my goals?</span>
+              </div>
+              <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="faq-answer">
+              Head to your <strong>Dashboard</strong> where you'll find a goals tracker. You can add new goals, mark milestones, and view your progress over time.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <div class="faq-question-left">
+                <div class="faq-icon"><i class="fas fa-users"></i></div>
+                <span>How do I join the community?</span>
+              </div>
+              <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="faq-answer">
+              Click on <strong>Encouragement</strong> or <strong>Experiences</strong> in the navigation. From there you can join discussions and connect with peers.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <div class="faq-question-left">
+                <div class="faq-icon"><i class="fas fa-user-edit"></i></div>
+                <span>How do I update my profile?</span>
+              </div>
+              <button class="faq-chevron" type="button"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="faq-answer">
+              Click your avatar in the top right and select <strong>My Profile</strong>, or go to <strong>Settings</strong> to update your photo, bio, skills and preferences.
+            </div>
+          </div>
         </div>
-    </main>
+
+        <!-- Right column -->
+        <div class="right-col">
+          <!-- Still need help -->
+          <div class="help-card">
+            <div class="help-card-title">Still need help?</div>
+            <div class="help-card-text">Our support team is here to assist you with anything you need.</div>
+            <button class="btn-green" id="contactExpertBtn" type="button">
+              Contact Support
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Report an issue -->
+          <div class="report-card" id="reportCard">
+            <h3>Report an Issue</h3>
+            <p>Let us know which problem arose and we’ll get it fixed.</p>
+
+            <label class="form-label" for="issueType">Issue type</label>
+            <select class="form-select" id="issueType">
+              <option value="" disabled selected>Select issue type</option>
+              <option>Account Problem</option>
+              <option>Payment Issue</option>
+              <option>Technical Bug</option>
+              <option>Mentor Issue</option>
+              <option>Other</option>
+            </select>
+
+            <label class="form-label" for="issueMessage">Description</label>
+            <textarea class="form-textarea" id="issueMessage" placeholder="Describe your issue in detail..." rows="4"></textarea>
+
+            <button class="btn-green-sm" id="supBtn" type="button">
+              Contact Support
+              <i class="fas fa-paper-plane"></i>
+            </button>
+
+            <p id="supStatus" class="sup-status"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
 
 <!-- Scripts (same order as ExperienceWall) -->

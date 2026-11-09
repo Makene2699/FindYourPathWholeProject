@@ -44,55 +44,6 @@
     color: #a0aec0;
 }
 
-.search-help input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 0.9rem;
-    color: #1a2b3c;
-}
-
-.search-help input::placeholder {
-    color: #a0aec0;
-}
-
-.search-help:focus-within {
-    border-color: #2e7d32;
-}
-
-.search-clear {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-}
-
-.faq-no-results {
-    text-align: center;
-    padding: 32px 12px;
-    color: #718096;
-}
-
-.faq-no-results i {
-    font-size: 1.6rem;
-    margin-bottom: 8px;
-}
-
-.faq-no-results p {
-    margin: 0 0 4px;
-    font-weight: 500;
-    color: #1a2b3c;
-}
-
-mark.search-hit {
-    background: #fff3a8;
-    color: inherit;
-    border-radius: 2px;
-    padding: 0 1px;
-}
-
 /* Two-column layout */
 .help-grid {
     display: grid;
