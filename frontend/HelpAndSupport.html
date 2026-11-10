@@ -34,13 +34,22 @@
 
       <div class="search-help">
         <i class="fas fa-search"></i>
-        <span>Search for help...</span>
+        <input type="text" id="helpSearchInput" placeholder="Search for help..." autocomplete="off" aria-label="Search help articles">
+        <button type="button" id="helpSearchClear" class="search-clear" aria-label="Clear search" hidden>
+          <i class="fas fa-times"></i>
+        </button>
       </div>
 
       <div class="help-grid">
         <!-- FAQ -->
         <div class="faq-card">
           <h3>Frequently Asked Questions</h3>
+          <p id="faqResultCount" class="faq-result-count" hidden></p>
+          <div id="faqNoResults" class="faq-no-results" hidden>
+            <i class="fas fa-circle-question"></i>
+            <p>No results found for "<span id="faqNoResultsTerm"></span>".</p>
+            <p class="faq-no-results-hint">Try different keywords, or use <strong>Contact Support</strong> and we'll help you out.</p>
+          </div>
 
           <div class="faq-item">
             <div class="faq-question" onclick="toggleFaq(this)">

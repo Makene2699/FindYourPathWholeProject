@@ -44,6 +44,89 @@
     color: #a0aec0;
 }
 
+.search-help:focus-within {
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+.search-help input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #1a2e44;
+}
+
+.search-help input::placeholder {
+    color: #a0aec0;
+}
+
+.search-clear {
+    border: none;
+    background: #f0f4f8;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.search-clear[hidden] {
+    display: none;
+}
+
+.search-clear i {
+    font-size: 0.7rem;
+    color: #4a5568;
+}
+
+.faq-result-count {
+    font-size: 0.8rem;
+    color: #718096;
+    margin: -8px 0 12px;
+}
+
+.faq-no-results {
+    text-align: center;
+    padding: 28px 12px;
+    color: #718096;
+}
+
+.faq-no-results[hidden],
+.faq-result-count[hidden],
+.faq-item[hidden] {
+    display: none;
+}
+
+.faq-no-results > i {
+    font-size: 1.8rem;
+    color: #cbd5e0;
+    margin-bottom: 10px;
+}
+
+.faq-no-results p {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.faq-no-results-hint {
+    font-size: 0.82rem !important;
+    color: #a0aec0;
+}
+
+mark.search-hit {
+    background: #fff3b0;
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 1px;
+}
+
 /* Two-column layout */
 .help-grid {
     display: grid;
